@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import styles from './page.module.css';
 
 export default function Index() {
@@ -14,6 +15,7 @@ export default function Index() {
             <h1>
               <span> Hello there, </span>
               Welcome @syndic-pro/web 👋
+              <Button>Click me</Button>
             </h1>
           </div>
 
