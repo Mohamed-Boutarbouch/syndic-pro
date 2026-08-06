@@ -1,21 +1,31 @@
 {
   "compilerOptions": {
     "composite": true,
+    "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "importHelpers": true,
-    "isolatedModules": true,
-    "lib": ["es2022"],
+    "incremental": true,
+    "emitDeclarationOnly": false,
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "noEmitOnError": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "target": "es2022",
+    "lib": [
+      "es2022"
+    ],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2022",
-    "customConditions": ["@syndic-pro/source"]
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "customConditions": [
+      "@syndic-pro/source"
+    ]
   }
 }

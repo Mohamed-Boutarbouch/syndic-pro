@@ -1,0 +1,46 @@
+{
+  "name": "@syndic-pro/db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate",
+    "push": "drizzle-kit push",
+    "pull": "drizzle-kit pull",
+    "studio": "drizzle-kit studio",
+    "check": "drizzle-kit check"
+  },
+  "exports": {
+    ".": {
+      "@syndic-pro/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./schema": {
+      "@syndic-pro/source": "./src/schema/index.ts",
+      "types": "./dist/schema/index.d.ts",
+      "import": "./dist/schema/index.js",
+      "default": "./dist/schema/index.js"
+    },
+    "./client": {
+      "@syndic-pro/source": "./src/client.ts",
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js",
+      "default": "./dist/client.js"
+    }
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.2",
+    "drizzle-zod": "^0.8.3",
+    "pg": "^8.22.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.4",
+    "drizzle-kit": "^0.31.10"
+  }
+}

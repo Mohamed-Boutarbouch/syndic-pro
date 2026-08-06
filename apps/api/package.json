@@ -83,6 +83,9 @@
     }
   },
   "dependencies": {
+    "@syndic-pro/db": "*",
+    "zod": "^4.4.3",
+    "nestjs-zod": "^5.5.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
