@@ -45,3 +45,9 @@ Thumbs.db
 .claude/settings.local.json
 
 test-output
+
+.env
+
+# Next.js
+.next
+out
