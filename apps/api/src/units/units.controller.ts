@@ -9,7 +9,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { insertUnitSchema, updateUnitSchema } from '@syndic-pro/db/validators';
-import { ZodValidationPipe } from '../common/zod-validation.pipe';
+import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { UpdateUnitDto } from './dto/update-unit.dto';
 import { UnitsService } from './units.service';
 import { CreateUnitDto } from './dto/create-unit.dto';

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { eq } from '@syndic-pro/db';
 import { units } from '@syndic-pro/db/schema';
-import { NewUnit, UpdateUnit } from '@syndic-pro/db/types';
+import { type NewUnit, type UpdateUnit } from '@syndic-pro/db/types';
 
 import { DatabaseService } from '../database/database.service';
 
@@ -16,19 +16,7 @@ export class UnitsService {
   }
 
   async findOne(id: string) {
-    const unit = await this.database.db.query.units.findFirst({
-      where: (unit, { eq }) => eq(unit.id, id),
-
-      with: {
-        building: true,
-      },
-    });
-
-    if (!unit) {
-      throw new NotFoundException(`Unit '${id}' not found.`);
-    }
-
-    return unit;
+    return this.findUnitOrThrow(id);
   }
 
   async update(id: string, dto: UpdateUnit) {
@@ -50,6 +38,21 @@ export class UnitsService {
       .delete(units)
       .where(eq(units.id, id))
       .returning();
+
+    if (!unit) {
+      throw new NotFoundException(`Unit '${id}' not found.`);
+    }
+
+    return unit;
+  }
+
+  private async findUnitOrThrow(id: string) {
+    const unit = await this.database.db.query.units.findFirst({
+      where: (unit, { eq }) => eq(unit.id, id),
+      with: {
+        building: true,
+      },
+    });
 
     if (!unit) {
       throw new NotFoundException(`Unit '${id}' not found.`);
