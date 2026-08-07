@@ -2,7 +2,14 @@
   "name": "@syndic-pro/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "db:generate": "npm run generate -w packages/db",
+    "db:push": "npm run push -w packages/db",
+    "db:migrate": "npm run migrate -w packages/db --verbose",
+    "db:pull": "npm run pull -w packages/db",
+    "db:studio": "npm run studio -w packages/db",
+    "db:check": "npm run check -w packages/db"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^11.0.0",

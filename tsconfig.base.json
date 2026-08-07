@@ -8,9 +8,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "target": "es2022",
-    "lib": [
-      "es2022"
-    ],
+    "lib": ["es2022"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -24,8 +22,6 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "customConditions": [
-      "@syndic-pro/source"
-    ]
-  }
+    "customConditions": ["@syndic-pro/source"],
+  },
 }

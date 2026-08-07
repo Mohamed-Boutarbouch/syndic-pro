@@ -83,15 +83,16 @@
     }
   },
   "dependencies": {
-    "@syndic-pro/db": "*",
-    "zod": "^4.4.3",
-    "nestjs-zod": "^5.5.0",
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@syndic-pro/db": "*",
+    "nestjs-zod": "^5.5.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@nestjs/testing": "^11.0.0"

@@ -1,8 +1,5 @@
-import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { insertUnitSchema } from '@syndic-pro/db/validators';
-import type { NewUnit } from '@syndic-pro/db/types';
-import { ZodValidationPipe } from '../common/zod-validation.pipe';
 
 @Controller()
 export class AppController {
@@ -11,11 +8,5 @@ export class AppController {
   @Get()
   getData() {
     return this.appService.getData();
-  }
-
-  @Post()
-  @UsePipes(new ZodValidationPipe(insertUnitSchema))
-  create(@Body() body: NewUnit) {
-    console.log(body);
   }
 }
