@@ -26,6 +26,18 @@
       "import": "./dist/schema/index.js",
       "default": "./dist/schema/index.js"
     },
+    "./validators": {
+      "@syndic-pro/source": "./src/validators/index.ts",
+      "types": "./dist/validators/index.d.ts",
+      "import": "./dist/validators/index.js",
+      "default": "./dist/validators/index.js"
+    },
+    "./types": {
+      "@syndic-pro/source": "./src/types/index.ts",
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "default": "./dist/types/index.js"
+    },
     "./client": {
       "@syndic-pro/source": "./src/client.ts",
       "types": "./dist/client.d.ts",
