@@ -4,8 +4,13 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { buildings } from '../schema/buildings.js';
+import { z } from 'zod';
 
-export const selectBuildingSchema = createSelectSchema(buildings);
+const dateAsIsoString = z.iso.datetime();
+
+export const selectBuildingSchema = createSelectSchema(buildings, {
+  createdAt: () => dateAsIsoString,
+});
 export const buildingResponseSchema = selectBuildingSchema;
 
 export const insertBuildingSchema = createInsertSchema(buildings, {

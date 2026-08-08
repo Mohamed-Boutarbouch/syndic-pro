@@ -4,8 +4,13 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { units } from '../schema/units.js';
+import { z } from 'zod';
 
-export const selectUnitSchema = createSelectSchema(units);
+const dateAsIsoString = z.iso.datetime();
+
+export const selectUnitSchema = createSelectSchema(units, {
+  createdAt: () => dateAsIsoString,
+});
 export const unitResponseSchema = selectUnitSchema;
 
 export const insertUnitSchema = createInsertSchema(units, {

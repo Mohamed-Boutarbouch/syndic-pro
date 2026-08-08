@@ -87,6 +87,7 @@
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/swagger": "^11.4.6",
     "@syndic-pro/db": "*",
     "nestjs-zod": "^5.5.0",
     "reflect-metadata": "^0.2.0",
