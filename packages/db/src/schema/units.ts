@@ -1,12 +1,14 @@
-import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text } from 'drizzle-orm/pg-core';
+
+import { baseId, timestamps } from './helpers/columns.js';
 import { buildings } from './buildings.js';
 
 export const units = pgTable('units', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  buildingId: uuid('building_id')
+  ...baseId,
+  buildingId: integer('building_id')
     .notNull()
     .references(() => buildings.id, { onDelete: 'cascade' }),
   label: text('label').notNull(),
   floor: integer('floor').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  ...timestamps,
 });

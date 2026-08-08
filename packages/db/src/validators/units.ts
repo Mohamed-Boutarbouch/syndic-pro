@@ -3,24 +3,21 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from 'drizzle-zod';
+
 import { units } from '../schema/units.js';
-import { z } from 'zod';
+import { withoutServerColumns } from './shared/column-sets.js';
+import { withDateRefinements } from './shared/date-refinements.js';
 
-const dateAsIsoString = z.iso.datetime();
-
-export const selectUnitSchema = createSelectSchema(units, {
-  createdAt: () => dateAsIsoString,
-});
+export const selectUnitSchema = createSelectSchema(
+  units,
+  withDateRefinements(units),
+);
 export const unitResponseSchema = selectUnitSchema;
 
 export const insertUnitSchema = createInsertSchema(units, {
-  label: (schema) => schema.min(3).max(120),
-}).omit({
-  id: true,
-  createdAt: true,
-});
+  label: (s) => s.min(3).max(120),
+}).omit(withoutServerColumns(units));
 
-export const updateUnitSchema = createUpdateSchema(units).omit({
-  id: true,
-  createdAt: true,
-});
+export const updateUnitSchema = createUpdateSchema(units).omit(
+  withoutServerColumns(units),
+);

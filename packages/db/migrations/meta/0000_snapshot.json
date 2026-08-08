@@ -1,5 +1,5 @@
 {
-  "id": "35e4c58a-fb51-4be9-bf6e-4b5c67168cee",
+  "id": "233c47b0-fd43-426a-b0fe-41aa803f7d25",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,10 +10,9 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "serial",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -23,10 +22,16 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -43,14 +48,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "serial",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
         "building_id": {
           "name": "building_id",
-          "type": "uuid",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -68,10 +72,16 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},

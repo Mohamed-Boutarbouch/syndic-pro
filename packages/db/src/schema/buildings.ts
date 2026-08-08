@@ -1,7 +1,9 @@
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text } from 'drizzle-orm/pg-core';
+
+import { baseId, timestamps } from './helpers/columns.js';
 
 export const buildings = pgTable('buildings', {
-  id: uuid('id').primaryKey().defaultRandom(),
+  ...baseId,
   name: text('name').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  ...timestamps,
 });
