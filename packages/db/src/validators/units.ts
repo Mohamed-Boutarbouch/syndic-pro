@@ -3,7 +3,6 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from 'drizzle-zod';
-
 import { units } from '../schema/units.js';
 import { withoutServerColumns } from './shared/column-sets.js';
 import { withDateRefinements } from './shared/date-refinements.js';
@@ -15,7 +14,8 @@ export const selectUnitSchema = createSelectSchema(
 export const unitResponseSchema = selectUnitSchema;
 
 export const insertUnitSchema = createInsertSchema(units, {
-  label: (s) => s.min(3).max(120),
+  unitNumber: (schema) => schema.min(1).max(30),
+  contributionWeight: (schema) => schema.positive(),
 }).omit(withoutServerColumns(units));
 
 export const updateUnitSchema = createUpdateSchema(units).omit(
