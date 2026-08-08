@@ -5,10 +5,14 @@
   "scripts": {
     "db:generate": "npm run generate -w packages/db",
     "db:push": "npm run push -w packages/db",
-    "db:migrate": "npm run migrate -w packages/db --verbose",
-    "db:pull": "npm run pull -w packages/db",
     "db:studio": "npm run studio -w packages/db",
-    "db:check": "npm run check -w packages/db"
+    "db:migrate": "npm run migrate -w packages/db",
+    "db:pull": "npm run pull -w packages/db",
+    "db:check": "npm run check -w packages/db",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v && docker compose up -d",
+    "docker:logs": "docker compose logs -f postgres"
   },
   "private": true,
   "dependencies": {
