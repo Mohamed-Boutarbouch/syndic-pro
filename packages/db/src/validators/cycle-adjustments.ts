@@ -4,12 +4,14 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { cycleAdjustments } from '../schema/cycle-adjustments.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
 export const selectCycleAdjustmentSchema = createSelectSchema(
   cycleAdjustments,
-  withDateRefinements(cycleAdjustments),
+  {
+    createdAt: dateAsIsoString,
+    updatedAt: dateAsIsoString,
+  },
 );
 export const cycleAdjustmentResponseSchema = selectCycleAdjustmentSchema;
 
@@ -18,8 +20,11 @@ export const insertCycleAdjustmentSchema = createInsertSchema(
   {
     reason: (schema) => schema.min(1),
   },
-).omit(withoutServerColumns(cycleAdjustments));
+).omit(SERVER_OMIT);
 
 export const updateCycleAdjustmentSchema = createUpdateSchema(
   cycleAdjustments,
-).omit(withoutServerColumns(cycleAdjustments));
+  {
+    reason: (schema) => schema.min(1),
+  },
+).omit(SERVER_OMIT);

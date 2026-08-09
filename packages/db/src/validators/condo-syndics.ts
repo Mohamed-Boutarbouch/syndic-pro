@@ -4,19 +4,16 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { condoSyndics } from '../schema/condo-syndics.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
-export const selectCondoSyndicSchema = createSelectSchema(
-  condoSyndics,
-  withDateRefinements(condoSyndics),
-);
+export const selectCondoSyndicSchema = createSelectSchema(condoSyndics, {
+  createdAt: dateAsIsoString,
+  updatedAt: dateAsIsoString,
+});
 export const condoSyndicResponseSchema = selectCondoSyndicSchema;
 
-export const insertCondoSyndicSchema = createInsertSchema(condoSyndics).omit(
-  withoutServerColumns(condoSyndics),
-);
+export const insertCondoSyndicSchema =
+  createInsertSchema(condoSyndics).omit(SERVER_OMIT);
 
-export const updateCondoSyndicSchema = createUpdateSchema(condoSyndics).omit(
-  withoutServerColumns(condoSyndics),
-);
+export const updateCondoSyndicSchema =
+  createUpdateSchema(condoSyndics).omit(SERVER_OMIT);

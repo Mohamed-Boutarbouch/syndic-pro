@@ -4,20 +4,20 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { budgetCycles } from '../schema/budget-cycles.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
-export const selectBudgetCycleSchema = createSelectSchema(
-  budgetCycles,
-  withDateRefinements(budgetCycles),
-);
+export const selectBudgetCycleSchema = createSelectSchema(budgetCycles, {
+  createdAt: dateAsIsoString,
+  updatedAt: dateAsIsoString,
+});
 export const budgetCycleResponseSchema = selectBudgetCycleSchema;
 
 export const insertBudgetCycleSchema = createInsertSchema(budgetCycles, {
   label: (schema) => schema.min(1).max(50),
   totalBudget: (schema) => schema.nonnegative(),
-}).omit(withoutServerColumns(budgetCycles));
+}).omit(SERVER_OMIT);
 
-export const updateBudgetCycleSchema = createUpdateSchema(budgetCycles).omit(
-  withoutServerColumns(budgetCycles),
-);
+export const updateBudgetCycleSchema = createUpdateSchema(budgetCycles, {
+  label: (schema) => schema.min(1).max(50),
+  totalBudget: (schema) => schema.nonnegative(),
+}).omit(SERVER_OMIT);

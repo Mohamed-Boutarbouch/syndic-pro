@@ -4,19 +4,16 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { tenantUsers } from '../schema/tenant-users.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
-export const selectTenantUserSchema = createSelectSchema(
-  tenantUsers,
-  withDateRefinements(tenantUsers),
-);
+export const selectTenantUserSchema = createSelectSchema(tenantUsers, {
+  createdAt: dateAsIsoString,
+  updatedAt: dateAsIsoString,
+});
 export const tenantUserResponseSchema = selectTenantUserSchema;
 
-export const insertTenantUserSchema = createInsertSchema(tenantUsers).omit(
-  withoutServerColumns(tenantUsers),
-);
+export const insertTenantUserSchema =
+  createInsertSchema(tenantUsers).omit(SERVER_OMIT);
 
-export const updateTenantUserSchema = createUpdateSchema(tenantUsers).omit(
-  withoutServerColumns(tenantUsers),
-);
+export const updateTenantUserSchema =
+  createUpdateSchema(tenantUsers).omit(SERVER_OMIT);

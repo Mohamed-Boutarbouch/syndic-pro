@@ -1,25 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { eq } from '@syndic-pro/db';
 import { units } from '@syndic-pro/db/schema';
-import { type NewUnit, type UpdateUnit } from '@syndic-pro/db/types';
 
 import { DatabaseService } from '../database/database.service';
+import { CreateUnitDto } from './dto/create-unit.dto';
+import { UpdateUnitDto } from './dto/update-unit.dto';
 
 @Injectable()
 export class UnitsService {
   constructor(private readonly database: DatabaseService) {}
 
-  async create(dto: NewUnit) {
+  async create(dto: CreateUnitDto) {
     const [unit] = await this.database.db.insert(units).values(dto).returning();
 
     return unit;
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     return this.findUnitOrThrow(id);
   }
 
-  async update(id: string, dto: UpdateUnit) {
+  async update(id: number, dto: UpdateUnitDto) {
     const [unit] = await this.database.db
       .update(units)
       .set(dto)
@@ -33,7 +34,7 @@ export class UnitsService {
     return unit;
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     const [unit] = await this.database.db
       .delete(units)
       .where(eq(units.id, id))
@@ -46,12 +47,9 @@ export class UnitsService {
     return unit;
   }
 
-  private async findUnitOrThrow(id: string) {
+  private async findUnitOrThrow(id: number) {
     const unit = await this.database.db.query.units.findFirst({
       where: (unit, { eq }) => eq(unit.id, id),
-      with: {
-        building: true,
-      },
     });
 
     if (!unit) {

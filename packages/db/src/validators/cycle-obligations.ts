@@ -4,12 +4,14 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { cycleObligations } from '../schema/cycle-obligations.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
 export const selectCycleObligationSchema = createSelectSchema(
   cycleObligations,
-  withDateRefinements(cycleObligations),
+  {
+    createdAt: dateAsIsoString,
+    updatedAt: dateAsIsoString,
+  },
 );
 export const cycleObligationResponseSchema = selectCycleObligationSchema;
 
@@ -19,8 +21,12 @@ export const insertCycleObligationSchema = createInsertSchema(
     shareAmount: (schema) => schema.positive(),
     baseMonthlyRate: (schema) => schema.positive(),
   },
-).omit(withoutServerColumns(cycleObligations));
+).omit(SERVER_OMIT);
 
 export const updateCycleObligationSchema = createUpdateSchema(
   cycleObligations,
-).omit(withoutServerColumns(cycleObligations));
+  {
+    shareAmount: (schema) => schema.positive(),
+    baseMonthlyRate: (schema) => schema.positive(),
+  },
+).omit(SERVER_OMIT);

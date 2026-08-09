@@ -4,12 +4,14 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { paymentSchedules } from '../schema/payment-schedules.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
 export const selectPaymentScheduleSchema = createSelectSchema(
   paymentSchedules,
-  withDateRefinements(paymentSchedules),
+  {
+    createdAt: dateAsIsoString,
+    updatedAt: dateAsIsoString,
+  },
 );
 export const paymentScheduleResponseSchema = selectPaymentScheduleSchema;
 
@@ -18,8 +20,11 @@ export const insertPaymentScheduleSchema = createInsertSchema(
   {
     amountDue: (schema) => schema.positive(),
   },
-).omit(withoutServerColumns(paymentSchedules));
+).omit(SERVER_OMIT);
 
 export const updatePaymentScheduleSchema = createUpdateSchema(
   paymentSchedules,
-).omit(withoutServerColumns(paymentSchedules));
+  {
+    amountDue: (schema) => schema.positive(),
+  },
+).omit(SERVER_OMIT);

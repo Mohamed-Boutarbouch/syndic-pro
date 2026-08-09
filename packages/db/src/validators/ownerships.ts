@@ -4,19 +4,16 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { ownerships } from '../schema/ownerships.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
-export const selectOwnershipSchema = createSelectSchema(
-  ownerships,
-  withDateRefinements(ownerships),
-);
+export const selectOwnershipSchema = createSelectSchema(ownerships, {
+  createdAt: dateAsIsoString,
+  updatedAt: dateAsIsoString,
+});
 export const ownershipResponseSchema = selectOwnershipSchema;
 
-export const insertOwnershipSchema = createInsertSchema(ownerships).omit(
-  withoutServerColumns(ownerships),
-);
+export const insertOwnershipSchema =
+  createInsertSchema(ownerships).omit(SERVER_OMIT);
 
-export const updateOwnershipSchema = createUpdateSchema(ownerships).omit(
-  withoutServerColumns(ownerships),
-);
+export const updateOwnershipSchema =
+  createUpdateSchema(ownerships).omit(SERVER_OMIT);

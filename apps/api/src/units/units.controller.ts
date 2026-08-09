@@ -40,7 +40,7 @@ export class UnitsController {
   @ApiOperation({ summary: 'Get a unit by id' })
   @ApiParam({ name: 'id', type: String, format: 'uuid' })
   @ApiOkResponse({ type: UnitResponseDto })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: number) {
     return this.unitsService.findOne(id);
   }
 
@@ -50,7 +50,7 @@ export class UnitsController {
   @ApiBody({ type: UpdateUnitDto })
   @ApiOkResponse({ type: UnitResponseDto })
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body(new ZodValidationPipe(updateUnitSchema)) body: UpdateUnitDto,
   ) {
     return this.unitsService.update(id, body);
@@ -60,7 +60,7 @@ export class UnitsController {
   @ApiOperation({ summary: 'Delete a unit' })
   @ApiParam({ name: 'id', type: String, format: 'uuid' })
   @ApiOkResponse({ type: UnitResponseDto })
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: number) {
     return this.unitsService.remove(id);
   }
 }

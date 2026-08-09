@@ -4,22 +4,18 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { paymentCoPayers } from '../schema/payment-co-payers.js';
-import { withoutServerColumns } from './shared/column-sets.js';
-import { withDateRefinements } from './shared/date-refinements.js';
+import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
-export const selectPaymentCoPayerSchema = createSelectSchema(
-  paymentCoPayers,
-  withDateRefinements(paymentCoPayers),
-);
+export const selectPaymentCoPayerSchema = createSelectSchema(paymentCoPayers, {
+  createdAt: dateAsIsoString,
+  updatedAt: dateAsIsoString,
+});
 export const paymentCoPayerResponseSchema = selectPaymentCoPayerSchema;
 
-export const insertPaymentCoPayerSchema = createInsertSchema(
-  paymentCoPayers,
-  {
-    expectedShare: (schema) => schema.positive(),
-  },
-).omit(withoutServerColumns(paymentCoPayers));
+export const insertPaymentCoPayerSchema = createInsertSchema(paymentCoPayers, {
+  expectedShare: (schema) => schema.positive(),
+}).omit(SERVER_OMIT);
 
-export const updatePaymentCoPayerSchema = createUpdateSchema(
-  paymentCoPayers,
-).omit(withoutServerColumns(paymentCoPayers));
+export const updatePaymentCoPayerSchema = createUpdateSchema(paymentCoPayers, {
+  expectedShare: (schema) => schema.positive(),
+}).omit(SERVER_OMIT);

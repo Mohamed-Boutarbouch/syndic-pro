@@ -30,6 +30,9 @@ export const cycleAdjustments = pgTable(
     createdAt: timestamp('created_at', { mode: 'date', withTimezone: true })
       .notNull()
       .defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date', withTimezone: true })
+      .$onUpdate(() => new Date())
+      .notNull(),
   },
   (table) => [index('idx_cycle_adjustments_cycle_id').on(table.budgetCycleId)],
 );
