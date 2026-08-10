@@ -52,15 +52,15 @@ const chartConfig = {
 
 export function MonthlyCollection() {
   return (
-    <Card className="w-full">
+    <Card className="flex h-full flex-col">
       <CardHeader>
         <CardTitle>Monthly Collection</CardTitle>
         <CardDescription>
           Collected vs monthly target · Nov 2025 – Oct 2026
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-80 w-full">
+      <CardContent className="flex-1">
+        <ChartContainer config={chartConfig} className="h-full w-full min-h-70">
           <BarChart data={data}>
             <CartesianGrid vertical={false} />
             <XAxis

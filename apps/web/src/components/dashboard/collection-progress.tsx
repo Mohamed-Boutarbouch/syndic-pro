@@ -69,7 +69,6 @@ export function CollectionProgress() {
             </span>
           </div>
         </div>
-
         {/* Per-owner rows */}
         <div className="space-y-4 pt-2">
           {owners.map((owner) => (
