@@ -8,7 +8,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 
 type Owner = {
   name: string;
@@ -90,11 +90,12 @@ export function CollectionProgress() {
         </div>
 
         {hiddenCount > 0 && (
-          <Button variant="link">
-            <Link href="/ledger">
-              {'>'} {hiddenCount} more co-owners — see Ledger
-            </Link>
-          </Button>
+          <Link
+            href="/ledger"
+            className={buttonVariants({ variant: 'secondary', size: 'sm' })}
+          >
+            {'>'} {hiddenCount} more co-owners — see Ledger
+          </Link>
         )}
       </CardContent>
     </Card>
