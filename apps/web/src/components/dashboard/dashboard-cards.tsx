@@ -1,3 +1,4 @@
+// TODO: No card content?
 import { Target, TrendingDown, Users, Wallet } from 'lucide-react';
 import {
   Card,
