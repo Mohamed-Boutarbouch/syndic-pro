@@ -1,4 +1,5 @@
 import { BudgetActions } from '@/components/budget/budget-actions';
+import { CurrentDistribution } from '@/components/budget/current-distribution';
 import { FiscalYear } from '@/components/budget/fiscal-year';
 
 export default function BudgetPage() {
@@ -8,8 +9,10 @@ export default function BudgetPage() {
         <div className="lg:col-span-2">
           <FiscalYear />
         </div>
-        <div className="lg:col-span-1">
+
+        <div className="flex flex-col gap-4 lg:col-span-1">
           <BudgetActions />
+          <CurrentDistribution />
         </div>
       </div>
     </div>
