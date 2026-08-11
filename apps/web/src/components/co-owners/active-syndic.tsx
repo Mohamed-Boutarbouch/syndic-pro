@@ -222,7 +222,7 @@ export function ActiveSyndic() {
                   disabled={!selectedOwner}
                   onClick={handleTransfer}
                 >
-                  Save changes
+                  Transfer Management
                 </Button>
               </DialogFooter>
             </DialogContent>
