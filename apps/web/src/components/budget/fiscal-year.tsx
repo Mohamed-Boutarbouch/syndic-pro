@@ -59,7 +59,7 @@ const months = [
   { label: 'December', value: 'December' },
 ];
 
-export default function FiscalYear() {
+export function FiscalYear() {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [annualTarget, setAnnualTarget] = useState('60000');
 

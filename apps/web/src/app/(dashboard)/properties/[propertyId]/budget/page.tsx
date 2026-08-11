@@ -1,4 +1,5 @@
-import FiscalYear from '@/components/budget/fiscal-year';
+import { BudgetActions } from '@/components/budget/budget-actions';
+import { FiscalYear } from '@/components/budget/fiscal-year';
 
 export default function BudgetPage() {
   return (
@@ -7,7 +8,9 @@ export default function BudgetPage() {
         <div className="lg:col-span-2">
           <FiscalYear />
         </div>
-        <div className="lg:col-span-1">{/*<RecentPayments />*/}</div>
+        <div className="lg:col-span-1">
+          <BudgetActions />
+        </div>
       </div>
     </div>
   );
