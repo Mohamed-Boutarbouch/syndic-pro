@@ -15,7 +15,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { Bell, Dot } from 'lucide-react';
+import { Bell, LockKeyhole } from 'lucide-react';
 
 export default function DashboardLayout({
   children,
@@ -47,8 +47,11 @@ export default function DashboardLayout({
               </Breadcrumb>
             </div>
             <div className="flex items-center gap-4">
-              <Badge variant="outline" className="[&>svg]:size-10! h-10">
-                <Dot className="text-green-500" />
+              <Badge
+                variant="outline"
+                className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
+              >
+                <LockKeyhole data-icon="inline-start" />
                 Budget Locked
               </Badge>
               <Button variant="outline" size="icon">
