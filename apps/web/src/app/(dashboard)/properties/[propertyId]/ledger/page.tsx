@@ -1,4 +1,5 @@
 import { FiscalYearCollectionCard } from '@/components/ledger/fiscal-year-collection-card';
+import { TransactionSummaryCard } from '@/components/ledger/transaction-summary-card';
 
 export default async function LedgerPage() {
   return (
@@ -7,7 +8,9 @@ export default async function LedgerPage() {
         <div className="lg:col-span-2">
           <FiscalYearCollectionCard />
         </div>
-        <div className="lg:col-span-1">{/*<RecentPayments />*/}</div>
+        <div className="lg:col-span-1">
+          <TransactionSummaryCard />
+        </div>
       </div>
       <div className="px-4 lg:px-6">{/*<CoOwnerPayments />*/}</div>
     </div>
