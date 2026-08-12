@@ -67,7 +67,7 @@ export function BudgetActions() {
                   />
                 </Field>
                 <Field>
-                  <Label htmlFor="username-1">Weight Coefficient</Label>
+                  <Label htmlFor="weight-coefficient">Weight Coefficient</Label>
                   <Input
                     type="number"
                     step="0.1"
