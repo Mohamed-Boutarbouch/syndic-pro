@@ -154,7 +154,7 @@ export function CoOwnerPaymentCard({
                 </Item>
 
                 <div className="mt-3 flex items-center gap-2 pl-11">
-                  <Progress value={progress} className="flex-1" />
+                  <Progress value={progress} className="h-4" />
 
                   <span className="shrink-0 text-xs text-muted-foreground">
                     {progress}%

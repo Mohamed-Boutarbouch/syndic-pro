@@ -123,7 +123,7 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
           </span>
         </Item>
 
-        <Progress value={progress} className="mt-2" />
+        <Progress value={progress} className="mt-2 h-2" />
 
         <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
           <span>{formatMAD(totalCollected)} collected</span>
