@@ -4,6 +4,7 @@ import { ComponentProps, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import {
   BookOpen,
+  Building,
   Building2,
   Command,
   LayoutDashboard,
@@ -25,12 +26,25 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { PropertySwitcher } from './property-switcher';
 
 const user = {
   name: 'shadcn',
   email: 'm@example.com',
   avatar: '/avatars/shadcn.jpg',
 };
+const properties = [
+  {
+    name: 'Résidence Al Andalus',
+    logo: Building,
+    city: 'Fes',
+  },
+  {
+    name: 'Résidence Al Houda',
+    logo: Building,
+    city: 'Casablanca',
+  },
+];
 
 const navSecondary = [
   {
@@ -97,6 +111,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        <PropertySwitcher properties={properties} />
         <NavManagements managements={managements} />
         <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
