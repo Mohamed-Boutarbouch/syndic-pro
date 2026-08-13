@@ -15,8 +15,32 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { Bell, LockKeyhole } from 'lucide-react';
+import { LockKeyhole } from 'lucide-react';
+import { Notification, Notifications } from '@/components/notification';
 
+const notifications: Notification[] = [
+  {
+    id: '1',
+    title: 'Payment received',
+    description: 'Ahmed Benali paid 1,500 MAD.',
+    time: '5m ago',
+    read: false,
+  },
+  {
+    id: '2',
+    title: 'Budget locked',
+    description: 'The 2026 fiscal budget has been locked.',
+    time: '1h ago',
+    read: false,
+  },
+  {
+    id: '3',
+    title: 'Payment reminder',
+    description: 'Nadia Cherkaoui has an outstanding balance.',
+    time: '3h ago',
+    read: true,
+  },
+];
 export default function DashboardLayout({
   children,
 }: {
@@ -54,9 +78,7 @@ export default function DashboardLayout({
                 <LockKeyhole data-icon="inline-start" />
                 Budget Locked
               </Badge>
-              <Button variant="outline" size="icon">
-                <Bell />
-              </Button>
+              <Notifications notifications={notifications} />
             </div>
           </div>
         </header>
