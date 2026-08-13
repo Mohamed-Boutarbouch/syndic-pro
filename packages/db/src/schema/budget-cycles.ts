@@ -11,16 +11,16 @@ import {
 import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { budgetCycleStatus } from './enums.js';
-import { condos } from './condos.js';
+import { properties } from './properties.js';
 import { users } from './users.js';
 
 export const budgetCycles = pgTable(
   'budget_cycles',
   {
     ...baseId,
-    condoId: integer('condo_id')
+    propertyId: integer('property_id')
       .notNull()
-      .references(() => condos.id, { onDelete: 'restrict' }),
+      .references(() => properties.id, { onDelete: 'restrict' }),
     label: varchar('label', { length: 50 }).notNull(),
     startMonth: date('start_month', { mode: 'date' }).notNull(),
     endMonth: date('end_month', { mode: 'date' }).notNull(),
@@ -46,11 +46,11 @@ export const budgetCycles = pgTable(
     ...timestamps,
   },
   (table) => [
-    unique('budget_cycles_unique_label_per_condo').on(
-      table.condoId,
+    unique('budget_cycles_unique_label_per_property').on(
+      table.propertyId,
       table.label,
     ),
-    index('idx_budget_cycles_condo_id').on(table.condoId),
-    index('idx_budget_cycles_status').on(table.condoId, table.status),
+    index('idx_budget_cycles_property_id').on(table.propertyId),
+    index('idx_budget_cycles_status').on(table.propertyId, table.status),
   ],
 );

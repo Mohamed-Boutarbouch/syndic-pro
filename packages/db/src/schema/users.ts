@@ -21,7 +21,7 @@ export const users = pgTable(
     phone: varchar('phone', { length: 30 }),
     passwordHash: varchar('password_hash', { length: 255 }).notNull(),
     rememberToken: varchar('remember_token', { length: 100 }),
-    locale: varchar('locale', { length: 10 }).notNull().default('fr'),
+    locale: varchar('locale', { length: 10 }).notNull().default('en'),
     isActive: boolean('is_active').notNull().default(true),
     ...timestamps,
   },

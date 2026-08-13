@@ -3,22 +3,22 @@ import {
   createSelectSchema,
   createUpdateSchema,
 } from 'drizzle-zod';
-import { condos } from '../schema/condos.js';
+import { properties } from '../schema/properties.js';
 import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 
-export const selectCondoSchema = createSelectSchema(condos, {
+export const selectPropertySchema = createSelectSchema(properties, {
   createdAt: dateAsIsoString,
   updatedAt: dateAsIsoString,
 });
-export const condoResponseSchema = selectCondoSchema;
+export const propertyResponseSchema = selectPropertySchema;
 
-export const insertCondoSchema = createInsertSchema(condos, {
+export const insertPropertySchema = createInsertSchema(properties, {
   name: (schema) => schema.min(1).max(200),
   city: (schema) => schema.min(1).max(100),
   countryCode: (schema) => schema.length(2),
 }).omit(SERVER_OMIT);
 
-export const updateCondoSchema = createUpdateSchema(condos, {
+export const updatePropertySchema = createUpdateSchema(properties, {
   name: (schema) => schema.min(1).max(200),
   city: (schema) => schema.min(1).max(100),
   countryCode: (schema) => schema.length(2),

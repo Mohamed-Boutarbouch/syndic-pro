@@ -4,12 +4,10 @@ CREATE TYPE "public"."obligation_status" AS ENUM('active', 'departed', 'waived',
 CREATE TYPE "public"."payment_method" AS ENUM('cash', 'bank_transfer', 'cheque', 'mobile_payment', 'other');--> statement-breakpoint
 CREATE TYPE "public"."schedule_status" AS ENUM('pending', 'partial', 'paid', 'overdue', 'cancelled');--> statement-breakpoint
 CREATE TYPE "public"."syndic_event" AS ENUM('assigned', 'resigned', 'transferred');--> statement-breakpoint
-CREATE TYPE "public"."tenant_plan" AS ENUM('starter', 'pro', 'enterprise');--> statement-breakpoint
-CREATE TYPE "public"."tenant_user_role" AS ENUM('admin', 'member');--> statement-breakpoint
 CREATE TYPE "public"."unit_type" AS ENUM('residential', 'commercial', 'storage', 'parking', 'other');--> statement-breakpoint
 CREATE TABLE "budget_cycles" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"condo_id" integer NOT NULL,
+	"property_id" integer NOT NULL,
 	"label" varchar(50) NOT NULL,
 	"start_month" date NOT NULL,
 	"end_month" date NOT NULL,
@@ -22,33 +20,7 @@ CREATE TABLE "budget_cycles" (
 	"notes" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone NOT NULL,
-	CONSTRAINT "budget_cycles_unique_label_per_condo" UNIQUE("condo_id","label")
-);
---> statement-breakpoint
-CREATE TABLE "condo_syndics" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"condo_id" integer NOT NULL,
-	"user_id" integer NOT NULL,
-	"event" "syndic_event" DEFAULT 'assigned' NOT NULL,
-	"transferred_from_user_id" integer,
-	"assigned_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"resigned_at" timestamp with time zone,
-	"notes" text,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE "condos" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"tenant_id" integer NOT NULL,
-	"name" varchar(200) NOT NULL,
-	"address" text NOT NULL,
-	"city" varchar(100) NOT NULL,
-	"postal_code" varchar(20),
-	"country_code" char(2) DEFAULT 'MA' NOT NULL,
-	"is_active" boolean DEFAULT true NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone NOT NULL
+	CONSTRAINT "budget_cycles_unique_label_per_property" UNIQUE("property_id","label")
 );
 --> statement-breakpoint
 CREATE TABLE "cycle_adjustments" (
@@ -59,7 +31,8 @@ CREATE TABLE "cycle_adjustments" (
 	"reason" text NOT NULL,
 	"related_ownership_id" integer,
 	"created_by_user_id" integer NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "cycle_obligations" (
@@ -79,16 +52,6 @@ CREATE TABLE "cycle_obligations" (
 	CONSTRAINT "cycle_obligations_unique_per_cycle_ownership" UNIQUE("budget_cycle_id","ownership_id")
 );
 --> statement-breakpoint
-CREATE TABLE "tenants" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(150) NOT NULL,
-	"plan" "tenant_plan" DEFAULT 'starter' NOT NULL,
-	"billing_email" varchar(255) NOT NULL,
-	"is_active" boolean DEFAULT true NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE "users" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(150) NOT NULL,
@@ -97,28 +60,28 @@ CREATE TABLE "users" (
 	"phone" varchar(30),
 	"password_hash" varchar(255) NOT NULL,
 	"remember_token" varchar(100),
-	"locale" varchar(10) DEFAULT 'fr' NOT NULL,
+	"locale" varchar(10) DEFAULT 'en' NOT NULL,
 	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
-CREATE TABLE "tenant_users" (
+CREATE TABLE "properties" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"tenant_id" integer NOT NULL,
-	"user_id" integer NOT NULL,
-	"role" "tenant_user_role" DEFAULT 'member' NOT NULL,
-	"invited_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"joined_at" timestamp with time zone,
+	"name" varchar(200) NOT NULL,
+	"address" text NOT NULL,
+	"city" varchar(100) NOT NULL,
+	"postal_code" varchar(20),
+	"country_code" char(2) DEFAULT 'MA' NOT NULL,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone NOT NULL,
-	CONSTRAINT "tenant_users_unique_membership" UNIQUE("tenant_id","user_id")
+	"updated_at" timestamp with time zone NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "units" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"condo_id" integer NOT NULL,
+	"property_id" integer NOT NULL,
 	"unit_number" varchar(30) NOT NULL,
 	"floor" smallint,
 	"type" "unit_type" DEFAULT 'residential' NOT NULL,
@@ -127,7 +90,7 @@ CREATE TABLE "units" (
 	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone NOT NULL,
-	CONSTRAINT "units_unique_number_per_condo" UNIQUE("condo_id","unit_number")
+	CONSTRAINT "units_unique_number_per_property" UNIQUE("property_id","unit_number")
 );
 --> statement-breakpoint
 CREATE TABLE "ownerships" (
@@ -136,6 +99,19 @@ CREATE TABLE "ownerships" (
 	"user_id" integer NOT NULL,
 	"started_at" date NOT NULL,
 	"ended_at" date,
+	"notes" text,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "property_syndics" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"property_id" integer NOT NULL,
+	"user_id" integer NOT NULL,
+	"event" "syndic_event" DEFAULT 'assigned' NOT NULL,
+	"transferred_from_user_id" integer,
+	"assigned_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"resigned_at" timestamp with time zone,
 	"notes" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone NOT NULL
@@ -184,12 +160,10 @@ CREATE TABLE "payments" (
 --> statement-breakpoint
 CREATE TABLE "invitations" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"tenant_id" integer NOT NULL,
-	"condo_id" integer,
+	"property_id" integer,
 	"invited_by_user_id" integer NOT NULL,
 	"user_id" integer,
 	"email" varchar(255) NOT NULL,
-	"role" "tenant_user_role" DEFAULT 'member' NOT NULL,
 	"token" varchar(64) NOT NULL,
 	"accepted_at" timestamp with time zone,
 	"expires_at" timestamp with time zone NOT NULL,
@@ -198,22 +172,19 @@ CREATE TABLE "invitations" (
 	CONSTRAINT "invitations_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
-ALTER TABLE "budget_cycles" ADD CONSTRAINT "budget_cycles_condo_id_condos_id_fk" FOREIGN KEY ("condo_id") REFERENCES "public"."condos"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "budget_cycles" ADD CONSTRAINT "budget_cycles_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "budget_cycles" ADD CONSTRAINT "budget_cycles_activated_by_user_id_users_id_fk" FOREIGN KEY ("activated_by_user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "condo_syndics" ADD CONSTRAINT "condo_syndics_condo_id_condos_id_fk" FOREIGN KEY ("condo_id") REFERENCES "public"."condos"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "condo_syndics" ADD CONSTRAINT "condo_syndics_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "condo_syndics" ADD CONSTRAINT "condo_syndics_transferred_from_user_id_users_id_fk" FOREIGN KEY ("transferred_from_user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "condos" ADD CONSTRAINT "condos_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "public"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "cycle_adjustments" ADD CONSTRAINT "cycle_adjustments_budget_cycle_id_budget_cycles_id_fk" FOREIGN KEY ("budget_cycle_id") REFERENCES "public"."budget_cycles"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "cycle_adjustments" ADD CONSTRAINT "cycle_adjustments_related_ownership_id_ownerships_id_fk" FOREIGN KEY ("related_ownership_id") REFERENCES "public"."ownerships"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "cycle_adjustments" ADD CONSTRAINT "cycle_adjustments_created_by_user_id_users_id_fk" FOREIGN KEY ("created_by_user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "cycle_obligations" ADD CONSTRAINT "cycle_obligations_budget_cycle_id_budget_cycles_id_fk" FOREIGN KEY ("budget_cycle_id") REFERENCES "public"."budget_cycles"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "cycle_obligations" ADD CONSTRAINT "cycle_obligations_ownership_id_ownerships_id_fk" FOREIGN KEY ("ownership_id") REFERENCES "public"."ownerships"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "tenant_users" ADD CONSTRAINT "tenant_users_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "public"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "tenant_users" ADD CONSTRAINT "tenant_users_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "units" ADD CONSTRAINT "units_condo_id_condos_id_fk" FOREIGN KEY ("condo_id") REFERENCES "public"."condos"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "units" ADD CONSTRAINT "units_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ownerships" ADD CONSTRAINT "ownerships_unit_id_units_id_fk" FOREIGN KEY ("unit_id") REFERENCES "public"."units"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "ownerships" ADD CONSTRAINT "ownerships_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "property_syndics" ADD CONSTRAINT "property_syndics_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "property_syndics" ADD CONSTRAINT "property_syndics_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "property_syndics" ADD CONSTRAINT "property_syndics_transferred_from_user_id_users_id_fk" FOREIGN KEY ("transferred_from_user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payment_schedules" ADD CONSTRAINT "payment_schedules_cycle_obligation_id_cycle_obligations_id_fk" FOREIGN KEY ("cycle_obligation_id") REFERENCES "public"."cycle_obligations"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payment_co_payers" ADD CONSTRAINT "payment_co_payers_payment_schedule_id_payment_schedules_id_fk" FOREIGN KEY ("payment_schedule_id") REFERENCES "public"."payment_schedules"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payment_co_payers" ADD CONSTRAINT "payment_co_payers_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
@@ -222,30 +193,24 @@ ALTER TABLE "payments" ADD CONSTRAINT "payments_payment_schedule_id_payment_sche
 ALTER TABLE "payments" ADD CONSTRAINT "payments_paid_by_user_id_users_id_fk" FOREIGN KEY ("paid_by_user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payments" ADD CONSTRAINT "payments_recorded_by_user_id_users_id_fk" FOREIGN KEY ("recorded_by_user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payments" ADD CONSTRAINT "payments_voided_by_user_id_users_id_fk" FOREIGN KEY ("voided_by_user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "invitations" ADD CONSTRAINT "invitations_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "public"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "invitations" ADD CONSTRAINT "invitations_condo_id_condos_id_fk" FOREIGN KEY ("condo_id") REFERENCES "public"."condos"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "invitations" ADD CONSTRAINT "invitations_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "invitations" ADD CONSTRAINT "invitations_invited_by_user_id_users_id_fk" FOREIGN KEY ("invited_by_user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "invitations" ADD CONSTRAINT "invitations_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "idx_budget_cycles_condo_id" ON "budget_cycles" USING btree ("condo_id");--> statement-breakpoint
-CREATE INDEX "idx_budget_cycles_status" ON "budget_cycles" USING btree ("condo_id","status");--> statement-breakpoint
-CREATE INDEX "idx_condo_syndics_condo_id" ON "condo_syndics" USING btree ("condo_id");--> statement-breakpoint
-CREATE INDEX "idx_condo_syndics_user_id" ON "condo_syndics" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "idx_condos_tenant_id" ON "condos" USING btree ("tenant_id");--> statement-breakpoint
-CREATE INDEX "idx_condos_is_active" ON "condos" USING btree ("is_active","tenant_id");--> statement-breakpoint
+CREATE INDEX "idx_budget_cycles_property_id" ON "budget_cycles" USING btree ("property_id");--> statement-breakpoint
+CREATE INDEX "idx_budget_cycles_status" ON "budget_cycles" USING btree ("property_id","status");--> statement-breakpoint
 CREATE INDEX "idx_cycle_adjustments_cycle_id" ON "cycle_adjustments" USING btree ("budget_cycle_id");--> statement-breakpoint
 CREATE INDEX "idx_cycle_obligations_cycle_id" ON "cycle_obligations" USING btree ("budget_cycle_id");--> statement-breakpoint
 CREATE INDEX "idx_cycle_obligations_ownership_id" ON "cycle_obligations" USING btree ("ownership_id");--> statement-breakpoint
 CREATE INDEX "idx_cycle_obligations_status" ON "cycle_obligations" USING btree ("budget_cycle_id","status");--> statement-breakpoint
-CREATE INDEX "idx_tenants_is_active" ON "tenants" USING btree ("is_active");--> statement-breakpoint
 CREATE INDEX "idx_users_email" ON "users" USING btree ("email");--> statement-breakpoint
 CREATE INDEX "idx_users_is_active" ON "users" USING btree ("is_active");--> statement-breakpoint
-CREATE INDEX "idx_tenant_users_tenant_id" ON "tenant_users" USING btree ("tenant_id");--> statement-breakpoint
-CREATE INDEX "idx_tenant_users_user_id" ON "tenant_users" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "idx_units_condo_id" ON "units" USING btree ("condo_id");--> statement-breakpoint
-CREATE INDEX "idx_units_type" ON "units" USING btree ("condo_id","type");--> statement-breakpoint
+CREATE INDEX "idx_units_property_id" ON "units" USING btree ("property_id");--> statement-breakpoint
+CREATE INDEX "idx_units_type" ON "units" USING btree ("property_id","type");--> statement-breakpoint
 CREATE INDEX "idx_ownerships_unit_id" ON "ownerships" USING btree ("unit_id");--> statement-breakpoint
 CREATE INDEX "idx_ownerships_user_id" ON "ownerships" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "idx_ownerships_active" ON "ownerships" USING btree ("unit_id","started_at");--> statement-breakpoint
+CREATE INDEX "idx_property_syndics_property_id" ON "property_syndics" USING btree ("property_id");--> statement-breakpoint
+CREATE INDEX "idx_property_syndics_user_id" ON "property_syndics" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "idx_payment_schedules_obligation_id" ON "payment_schedules" USING btree ("cycle_obligation_id");--> statement-breakpoint
 CREATE INDEX "idx_payment_schedules_due_date" ON "payment_schedules" USING btree ("due_date","status");--> statement-breakpoint
 CREATE INDEX "idx_payment_schedules_status" ON "payment_schedules" USING btree ("status");--> statement-breakpoint
@@ -256,5 +221,4 @@ CREATE INDEX "idx_payments_schedule_id" ON "payments" USING btree ("payment_sche
 CREATE INDEX "idx_payments_paid_by" ON "payments" USING btree ("paid_by_user_id");--> statement-breakpoint
 CREATE INDEX "idx_payments_paid_at" ON "payments" USING btree ("paid_at");--> statement-breakpoint
 CREATE INDEX "idx_invitations_email" ON "invitations" USING btree ("email");--> statement-breakpoint
-CREATE INDEX "idx_invitations_token" ON "invitations" USING btree ("token");--> statement-breakpoint
-CREATE INDEX "idx_invitations_tenant_id" ON "invitations" USING btree ("tenant_id");
+CREATE INDEX "idx_invitations_token" ON "invitations" USING btree ("token");

@@ -11,15 +11,15 @@ import {
 import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { unitType } from './enums.js';
-import { condos } from './condos.js';
+import { properties } from './properties.js';
 
 export const units = pgTable(
   'units',
   {
     ...baseId,
-    condoId: integer('condo_id')
+    propertyId: integer('property_id')
       .notNull()
-      .references(() => condos.id, { onDelete: 'cascade' }),
+      .references(() => properties.id, { onDelete: 'cascade' }),
     unitNumber: varchar('unit_number', { length: 30 }).notNull(),
     floor: smallint('floor'),
     type: unitType('type').notNull().default('residential'),
@@ -35,8 +35,11 @@ export const units = pgTable(
     ...timestamps,
   },
   (table) => [
-    unique('units_unique_number_per_condo').on(table.condoId, table.unitNumber),
-    index('idx_units_condo_id').on(table.condoId),
-    index('idx_units_type').on(table.condoId, table.type),
+    unique('units_unique_number_per_property').on(
+      table.propertyId,
+      table.unitNumber,
+    ),
+    index('idx_units_property_id').on(table.propertyId),
+    index('idx_units_type').on(table.propertyId, table.type),
   ],
 );

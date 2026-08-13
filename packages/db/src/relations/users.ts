@@ -1,18 +1,16 @@
 import { relations } from 'drizzle-orm';
 import { users } from '../schema/users.js';
-import { tenantUsers } from '../schema/tenant-users.js';
 import { ownerships } from '../schema/ownerships.js';
-import { condoSyndics } from '../schema/condo-syndics.js';
+import { propertySyndics } from '../schema/property-syndics.js';
 import { cycleAdjustments } from '../schema/cycle-adjustments.js';
 import { payments } from '../schema/payments.js';
 import { paymentCoPayers } from '../schema/payment-co-payers.js';
 import { invitations } from '../schema/invitations.js';
 
 export const usersRelations = relations(users, ({ many }) => ({
-  tenantUsers: many(tenantUsers),
   ownerships: many(ownerships),
-  condoSyndics: many(condoSyndics, { relationName: 'syndic' }),
-  transferredCondoSyndics: many(condoSyndics, {
+  propertySyndics: many(propertySyndics, { relationName: 'syndic' }),
+  transferredPropertySyndics: many(propertySyndics, {
     relationName: 'transferredFromSyndic',
   }),
   cycleAdjustments: many(cycleAdjustments),

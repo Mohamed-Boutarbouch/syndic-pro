@@ -16,7 +16,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Syndic Pro API')
-    .setDescription('Condo/syndic management API')
+    .setDescription('Property/syndic management API')
     .setVersion('1.0')
     .build();
 

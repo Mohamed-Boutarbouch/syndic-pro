@@ -1,13 +1,5 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
 
-export const tenantPlan = pgEnum('tenant_plan', [
-  'starter',
-  'pro',
-  'enterprise',
-]);
-
-export const tenantUserRole = pgEnum('tenant_user_role', ['admin', 'member']);
-
 export const unitType = pgEnum('unit_type', [
   'residential',
   'commercial',
