@@ -1,6 +1,7 @@
 import { CoOwnerStatus } from '@/components/ledger/co-owner-status';
 import { coOwners } from '@/components/ledger/co-owners-data';
 import { FiscalYearCollectionCard } from '@/components/ledger/fiscal-year-collection-card';
+import { PaymentJournal } from '@/components/ledger/payment-journal';
 import { TransactionSummaryCard } from '@/components/ledger/transaction-summary-card';
 
 export default async function LedgerPage() {
@@ -17,6 +18,7 @@ export default async function LedgerPage() {
       <div className="px-4 lg:px-6">
         {<CoOwnerStatus coOwners={coOwners} />}
       </div>
+      <div className="px-4 lg:px-6">{<PaymentJournal />}</div>
     </div>
   );
 }

@@ -13,12 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from '@/components/ui/item';
+import { Item, ItemContent, ItemTitle } from '@/components/ui/item';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
