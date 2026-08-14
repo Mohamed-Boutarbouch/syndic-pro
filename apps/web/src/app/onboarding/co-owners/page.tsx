@@ -1,7 +1,9 @@
+import { OnboardingCoOwnerForm } from '@/components/onboarding/onboarding-co-owner-form copy';
+
 export default function CoOwnersPage() {
   return (
     <div>
-      <div />
+      <OnboardingCoOwnerForm />
     </div>
   );
 }

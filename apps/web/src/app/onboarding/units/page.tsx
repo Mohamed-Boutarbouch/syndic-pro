@@ -1,4 +1,4 @@
-import { OnboardingUnitForm } from '@/components/onboarding/onboarding-units-form';
+import { OnboardingUnitForm } from '@/components/onboarding/onboarding-unit-form';
 
 export default function UnitsPage() {
   return (
