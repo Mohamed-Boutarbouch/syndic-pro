@@ -65,7 +65,7 @@ export function OnboardingStepper() {
             {!isLast && (
               <div
                 className={cn(
-                  'mx-2 mb-5 h-1 flex-1',
+                  'mx-2 mb-5 h-0.5 flex-1',
                   isCompleted ? 'bg-primary' : 'bg-muted-foreground/30',
                 )}
               />

@@ -77,116 +77,120 @@ export function OnboardingUnitForm() {
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FieldGroup>
-            <Controller
-              name="unitLabel"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="unit-label">Label</FieldLabel>
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+              <Controller
+                name="unitLabel"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="unit-label">Label</FieldLabel>
 
-                  <Input
-                    {...field}
-                    id="unit-label"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="A-101"
-                  />
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="unitType"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="unit-type">Type</FieldLabel>
-
-                  <Select
-                    name={field.name}
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      id="unit-type"
+                    <Input
+                      {...field}
+                      id="unit-label"
                       aria-invalid={fieldState.invalid}
+                      placeholder="A-101"
+                    />
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="unitType"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="unit-type">Type</FieldLabel>
+
+                    <Select
+                      name={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
                     >
-                      <SelectValue />
-                    </SelectTrigger>
+                      <SelectTrigger
+                        id="unit-type"
+                        aria-invalid={fieldState.invalid}
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
 
-                    <SelectContent>
-                      {UNIT_TYPES.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <SelectContent>
+                        {UNIT_TYPES.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name="unitFloor"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="unit-floor">Floor</FieldLabel>
+              <Controller
+                name="unitFloor"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="unit-floor">Floor</FieldLabel>
 
-                  <Input
-                    {...field}
-                    id="unit-floor"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="RDC"
-                  />
+                    <Input
+                      {...field}
+                      id="unit-floor"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="RDC"
+                    />
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name="weightCoefficient"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="weight-coefficient">
-                    Weight coefficient
-                  </FieldLabel>
+              <Controller
+                name="weightCoefficient"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="weight-coefficient">
+                      Weight coefficient
+                    </FieldLabel>
 
-                  <Input
-                    id="weight-coefficient"
-                    type="number"
-                    min={0}
-                    step="0.1"
-                    placeholder="1.0"
-                    aria-invalid={fieldState.invalid}
-                    name={field.name}
-                    ref={field.ref}
-                    onBlur={field.onBlur}
-                    value={field.value ?? ''}
-                    onChange={(event) => {
-                      const value = event.target.value;
+                    <Input
+                      id="weight-coefficient"
+                      type="number"
+                      min={0}
+                      step="0.1"
+                      placeholder="1.0"
+                      aria-invalid={fieldState.invalid}
+                      name={field.name}
+                      ref={field.ref}
+                      onBlur={field.onBlur}
+                      value={field.value ?? ''}
+                      onChange={(event) => {
+                        const value = event.target.value;
 
-                      field.onChange(value === '' ? undefined : Number(value));
-                    }}
-                  />
+                        field.onChange(
+                          value === '' ? undefined : Number(value),
+                        );
+                      }}
+                    />
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
           </FieldGroup>
         </form>
       </CardContent>

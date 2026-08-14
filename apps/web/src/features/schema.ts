@@ -3,20 +3,6 @@ import { z } from 'zod';
 // -----------------------------------------------------------------------------
 // Shared values
 // -----------------------------------------------------------------------------
-export const MONTHS = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-] as const;
 
 export const UNIT_TYPES = ['Apartment', 'Commercial', 'Storage'] as const;
 
@@ -30,13 +16,12 @@ export const BILLING_FREQUENCIES = [
 // -----------------------------------------------------------------------------
 // Shared schemas
 // -----------------------------------------------------------------------------
-export const monthSchema = z.enum(MONTHS);
+
 export const unitTypeSchema = z.enum(UNIT_TYPES);
 export const billingFrequencySchema = z.enum(BILLING_FREQUENCIES);
 
-const yearSchema = z.string().regex(/^\d{4}$/, 'Enter a valid 4-digit year');
+const fiscalDateSchema = z.iso.date('Enter a valid date');
 
-// Reusable string constraint helpers — cuts the repeated .trim().min().max() boilerplate
 const requiredString = (label: string, min: number, max = 80) =>
   z
     .string()
@@ -52,8 +37,9 @@ const optionalString = (label: string, max = 80) =>
     .optional();
 
 // -----------------------------------------------------------------------------
-// Onboarding schema
+// Master onboarding schema
 // -----------------------------------------------------------------------------
+
 export const onboardingSyndicSchema = z.object({
   // Property
   propertyName: requiredString('Property name', 3),
@@ -61,53 +47,56 @@ export const onboardingSyndicSchema = z.object({
   propertyCity: requiredString('City', 3),
 
   // Fiscal year
-  startMonth: monthSchema,
-  endMonth: monthSchema,
-  startYear: yearSchema,
-  endYear: yearSchema,
+  fiscalYearStart: fiscalDateSchema,
+  fiscalYearEnd: fiscalDateSchema,
+
   annualTargetBudget: z
     .number()
     .min(50, 'Annual target budget must be at least 50'),
+
   lockBudget: z.boolean(),
 
   // Unit
   unitLabel: requiredString('Unit label', 1),
   unitType: unitTypeSchema,
   unitFloor: requiredString('Floor', 1),
+
   weightCoefficient: z
     .number()
     .positive('Weight coefficient must be greater than 0'),
 
   // Co-owner
   coOwnerName: requiredString('Name', 3),
-  coOwnerEmail: z.email('Enter a valid email address'),
+  coOwnerEmail: z
+    .email('Enter a valid email address')
+    .optional()
+    .or(z.literal('')),
   coOwnerPhone: optionalString('Phone number', 15),
   billingFrequency: billingFrequencySchema,
   designatedSyndic: z.boolean(),
 });
 
 // -----------------------------------------------------------------------------
-// Types
-// -----------------------------------------------------------------------------
-export type OnboardingSyndicSchema = z.infer<typeof onboardingSyndicSchema>;
-
-// -----------------------------------------------------------------------------
 // Step schemas
 // -----------------------------------------------------------------------------
+
 export const onboardingPropertySchema = onboardingSyndicSchema.pick({
   propertyName: true,
   propertyAddress: true,
   propertyCity: true,
 });
 
-export const onboardingFiscalYearSchema = onboardingSyndicSchema.pick({
-  startMonth: true,
-  endMonth: true,
-  startYear: true,
-  endYear: true,
-  annualTargetBudget: true,
-  lockBudget: true,
-});
+export const onboardingFiscalYearSchema = onboardingSyndicSchema
+  .pick({
+    fiscalYearStart: true,
+    fiscalYearEnd: true,
+    annualTargetBudget: true,
+    lockBudget: true,
+  })
+  .refine((data) => data.fiscalYearEnd >= data.fiscalYearStart, {
+    path: ['fiscalYearEnd'],
+    message: 'End of fiscal year must be after the start date',
+  });
 
 export const onboardingUnitSchema = onboardingSyndicSchema.pick({
   unitLabel: true,
@@ -125,9 +114,15 @@ export const onboardingCoOwnerSchema = onboardingSyndicSchema.pick({
 });
 
 // -----------------------------------------------------------------------------
-// Step types
+// Types
 // -----------------------------------------------------------------------------
+
+export type OnboardingSyndicSchema = z.infer<typeof onboardingSyndicSchema>;
+
 export type OnboardingProperty = z.infer<typeof onboardingPropertySchema>;
+
 export type OnboardingFiscalYear = z.infer<typeof onboardingFiscalYearSchema>;
+
 export type OnboardingUnit = z.infer<typeof onboardingUnitSchema>;
+
 export type OnboardingCoOwner = z.infer<typeof onboardingCoOwnerSchema>;

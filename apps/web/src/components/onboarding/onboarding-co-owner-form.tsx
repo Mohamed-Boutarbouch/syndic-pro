@@ -73,150 +73,155 @@ export function OnboardingCoOwnerForm() {
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FieldGroup>
-            <Controller
-              name="coOwnerName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="owner-name">Owner name</FieldLabel>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Controller
+                name="coOwnerName"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="owner-name">Owner name</FieldLabel>
 
-                  <Input
-                    {...field}
-                    id="owner-name"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g. John Doe"
-                    autoComplete="name"
-                  />
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="coOwnerEmail"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="owner-email">Email</FieldLabel>
-
-                  <Input
-                    {...field}
-                    type="email"
-                    id="owner-email"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="owner@email.com"
-                    autoComplete="email"
-                  />
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="coOwnerPhone"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="owner-phone">Phone</FieldLabel>
-
-                  <Input
-                    {...field}
-                    type="tel"
-                    id="owner-phone"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="+212 6XX XXX XXX"
-                    autoComplete="tel"
-                  />
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="billingFrequency"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="billing-frequency">
-                    Billing frequency
-                  </FieldLabel>
-
-                  <Select
-                    name={field.name}
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      id="billing-frequency"
+                    <Input
+                      {...field}
+                      id="owner-name"
                       aria-invalid={fieldState.invalid}
+                      placeholder="e.g. John Doe"
+                      autoComplete="name"
+                    />
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="coOwnerEmail"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="owner-email">Email</FieldLabel>
+
+                    <Input
+                      {...field}
+                      type="email"
+                      id="owner-email"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="owner@email.com"
+                      autoComplete="email"
+                    />
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="coOwnerPhone"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="owner-phone">Phone</FieldLabel>
+
+                    <Input
+                      {...field}
+                      type="tel"
+                      id="owner-phone"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="+212 6XX XXX XXX"
+                      autoComplete="tel"
+                    />
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name="billingFrequency"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="billing-frequency">
+                      Billing frequency
+                    </FieldLabel>
+
+                    <Select
+                      name={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
                     >
-                      <SelectValue />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      {BILLING_FREQUENCIES.map((frequency) => (
-                        <SelectItem key={frequency} value={frequency}>
-                          {frequency}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="designatedSyndic"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel
-                    htmlFor="designated-syndic"
-                    className="cursor-pointer"
-                  >
-                    <Field orientation="horizontal">
-                      <Checkbox
-                        id="designated-syndic"
-                        name={field.name}
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        onBlur={field.onBlur}
-                        ref={field.ref}
+                      <SelectTrigger
+                        id="billing-frequency"
                         aria-invalid={fieldState.invalid}
-                      />
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
 
-                      <FieldContent>
-                        <FieldTitle className="flex items-center gap-2">
-                          <Shield className="size-5" />
-                          Designate as syndic
-                        </FieldTitle>
+                      <SelectContent>
+                        {BILLING_FREQUENCIES.map((frequency) => (
+                          <SelectItem key={frequency} value={frequency}>
+                            {frequency}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                        <span className="text-muted-foreground text-sm">
-                          This co-owner will manage the property.
-                        </span>
-                      </FieldContent>
-                    </Field>
-                  </FieldLabel>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+              <Controller
+                name="designatedSyndic"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field
+                    className="md:col-span-2"
+                    data-invalid={fieldState.invalid}
+                  >
+                    <FieldLabel
+                      htmlFor="designated-syndic"
+                      className="cursor-pointer"
+                    >
+                      <Field orientation="horizontal">
+                        <Checkbox
+                          id="designated-syndic"
+                          name={field.name}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          onBlur={field.onBlur}
+                          ref={field.ref}
+                          aria-invalid={fieldState.invalid}
+                        />
+
+                        <FieldContent>
+                          <FieldTitle className="flex items-center gap-2">
+                            <Shield className="size-5" />
+                            Designate as syndic
+                          </FieldTitle>
+
+                          <span className="text-muted-foreground text-sm">
+                            This co-owner will manage the property.
+                          </span>
+                        </FieldContent>
+                      </Field>
+                    </FieldLabel>
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
           </FieldGroup>
         </form>
 
