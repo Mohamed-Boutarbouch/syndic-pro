@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/card';
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -72,10 +71,6 @@ export function OnboardingPropertyForm() {
                     autoComplete="organization"
                   />
 
-                  <FieldDescription>
-                    The name used to identify this property.
-                  </FieldDescription>
-
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -99,11 +94,6 @@ export function OnboardingPropertyForm() {
                     placeholder="12 Avenue Hassan II"
                     autoComplete="street-address"
                   />
-
-                  <FieldDescription>
-                    Optional. You can leave this blank if you don't have the
-                    address yet.
-                  </FieldDescription>
 
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />

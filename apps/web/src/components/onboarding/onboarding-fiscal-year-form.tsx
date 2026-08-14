@@ -132,7 +132,7 @@ export function OnboardingFiscalYearForm() {
                     id="annual-target-budget"
                     type="number"
                     min={50}
-                    step="1"
+                    step="0.01"
                     placeholder="60000"
                     aria-invalid={fieldState.invalid}
                     value={field.value ?? ''}

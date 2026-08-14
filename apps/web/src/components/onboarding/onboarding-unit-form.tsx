@@ -142,10 +142,7 @@ export function OnboardingUnitForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="unit-floor">
-                      Floor
-                      <span className="text-destructive">*</span>
-                    </FieldLabel>
+                    <FieldLabel htmlFor="unit-floor">Floor</FieldLabel>
 
                     <Input
                       {...field}

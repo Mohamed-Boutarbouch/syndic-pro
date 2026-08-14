@@ -59,7 +59,7 @@ export const onboardingSyndicSchema = z.object({
   // Unit
   unitLabel: requiredString('Unit label', 1),
   unitType: unitTypeSchema,
-  unitFloor: requiredString('Floor', 1),
+  unitFloor: requiredString('Floor', 1).optional().or(z.literal('')),
 
   weightCoefficient: z
     .number()
