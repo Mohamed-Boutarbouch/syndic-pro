@@ -43,10 +43,7 @@ export const billingFrequencySchema = z.enum(billingFrequencies);
 // -----------------------------------------------------------------------------
 
 export const onboardingSyndicSchema = z.object({
-  // ---------------------------------------------------------------------------
   // Property
-  // ---------------------------------------------------------------------------
-
   propertyName: z
     .string()
     .trim()
@@ -65,10 +62,7 @@ export const onboardingSyndicSchema = z.object({
     .min(3, 'City must be at least 3 characters')
     .max(80, 'City must be at most 80 characters'),
 
-  // ---------------------------------------------------------------------------
   // Fiscal year
-  // ---------------------------------------------------------------------------
-
   startMonth: monthSchema,
 
   endMonth: monthSchema,
@@ -83,10 +77,7 @@ export const onboardingSyndicSchema = z.object({
 
   lockBudget: z.boolean(),
 
-  // ---------------------------------------------------------------------------
   // Unit
-  // ---------------------------------------------------------------------------
-
   unitLabel: z
     .string()
     .trim()
@@ -95,7 +86,7 @@ export const onboardingSyndicSchema = z.object({
 
   unitType: unitTypeSchema,
 
-  floor: z
+  unitFloor: z
     .string()
     .trim()
     .min(1, 'Floor is required')
@@ -103,12 +94,9 @@ export const onboardingSyndicSchema = z.object({
 
   weightCoefficient: z
     .number()
-    .min(50, 'Weight coefficient must be at least 50'),
+    .positive('Weight coefficient must be greater than 0'),
 
-  // ---------------------------------------------------------------------------
   // Co-owner
-  // ---------------------------------------------------------------------------
-
   coOwnerName: z
     .string()
     .trim()
@@ -129,7 +117,7 @@ export const onboardingSyndicSchema = z.object({
 });
 
 // -----------------------------------------------------------------------------
-// Full form type
+// Types
 // -----------------------------------------------------------------------------
 
 export type OnboardingSyndicSchema = z.infer<typeof onboardingSyndicSchema>;
@@ -156,7 +144,7 @@ export const onboardingFiscalYearSchema = onboardingSyndicSchema.pick({
 export const onboardingUnitSchema = onboardingSyndicSchema.pick({
   unitLabel: true,
   unitType: true,
-  floor: true,
+  unitFloor: true,
   weightCoefficient: true,
 });
 
