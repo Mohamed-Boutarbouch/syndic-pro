@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -39,7 +38,6 @@ import {
   onboardingCoOwnerSchema,
 } from '@/features/schema';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export function OnboardingCoOwnerForm() {
@@ -60,7 +58,7 @@ export function OnboardingCoOwnerForm() {
   }
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Assign co-owner</CardTitle>
 
@@ -221,32 +219,20 @@ export function OnboardingCoOwnerForm() {
             />
           </FieldGroup>
         </form>
+
+        <Item className="mt-4" variant="outline" size="sm">
+          <ItemMedia>
+            <Info />
+          </ItemMedia>
+
+          <ItemContent>
+            <ItemDescription>
+              Only one co-owner can be the syndic. You can change this later
+              from the Co-Owners tab.
+            </ItemDescription>
+          </ItemContent>
+        </Item>
       </CardContent>
-
-      <Item className="mt-4" variant="outline" size="sm">
-        <ItemMedia>
-          <Info />
-        </ItemMedia>
-
-        <ItemContent>
-          <ItemDescription>
-            Only one co-owner can be the syndic. You can change this later from
-            the Co-Owners tab.
-          </ItemDescription>
-        </ItemContent>
-      </Item>
-
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
-          </Button>
-
-          <Button type="submit" form="onboarding-co-owners-form">
-            Continue
-          </Button>
-        </Field>
-      </CardFooter>
     </Card>
   );
 }

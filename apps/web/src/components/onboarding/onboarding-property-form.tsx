@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -20,7 +19,6 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import {
   OnboardingProperty,
   onboardingPropertySchema,
@@ -136,18 +134,6 @@ export function OnboardingPropertyForm() {
           </FieldGroup>
         </form>
       </CardContent>
-
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
-          </Button>
-
-          <Button type="submit" form="onboarding-property-form">
-            Continue
-          </Button>
-        </Field>
-      </CardFooter>
     </Card>
   );
 }

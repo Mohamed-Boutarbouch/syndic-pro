@@ -18,7 +18,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -35,7 +34,6 @@ import {
   onboardingFiscalYearSchema,
 } from '@/features/schema';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 
 export function OnboardingFiscalYearForm() {
@@ -263,18 +261,6 @@ export function OnboardingFiscalYearForm() {
           </FieldGroup>
         </form>
       </CardContent>
-
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
-          </Button>
-
-          <Button type="submit" form="onboarding-fiscal-year-form">
-            Continue
-          </Button>
-        </Field>
-      </CardFooter>
     </Card>
   );
 }

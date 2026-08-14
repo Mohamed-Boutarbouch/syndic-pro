@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -32,7 +31,6 @@ import {
   onboardingUnitSchema,
 } from '@/features/schema';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 export function OnboardingUnitForm() {
   const router = useRouter();
@@ -192,18 +190,6 @@ export function OnboardingUnitForm() {
           </FieldGroup>
         </form>
       </CardContent>
-
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
-          </Button>
-
-          <Button type="submit" form="onboarding-units-form">
-            Continue
-          </Button>
-        </Field>
-      </CardFooter>
     </Card>
   );
 }
