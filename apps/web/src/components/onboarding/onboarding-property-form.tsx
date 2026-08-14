@@ -2,6 +2,7 @@
 
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 
 import {
@@ -22,7 +23,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { onboardingSyndicSchema } from '@/features/schema';
-import { useRouter } from 'next/navigation';
 
 const onboardingPropertySchema = onboardingSyndicSchema.pick({
   propertyName: true,
@@ -49,7 +49,7 @@ export function OnboardingPropertyForm() {
   }
 
   return (
-    <Card className="w-full sm:max-w-md">
+    <Card>
       <CardHeader>
         <CardTitle>Tell us about your property</CardTitle>
         <CardDescription>
@@ -63,7 +63,6 @@ export function OnboardingPropertyForm() {
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FieldGroup>
-            {/* Property name */}
             <Controller
               name="propertyName"
               control={form.control}
@@ -90,7 +89,6 @@ export function OnboardingPropertyForm() {
               )}
             />
 
-            {/* Property address */}
             <Controller
               name="propertyAddress"
               control={form.control}
@@ -120,7 +118,6 @@ export function OnboardingPropertyForm() {
               )}
             />
 
-            {/* Property city */}
             <Controller
               name="propertyCity"
               control={form.control}

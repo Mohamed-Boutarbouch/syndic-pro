@@ -5,8 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 
-import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
-
 import {
   Card,
   CardContent,
@@ -15,19 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field';
-
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-
-import { onboardingSyndicSchema, unitTypes } from '@/features/schema';
-
 import {
   Select,
   SelectContent,
@@ -35,6 +20,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field';
+import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
+import { onboardingSyndicSchema, unitTypes } from '@/features/schema';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const onboardingUnitSchema = onboardingSyndicSchema.pick({
   unitLabel: true,
@@ -55,7 +50,7 @@ export function OnboardingUnitForm() {
       unitLabel: '',
       unitType: 'Apartment',
       unitFloor: '',
-      weightCoefficient: 1.0,
+      weightCoefficient: undefined,
     },
   });
 
@@ -66,7 +61,7 @@ export function OnboardingUnitForm() {
   }
 
   return (
-    <Card className="w-full sm:max-w-md">
+    <Card>
       <CardHeader>
         <CardTitle>Add your units</CardTitle>
 
@@ -90,10 +85,6 @@ export function OnboardingUnitForm() {
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FieldGroup>
-            {/* ---------------------------------------------------------------- */}
-            {/* Unit Label */}
-            {/* ---------------------------------------------------------------- */}
-
             <Controller
               name="unitLabel"
               control={form.control}
@@ -114,10 +105,6 @@ export function OnboardingUnitForm() {
                 </Field>
               )}
             />
-
-            {/* ---------------------------------------------------------------- */}
-            {/* Unit Type */}
-            {/* ---------------------------------------------------------------- */}
 
             <Controller
               name="unitType"
@@ -154,10 +141,6 @@ export function OnboardingUnitForm() {
               )}
             />
 
-            {/* ---------------------------------------------------------------- */}
-            {/* Floor */}
-            {/* ---------------------------------------------------------------- */}
-
             <Controller
               name="unitFloor"
               control={form.control}
@@ -178,10 +161,6 @@ export function OnboardingUnitForm() {
                 </Field>
               )}
             />
-
-            {/* ---------------------------------------------------------------- */}
-            {/* Weight Coefficient */}
-            {/* ---------------------------------------------------------------- */}
 
             <Controller
               name="weightCoefficient"

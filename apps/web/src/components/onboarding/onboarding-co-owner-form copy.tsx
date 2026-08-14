@@ -1,15 +1,9 @@
 'use client';
 
 import { Controller, useForm } from 'react-hook-form';
+import { Info, Shield } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-} from '@/components/ui/item';
 
 import {
   Card,
@@ -19,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
 import {
   Field,
   FieldContent,
@@ -28,12 +21,6 @@ import {
   FieldLabel,
   FieldTitle,
 } from '@/components/ui/field';
-
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-
-import { billingFrequencies, onboardingSyndicSchema } from '@/features/schema';
-
 import {
   Select,
   SelectContent,
@@ -41,10 +28,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+} from '@/components/ui/item';
+import { billingFrequencies, onboardingSyndicSchema } from '@/features/schema';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-
-import { Info, Shield } from 'lucide-react';
 
 const onboardingCoOwnerSchema = onboardingSyndicSchema.pick({
   coOwnerName: true,
@@ -74,7 +67,7 @@ export function OnboardingCoOwnerForm() {
   }
 
   return (
-    <Card className="w-full sm:max-w-md">
+    <Card>
       <CardHeader>
         <CardTitle>Assign co-owner</CardTitle>
 

@@ -2,17 +2,8 @@
 
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { z } from 'zod';
 
 import {
   Field,
@@ -24,10 +15,14 @@ import {
   FieldSeparator,
   FieldTitle,
 } from '@/components/ui/field';
-
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -35,14 +30,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-import { Switch } from '@/components/ui/switch';
-
 import { months, onboardingSyndicSchema } from '@/features/schema';
-
-// -----------------------------------------------------------------------------
-// Step schema
-// -----------------------------------------------------------------------------
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 
 const onboardingFiscalYearSchema = onboardingSyndicSchema.pick({
   startMonth: true,
@@ -54,10 +45,6 @@ const onboardingFiscalYearSchema = onboardingSyndicSchema.pick({
 });
 
 type OnboardingFiscalYearSchema = z.infer<typeof onboardingFiscalYearSchema>;
-
-// -----------------------------------------------------------------------------
-// Component
-// -----------------------------------------------------------------------------
 
 export function OnboardingFiscalYearForm() {
   const router = useRouter();
@@ -82,7 +69,7 @@ export function OnboardingFiscalYearForm() {
   }
 
   return (
-    <Card className="w-full sm:max-w-md">
+    <Card>
       <CardHeader>
         <CardTitle>Set up your fiscal year</CardTitle>
 
@@ -97,10 +84,6 @@ export function OnboardingFiscalYearForm() {
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FieldGroup>
-            {/* ---------------------------------------------------------------- */}
-            {/* Start Month */}
-            {/* ---------------------------------------------------------------- */}
-
             <Controller
               name="startMonth"
               control={form.control}
@@ -136,10 +119,6 @@ export function OnboardingFiscalYearForm() {
               )}
             />
 
-            {/* ---------------------------------------------------------------- */}
-            {/* Start Year */}
-            {/* ---------------------------------------------------------------- */}
-
             <Controller
               name="startYear"
               control={form.control}
@@ -163,10 +142,6 @@ export function OnboardingFiscalYearForm() {
                 </Field>
               )}
             />
-
-            {/* ---------------------------------------------------------------- */}
-            {/* End Month */}
-            {/* ---------------------------------------------------------------- */}
 
             <Controller
               name="endMonth"
@@ -203,10 +178,6 @@ export function OnboardingFiscalYearForm() {
               )}
             />
 
-            {/* ---------------------------------------------------------------- */}
-            {/* End Year */}
-            {/* ---------------------------------------------------------------- */}
-
             <Controller
               name="endYear"
               control={form.control}
@@ -232,10 +203,6 @@ export function OnboardingFiscalYearForm() {
             />
 
             <FieldSeparator />
-
-            {/* ---------------------------------------------------------------- */}
-            {/* Annual Target Budget */}
-            {/* ---------------------------------------------------------------- */}
 
             <Controller
               name="annualTargetBudget"
@@ -274,10 +241,6 @@ export function OnboardingFiscalYearForm() {
                 </Field>
               )}
             />
-
-            {/* ---------------------------------------------------------------- */}
-            {/* Lock Budget */}
-            {/* ---------------------------------------------------------------- */}
 
             <Controller
               name="lockBudget"
