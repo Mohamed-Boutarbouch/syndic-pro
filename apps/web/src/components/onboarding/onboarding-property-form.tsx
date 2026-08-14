@@ -3,7 +3,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
 
 import {
   Card,
@@ -22,19 +21,14 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { onboardingSyndicSchema } from '@/features/schema';
-
-const onboardingPropertySchema = onboardingSyndicSchema.pick({
-  propertyName: true,
-  propertyAddress: true,
-  propertyCity: true,
-});
-
-type OnboardingPropertySchema = z.infer<typeof onboardingPropertySchema>;
+import {
+  OnboardingProperty,
+  onboardingPropertySchema,
+} from '@/features/schema';
 
 export function OnboardingPropertyForm() {
   const router = useRouter();
-  const form = useForm<OnboardingPropertySchema>({
+  const form = useForm<OnboardingProperty>({
     resolver: zodResolver(onboardingPropertySchema),
     defaultValues: {
       propertyName: '',
@@ -43,7 +37,7 @@ export function OnboardingPropertyForm() {
     },
   });
 
-  function submitHandler(data: OnboardingPropertySchema) {
+  function submitHandler(data: OnboardingProperty) {
     console.log(data);
     router.push('/onboarding/fiscal-year');
   }

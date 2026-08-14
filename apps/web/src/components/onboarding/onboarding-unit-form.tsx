@@ -3,7 +3,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
 
 import {
   Card,
@@ -27,23 +26,18 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
-import { onboardingSyndicSchema, unitTypes } from '@/features/schema';
+import {
+  UNIT_TYPES,
+  OnboardingUnit,
+  onboardingUnitSchema,
+} from '@/features/schema';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-const onboardingUnitSchema = onboardingSyndicSchema.pick({
-  unitLabel: true,
-  unitType: true,
-  unitFloor: true,
-  weightCoefficient: true,
-});
-
-type OnboardingUnitSchema = z.infer<typeof onboardingUnitSchema>;
 
 export function OnboardingUnitForm() {
   const router = useRouter();
 
-  const form = useForm<OnboardingUnitSchema>({
+  const form = useForm<OnboardingUnit>({
     resolver: zodResolver(onboardingUnitSchema),
 
     defaultValues: {
@@ -54,7 +48,7 @@ export function OnboardingUnitForm() {
     },
   });
 
-  function submitHandler(data: OnboardingUnitSchema) {
+  function submitHandler(data: OnboardingUnit) {
     console.log(data);
 
     router.push('/onboarding/co-owners');
@@ -126,7 +120,7 @@ export function OnboardingUnitForm() {
                     </SelectTrigger>
 
                     <SelectContent>
-                      {unitTypes.map((type) => (
+                      {UNIT_TYPES.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}
                         </SelectItem>

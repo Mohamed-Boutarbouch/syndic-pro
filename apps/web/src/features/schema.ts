@@ -3,8 +3,7 @@ import { z } from 'zod';
 // -----------------------------------------------------------------------------
 // Shared values
 // -----------------------------------------------------------------------------
-
-export const months = [
+export const MONTHS = [
   'January',
   'February',
   'March',
@@ -19,9 +18,9 @@ export const months = [
   'December',
 ] as const;
 
-export const unitTypes = ['Apartment', 'Commercial', 'Storage'] as const;
+export const UNIT_TYPES = ['Apartment', 'Commercial', 'Storage'] as const;
 
-export const billingFrequencies = [
+export const BILLING_FREQUENCIES = [
   'Monthly',
   'Bimonthly',
   'Quarterly',
@@ -31,101 +30,70 @@ export const billingFrequencies = [
 // -----------------------------------------------------------------------------
 // Shared schemas
 // -----------------------------------------------------------------------------
+export const monthSchema = z.enum(MONTHS);
+export const unitTypeSchema = z.enum(UNIT_TYPES);
+export const billingFrequencySchema = z.enum(BILLING_FREQUENCIES);
 
-export const monthSchema = z.enum(months);
+const yearSchema = z.string().regex(/^\d{4}$/, 'Enter a valid 4-digit year');
 
-export const unitTypeSchema = z.enum(unitTypes);
+// Reusable string constraint helpers — cuts the repeated .trim().min().max() boilerplate
+const requiredString = (label: string, min: number, max = 80) =>
+  z
+    .string()
+    .trim()
+    .min(min, `${label} must be at least ${min} characters`)
+    .max(max, `${label} must be at most ${max} characters`);
 
-export const billingFrequencySchema = z.enum(billingFrequencies);
+const optionalString = (label: string, max = 80) =>
+  z
+    .string()
+    .trim()
+    .max(max, `${label} must be at most ${max} characters`)
+    .optional();
 
 // -----------------------------------------------------------------------------
 // Onboarding schema
 // -----------------------------------------------------------------------------
-
 export const onboardingSyndicSchema = z.object({
   // Property
-  propertyName: z
-    .string()
-    .trim()
-    .min(3, 'Property name must be at least 3 characters')
-    .max(80, 'Property name must be at most 80 characters'),
-
-  propertyAddress: z
-    .string()
-    .trim()
-    .max(80, 'Address must be at most 80 characters')
-    .optional(),
-
-  propertyCity: z
-    .string()
-    .trim()
-    .min(3, 'City must be at least 3 characters')
-    .max(80, 'City must be at most 80 characters'),
+  propertyName: requiredString('Property name', 3),
+  propertyAddress: optionalString('Address'),
+  propertyCity: requiredString('City', 3),
 
   // Fiscal year
   startMonth: monthSchema,
-
   endMonth: monthSchema,
-
-  startYear: z.string().regex(/^\d{4}$/, 'Enter a valid 4-digit year'),
-
-  endYear: z.string().regex(/^\d{4}$/, 'Enter a valid 4-digit year'),
-
+  startYear: yearSchema,
+  endYear: yearSchema,
   annualTargetBudget: z
     .number()
     .min(50, 'Annual target budget must be at least 50'),
-
   lockBudget: z.boolean(),
 
   // Unit
-  unitLabel: z
-    .string()
-    .trim()
-    .min(1, 'Unit label is required')
-    .max(80, 'Unit label must be at most 80 characters'),
-
+  unitLabel: requiredString('Unit label', 1),
   unitType: unitTypeSchema,
-
-  unitFloor: z
-    .string()
-    .trim()
-    .min(1, 'Floor is required')
-    .max(80, 'Floor must be at most 80 characters'),
-
+  unitFloor: requiredString('Floor', 1),
   weightCoefficient: z
     .number()
     .positive('Weight coefficient must be greater than 0'),
 
   // Co-owner
-  coOwnerName: z
-    .string()
-    .trim()
-    .min(3, 'Name must be at least 3 characters')
-    .max(80, 'Name must be at most 80 characters'),
-
+  coOwnerName: requiredString('Name', 3),
   coOwnerEmail: z.email('Enter a valid email address'),
-
-  coOwnerPhone: z
-    .string()
-    .trim()
-    .max(15, 'Phone number must be at most 15 characters')
-    .optional(),
-
+  coOwnerPhone: optionalString('Phone number', 15),
   billingFrequency: billingFrequencySchema,
-
   designatedSyndic: z.boolean(),
 });
 
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
-
 export type OnboardingSyndicSchema = z.infer<typeof onboardingSyndicSchema>;
 
 // -----------------------------------------------------------------------------
 // Step schemas
 // -----------------------------------------------------------------------------
-
 export const onboardingPropertySchema = onboardingSyndicSchema.pick({
   propertyName: true,
   propertyAddress: true,
@@ -159,11 +127,7 @@ export const onboardingCoOwnerSchema = onboardingSyndicSchema.pick({
 // -----------------------------------------------------------------------------
 // Step types
 // -----------------------------------------------------------------------------
-
 export type OnboardingProperty = z.infer<typeof onboardingPropertySchema>;
-
 export type OnboardingFiscalYear = z.infer<typeof onboardingFiscalYearSchema>;
-
 export type OnboardingUnit = z.infer<typeof onboardingUnitSchema>;
-
 export type OnboardingCoOwner = z.infer<typeof onboardingCoOwnerSchema>;

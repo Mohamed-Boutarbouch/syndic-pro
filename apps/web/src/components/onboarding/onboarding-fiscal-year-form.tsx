@@ -3,7 +3,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
 
 import {
   Field,
@@ -30,26 +29,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { months, onboardingSyndicSchema } from '@/features/schema';
+import {
+  MONTHS,
+  OnboardingFiscalYear,
+  onboardingFiscalYearSchema,
+} from '@/features/schema';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 
-const onboardingFiscalYearSchema = onboardingSyndicSchema.pick({
-  startMonth: true,
-  endMonth: true,
-  startYear: true,
-  endYear: true,
-  annualTargetBudget: true,
-  lockBudget: true,
-});
-
-type OnboardingFiscalYearSchema = z.infer<typeof onboardingFiscalYearSchema>;
-
 export function OnboardingFiscalYearForm() {
   const router = useRouter();
 
-  const form = useForm<OnboardingFiscalYearSchema>({
+  const form = useForm<OnboardingFiscalYear>({
     resolver: zodResolver(onboardingFiscalYearSchema),
 
     defaultValues: {
@@ -62,7 +54,7 @@ export function OnboardingFiscalYearForm() {
     },
   });
 
-  function submitHandler(data: OnboardingFiscalYearSchema) {
+  function submitHandler(data: OnboardingFiscalYear) {
     console.log(data);
 
     router.push('/onboarding/units');
@@ -104,7 +96,7 @@ export function OnboardingFiscalYearForm() {
                     </SelectTrigger>
 
                     <SelectContent>
-                      {months.map((month) => (
+                      {MONTHS.map((month) => (
                         <SelectItem key={month} value={month}>
                           {month}
                         </SelectItem>
@@ -163,7 +155,7 @@ export function OnboardingFiscalYearForm() {
                     </SelectTrigger>
 
                     <SelectContent>
-                      {months.map((month) => (
+                      {MONTHS.map((month) => (
                         <SelectItem key={month} value={month}>
                           {month}
                         </SelectItem>

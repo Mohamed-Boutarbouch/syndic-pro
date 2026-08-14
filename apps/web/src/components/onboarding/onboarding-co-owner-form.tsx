@@ -3,7 +3,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { Info, Shield } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 
 import {
   Card,
@@ -34,23 +33,17 @@ import {
   ItemDescription,
   ItemMedia,
 } from '@/components/ui/item';
-import { billingFrequencies, onboardingSyndicSchema } from '@/features/schema';
+import {
+  BILLING_FREQUENCIES,
+  OnboardingCoOwner,
+  onboardingCoOwnerSchema,
+} from '@/features/schema';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const onboardingCoOwnerSchema = onboardingSyndicSchema.pick({
-  coOwnerName: true,
-  coOwnerEmail: true,
-  coOwnerPhone: true,
-  billingFrequency: true,
-  designatedSyndic: true,
-});
-
-type OnboardingCoOwnerSchema = z.infer<typeof onboardingCoOwnerSchema>;
-
 export function OnboardingCoOwnerForm() {
-  const form = useForm<OnboardingCoOwnerSchema>({
+  const form = useForm<OnboardingCoOwner>({
     resolver: zodResolver(onboardingCoOwnerSchema),
 
     defaultValues: {
@@ -62,7 +55,7 @@ export function OnboardingCoOwnerForm() {
     },
   });
 
-  function submitHandler(data: OnboardingCoOwnerSchema) {
+  function submitHandler(data: OnboardingCoOwner) {
     console.log(data);
   }
 
@@ -172,7 +165,7 @@ export function OnboardingCoOwnerForm() {
                     </SelectTrigger>
 
                     <SelectContent>
-                      {billingFrequencies.map((frequency) => (
+                      {BILLING_FREQUENCIES.map((frequency) => (
                         <SelectItem key={frequency} value={frequency}>
                           {frequency}
                         </SelectItem>
