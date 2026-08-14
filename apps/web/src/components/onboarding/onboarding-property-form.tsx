@@ -60,7 +60,9 @@ export function OnboardingPropertyForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="property-name">Property name</FieldLabel>
+                  <FieldLabel htmlFor="property-name">
+                    Property name <span className="text-destructive">*</span>
+                  </FieldLabel>
 
                   <Input
                     {...field}
@@ -115,7 +117,9 @@ export function OnboardingPropertyForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="property-city">City</FieldLabel>
+                  <FieldLabel htmlFor="property-city">
+                    City <span className="text-destructive">*</span>
+                  </FieldLabel>
 
                   <Input
                     {...field}

@@ -74,7 +74,10 @@ export function OnboardingFiscalYearForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Start of fiscal year</FieldLabel>
+                    <FieldLabel>
+                      Start of fiscal year
+                      <span className="text-destructive">*</span>
+                    </FieldLabel>
 
                     <MonthYearPicker
                       value={field.value}
@@ -94,7 +97,10 @@ export function OnboardingFiscalYearForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>End of fiscal year</FieldLabel>
+                    <FieldLabel>
+                      End of fiscal year
+                      <span className="text-destructive">*</span>
+                    </FieldLabel>
 
                     <MonthYearPicker
                       value={field.value}
@@ -119,6 +125,7 @@ export function OnboardingFiscalYearForm() {
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="annual-target-budget">
                     Annual target budget (MAD)
+                    <span className="text-destructive">*</span>
                   </FieldLabel>
 
                   <Input

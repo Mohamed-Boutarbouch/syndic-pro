@@ -83,7 +83,10 @@ export function OnboardingUnitForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="unit-label">Label</FieldLabel>
+                    <FieldLabel htmlFor="unit-label">
+                      Label
+                      <span className="text-destructive">*</span>
+                    </FieldLabel>
 
                     <Input
                       {...field}
@@ -139,7 +142,10 @@ export function OnboardingUnitForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="unit-floor">Floor</FieldLabel>
+                    <FieldLabel htmlFor="unit-floor">
+                      Floor
+                      <span className="text-destructive">*</span>
+                    </FieldLabel>
 
                     <Input
                       {...field}
@@ -162,6 +168,7 @@ export function OnboardingUnitForm() {
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="weight-coefficient">
                       Weight coefficient
+                      <span className="text-destructive">*</span>
                     </FieldLabel>
 
                     <Input

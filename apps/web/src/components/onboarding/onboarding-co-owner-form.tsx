@@ -79,7 +79,10 @@ export function OnboardingCoOwnerForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="owner-name">Owner name</FieldLabel>
+                    <FieldLabel htmlFor="owner-name">
+                      Owner name
+                      <span className="text-destructive">*</span>
+                    </FieldLabel>
 
                     <Input
                       {...field}
