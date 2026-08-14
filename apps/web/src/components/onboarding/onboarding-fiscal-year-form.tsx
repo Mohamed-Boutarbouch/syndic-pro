@@ -14,6 +14,7 @@ import {
   FieldSeparator,
   FieldTitle,
 } from '@/components/ui/field';
+
 import {
   Card,
   CardContent,
@@ -21,19 +22,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  MONTHS,
   OnboardingFiscalYear,
   onboardingFiscalYearSchema,
 } from '@/features/schema';
+
 import { Input } from '@/components/ui/input';
+import { MonthYearPicker } from '@/components/month-year-picker';
 import { Switch } from '@/components/ui/switch';
 
 export function OnboardingFiscalYearForm() {
@@ -43,10 +39,8 @@ export function OnboardingFiscalYearForm() {
     resolver: zodResolver(onboardingFiscalYearSchema),
 
     defaultValues: {
-      startMonth: undefined,
-      endMonth: undefined,
-      startYear: '',
-      endYear: '',
+      fiscalYearStart: undefined,
+      fiscalYearEnd: undefined,
       annualTargetBudget: undefined,
       lockBudget: false,
     },
@@ -74,123 +68,47 @@ export function OnboardingFiscalYearForm() {
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FieldGroup>
-            <Controller
-              name="startMonth"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="start-month">Start month</FieldLabel>
+            <div className="grid gap-6 md:grid-cols-2">
+              <Controller
+                name="fiscalYearStart"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Start of fiscal year</FieldLabel>
 
-                  <Select
-                    name={field.name}
-                    value={field.value ?? ''}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      id="start-month"
+                    <MonthYearPicker
+                      value={field.value}
+                      onChange={field.onChange}
                       aria-invalid={fieldState.invalid}
-                    >
-                      <SelectValue placeholder="Select start month" />
-                    </SelectTrigger>
+                    />
 
-                    <SelectContent>
-                      {MONTHS.map((month) => (
-                        <SelectItem key={month} value={month}>
-                          {month}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+              <Controller
+                name="fiscalYearEnd"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>End of fiscal year</FieldLabel>
 
-            <Controller
-              name="startYear"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="start-year">Start year</FieldLabel>
-
-                  <Input
-                    {...field}
-                    id="start-year"
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={4}
-                    placeholder="2026"
-                    aria-invalid={fieldState.invalid}
-                  />
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="endMonth"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="end-month">End month</FieldLabel>
-
-                  <Select
-                    name={field.name}
-                    value={field.value ?? ''}
-                    onValueChange={field.onChange}
-                  >
-                    <SelectTrigger
-                      id="end-month"
+                    <MonthYearPicker
+                      value={field.value}
+                      onChange={field.onChange}
                       aria-invalid={fieldState.invalid}
-                    >
-                      <SelectValue placeholder="Select end month" />
-                    </SelectTrigger>
+                    />
 
-                    <SelectContent>
-                      {MONTHS.map((month) => (
-                        <SelectItem key={month} value={month}>
-                          {month}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="endYear"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="end-year">End year</FieldLabel>
-
-                  <Input
-                    {...field}
-                    id="end-year"
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={4}
-                    placeholder="2027"
-                    aria-invalid={fieldState.invalid}
-                  />
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
 
             <FieldSeparator />
 
