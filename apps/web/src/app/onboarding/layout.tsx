@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import Link from 'next/link';
 
 import { OnboardingFooter } from '@/components/onboarding/onboarding-footer';
+import { OnboardingStepper } from '@/components/onboarding/onboarding-stepper';
 
 export default function OnboardingLayout({
   children,
@@ -26,7 +27,10 @@ export default function OnboardingLayout({
 
       <main className="flex flex-1">
         <div className="container mx-auto flex flex-1 items-center justify-center px-4 py-10">
-          <div className="w-full max-w-2xl">{children}</div>
+          <div className="w-full max-w-2xl">
+            <OnboardingStepper />
+            {children}
+          </div>
         </div>
       </main>
 
