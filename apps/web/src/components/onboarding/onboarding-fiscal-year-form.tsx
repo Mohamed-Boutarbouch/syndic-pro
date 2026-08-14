@@ -3,6 +3,7 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 
 import {
   Card,
@@ -12,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
 import {
   Field,
   FieldContent,
@@ -19,19 +21,28 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldSeparator,
+  FieldTitle,
 } from '@/components/ui/field';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { onboardingSyndicSchema } from '@/features/schema';
-import { useRouter } from 'next/navigation';
+
 import {
   Select,
   SelectContent,
   SelectItem,
-  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+
+import { Switch } from '@/components/ui/switch';
+
+import { months, onboardingSyndicSchema } from '@/features/schema';
+
+// -----------------------------------------------------------------------------
+// Step schema
+// -----------------------------------------------------------------------------
 
 const onboardingFiscalYearSchema = onboardingSyndicSchema.pick({
   startMonth: true,
@@ -44,107 +55,217 @@ const onboardingFiscalYearSchema = onboardingSyndicSchema.pick({
 
 type OnboardingFiscalYearSchema = z.infer<typeof onboardingFiscalYearSchema>;
 
+// -----------------------------------------------------------------------------
+// Component
+// -----------------------------------------------------------------------------
+
 export function OnboardingFiscalYearForm() {
   const router = useRouter();
+
   const form = useForm<OnboardingFiscalYearSchema>({
     resolver: zodResolver(onboardingFiscalYearSchema),
+
     defaultValues: {
-      startMonth: null,
-      endMonth: null,
-      startYear: null,
-      endYear: null,
-      annualTargetBudget: null,
+      startMonth: undefined,
+      endMonth: undefined,
+      startYear: '',
+      endYear: '',
+      annualTargetBudget: undefined,
       lockBudget: false,
     },
   });
 
   function submitHandler(data: OnboardingFiscalYearSchema) {
     console.log(data);
+
     router.push('/onboarding/units');
   }
 
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader>
-        <CardTitle>Tell us about your property</CardTitle>
+        <CardTitle>Set up your fiscal year</CardTitle>
+
         <CardDescription>
-          This is the residence you'll be managing as syndic.
+          Define the budget period and annual target for this property.
         </CardDescription>
       </CardHeader>
 
       <CardContent>
         <form
-          id="onboarding-property-form"
+          id="onboarding-fiscal-year-form"
           onSubmit={form.handleSubmit(submitHandler)}
         >
           <FieldGroup>
-            {/* Property name */}
+            {/* ---------------------------------------------------------------- */}
+            {/* Start Month */}
+            {/* ---------------------------------------------------------------- */}
+
             <Controller
               name="startMonth"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field
-                  orientation="responsive"
-                  data-invalid={fieldState.invalid}
-                >
-                  <FieldContent>
-                    <FieldLabel htmlFor="form-rhf-select-language">
-                      Spoken Language
-                    </FieldLabel>
-                    <FieldDescription>
-                      For best results, select the language you speak.
-                    </FieldDescription>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </FieldContent>
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="start-month">Start month</FieldLabel>
+
                   <Select
                     name={field.name}
-                    value={field.value}
+                    value={field.value ?? ''}
                     onValueChange={field.onChange}
                   >
                     <SelectTrigger
-                      id="form-rhf-select-language"
+                      id="start-month"
                       aria-invalid={fieldState.invalid}
-                      className="min-w-30"
                     >
-                      <SelectValue placeholder="Select" />
+                      <SelectValue placeholder="Select start month" />
                     </SelectTrigger>
-                    <SelectContent position="item-aligned">
-                      <SelectItem value="auto">Auto</SelectItem>
-                      <SelectSeparator />
-                      {spokenLanguages.map((language) => (
-                        <SelectItem key={language.value} value={language.value}>
-                          {language.label}
+
+                    <SelectContent>
+                      {months.map((month) => (
+                        <SelectItem key={month} value={month}>
+                          {month}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
                 </Field>
               )}
             />
 
-            {/* Property address */}
+            {/* ---------------------------------------------------------------- */}
+            {/* Start Year */}
+            {/* ---------------------------------------------------------------- */}
+
             <Controller
-              name="propertyAddress"
+              name="startYear"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="property-address">
-                    Property address
-                  </FieldLabel>
+                  <FieldLabel htmlFor="start-year">Start year</FieldLabel>
 
                   <Input
                     {...field}
-                    id="property-address"
+                    id="start-year"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={4}
+                    placeholder="2026"
                     aria-invalid={fieldState.invalid}
-                    placeholder="12 Avenue Hassan II"
-                    autoComplete="street-address"
+                  />
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* ---------------------------------------------------------------- */}
+            {/* End Month */}
+            {/* ---------------------------------------------------------------- */}
+
+            <Controller
+              name="endMonth"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="end-month">End month</FieldLabel>
+
+                  <Select
+                    name={field.name}
+                    value={field.value ?? ''}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger
+                      id="end-month"
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select end month" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {months.map((month) => (
+                        <SelectItem key={month} value={month}>
+                          {month}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* ---------------------------------------------------------------- */}
+            {/* End Year */}
+            {/* ---------------------------------------------------------------- */}
+
+            <Controller
+              name="endYear"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="end-year">End year</FieldLabel>
+
+                  <Input
+                    {...field}
+                    id="end-year"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={4}
+                    placeholder="2027"
+                    aria-invalid={fieldState.invalid}
+                  />
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <FieldSeparator />
+
+            {/* ---------------------------------------------------------------- */}
+            {/* Annual Target Budget */}
+            {/* ---------------------------------------------------------------- */}
+
+            <Controller
+              name="annualTargetBudget"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="annual-target-budget">
+                    Annual target budget (MAD)
+                  </FieldLabel>
+
+                  <Input
+                    id="annual-target-budget"
+                    type="number"
+                    min={50}
+                    step="1"
+                    placeholder="60000"
+                    aria-invalid={fieldState.invalid}
+                    value={field.value ?? ''}
+                    onChange={(event) => {
+                      const value = event.target.value;
+
+                      field.onChange(value === '' ? undefined : Number(value));
+                    }}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
                   />
 
                   <FieldDescription>
-                    Optional. You can leave this blank if you don't have the
-                    address yet.
+                    The target annual budget for this property.
                   </FieldDescription>
 
                   {fieldState.invalid && (
@@ -154,26 +275,34 @@ export function OnboardingFiscalYearForm() {
               )}
             />
 
-            {/* Property city */}
+            {/* ---------------------------------------------------------------- */}
+            {/* Lock Budget */}
+            {/* ---------------------------------------------------------------- */}
+
             <Controller
-              name="propertyCity"
+              name="lockBudget"
               control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="property-city">City</FieldLabel>
+              render={({ field }) => (
+                <FieldLabel htmlFor="lock-budget">
+                  <Field orientation="horizontal">
+                    <FieldContent>
+                      <FieldTitle>Lock the budget after setup</FieldTitle>
 
-                  <Input
-                    {...field}
-                    id="property-city"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Casablanca"
-                    autoComplete="address-level2"
-                  />
+                      <FieldDescription>
+                        Existing co-owner quotas become immutable. New units
+                        added later only adjust the total.
+                      </FieldDescription>
+                    </FieldContent>
 
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
+                    <Switch
+                      id="lock-budget"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                    />
+                  </Field>
+                </FieldLabel>
               )}
             />
           </FieldGroup>
@@ -186,7 +315,7 @@ export function OnboardingFiscalYearForm() {
             Reset
           </Button>
 
-          <Button type="submit" form="onboarding-property-form">
+          <Button type="submit" form="onboarding-fiscal-year-form">
             Continue
           </Button>
         </Field>
