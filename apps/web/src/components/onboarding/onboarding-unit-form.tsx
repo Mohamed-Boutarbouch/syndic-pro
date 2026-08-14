@@ -1,9 +1,9 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-
+import { Plus, X } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -23,32 +23,51 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldSet,
+  FieldLegend,
+  FieldDescription,
 } from '@/components/ui/field';
-import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item';
+import { Button } from '@/components/ui/button';
 import {
   UNIT_TYPES,
-  OnboardingUnit,
-  onboardingUnitSchema,
+  OnboardingUnits,
+  unitsSchema,
+  UnitItem,
 } from '@/features/schema';
 import { Input } from '@/components/ui/input';
 
+const MAX_UNITS = 50;
+
+const emptyUnit: UnitItem = {
+  unitLabel: '',
+  unitType: 'Apartment',
+  unitFloor: '',
+  weightCoefficient: undefined,
+};
+
 export function OnboardingUnitForm() {
   const router = useRouter();
-
-  const form = useForm<OnboardingUnit>({
-    resolver: zodResolver(onboardingUnitSchema),
-
+  const form = useForm<OnboardingUnits>({
+    resolver: zodResolver(unitsSchema),
     defaultValues: {
-      unitLabel: '',
-      unitType: 'Apartment',
-      unitFloor: '',
-      weightCoefficient: undefined,
+      units: [emptyUnit],
     },
   });
 
-  function submitHandler(data: OnboardingUnit) {
-    console.log(data);
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'units',
+  });
 
+  function submitHandler(data: OnboardingUnits) {
+    console.log(data);
     router.push('/onboarding/co-owners');
   }
 
@@ -56,146 +75,176 @@ export function OnboardingUnitForm() {
     <Card>
       <CardHeader>
         <CardTitle>Add your units</CardTitle>
-
         <CardDescription>
           List all units in the property. You can add co-owners in the next
           step.
         </CardDescription>
       </CardHeader>
-
       <CardContent>
         <Item className="mb-4" variant="outline" size="sm">
           <ItemMedia className="text-muted-foreground">Rate:</ItemMedia>
-
           <ItemContent>
             <ItemTitle>10,000 MAD/point/year</ItemTitle>
           </ItemContent>
         </Item>
-
         <form
           id="onboarding-units-form"
           onSubmit={form.handleSubmit(submitHandler)}
         >
-          <FieldGroup>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-              <Controller
-                name="unitLabel"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="unit-label">
-                      Label
-                      <span className="text-destructive">*</span>
-                    </FieldLabel>
-
-                    <Input
-                      {...field}
-                      id="unit-label"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="A-101"
+          <FieldSet className="gap-4">
+            <FieldLegend variant="label">Units</FieldLegend>
+            <FieldDescription>
+              Add up to {MAX_UNITS} units for this property.
+            </FieldDescription>
+            <FieldGroup className="gap-4">
+              {fields.map((field, index) => (
+                <Item
+                  key={field.id}
+                  variant="outline"
+                  className="relative flex-col items-stretch gap-4"
+                >
+                  <ItemTitle>Unit {index + 1}</ItemTitle>
+                  <ItemContent className="grid w-full gap-4 sm:grid-cols-2 md:grid-cols-4 md:items-start">
+                    <Controller
+                      name={`units.${index}.unitLabel`}
+                      control={form.control}
+                      render={({ field: controllerField, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel htmlFor={`unit-label-${index}`}>
+                            Label
+                            <span className="text-destructive">*</span>
+                          </FieldLabel>
+                          <Input
+                            {...controllerField}
+                            id={`unit-label-${index}`}
+                            aria-invalid={fieldState.invalid}
+                            placeholder="A-101"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
+                      )}
                     />
+                    <Controller
+                      name={`units.${index}.unitType`}
+                      control={form.control}
+                      render={({ field: controllerField, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel htmlFor={`unit-type-${index}`}>
+                            Type
+                          </FieldLabel>
+                          <Select
+                            name={controllerField.name}
+                            value={controllerField.value}
+                            onValueChange={controllerField.onChange}
+                          >
+                            <SelectTrigger
+                              id={`unit-type-${index}`}
+                              aria-invalid={fieldState.invalid}
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {UNIT_TYPES.map((type) => (
+                                <SelectItem key={type} value={type}>
+                                  {type}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
+                      )}
+                    />
+                    <Controller
+                      name={`units.${index}.unitFloor`}
+                      control={form.control}
+                      render={({ field: controllerField, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel htmlFor={`unit-floor-${index}`}>
+                            Floor
+                          </FieldLabel>
+                          <Input
+                            {...controllerField}
+                            id={`unit-floor-${index}`}
+                            aria-invalid={fieldState.invalid}
+                            placeholder="RDC"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
+                      )}
+                    />
+                    <Controller
+                      name={`units.${index}.weightCoefficient`}
+                      control={form.control}
+                      render={({ field: controllerField, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel htmlFor={`weight-coefficient-${index}`}>
+                            Weight coefficient
+                            <span className="text-destructive">*</span>
+                          </FieldLabel>
+                          <Input
+                            id={`weight-coefficient-${index}`}
+                            type="number"
+                            min={0}
+                            step="0.1"
+                            placeholder="1.0"
+                            aria-invalid={fieldState.invalid}
+                            name={controllerField.name}
+                            ref={controllerField.ref}
+                            onBlur={controllerField.onBlur}
+                            value={controllerField.value ?? ''}
+                            onChange={(event) => {
+                              const value = event.target.value;
+                              controllerField.onChange(
+                                value === '' ? undefined : Number(value),
+                              );
+                            }}
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
+                        </Field>
+                      )}
+                    />
+                  </ItemContent>
 
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="unitType"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="unit-type">Type</FieldLabel>
-
-                    <Select
-                      name={field.name}
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger
-                        id="unit-type"
-                        aria-invalid={fieldState.invalid}
+                  {fields.length > 1 && (
+                    <ItemActions>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => remove(index)}
+                        aria-label={`Remove unit ${index + 1}`}
                       >
-                        <SelectValue />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        {UNIT_TYPES.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="unitFloor"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="unit-floor">Floor</FieldLabel>
-
-                    <Input
-                      {...field}
-                      id="unit-floor"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="RDC"
-                    />
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="weightCoefficient"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="weight-coefficient">
-                      Weight coefficient
-                      <span className="text-destructive">*</span>
-                    </FieldLabel>
-
-                    <Input
-                      id="weight-coefficient"
-                      type="number"
-                      min={0}
-                      step="0.1"
-                      placeholder="1.0"
-                      aria-invalid={fieldState.invalid}
-                      name={field.name}
-                      ref={field.ref}
-                      onBlur={field.onBlur}
-                      value={field.value ?? ''}
-                      onChange={(event) => {
-                        const value = event.target.value;
-
-                        field.onChange(
-                          value === '' ? undefined : Number(value),
-                        );
-                      }}
-                    />
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
-          </FieldGroup>
+                        <X className="size-4" />
+                      </Button>
+                    </ItemActions>
+                  )}
+                </Item>
+              ))}
+            </FieldGroup>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => append(emptyUnit)}
+              disabled={fields.length >= MAX_UNITS}
+            >
+              <Plus data-icon="inline-start" />
+              Add Another Unit
+            </Button>
+            {form.formState.errors.units?.root && (
+              <FieldError errors={[form.formState.errors.units.root]} />
+            )}
+          </FieldSet>
         </form>
       </CardContent>
     </Card>

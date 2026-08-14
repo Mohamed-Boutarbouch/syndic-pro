@@ -3,9 +3,7 @@ import { z } from 'zod';
 // -----------------------------------------------------------------------------
 // Shared values
 // -----------------------------------------------------------------------------
-
 export const UNIT_TYPES = ['Apartment', 'Commercial', 'Storage'] as const;
-
 export const BILLING_FREQUENCIES = [
   'Monthly',
   'Bimonthly',
@@ -14,9 +12,8 @@ export const BILLING_FREQUENCIES = [
 ] as const;
 
 // -----------------------------------------------------------------------------
-// Shared schemas
+// Shared schemas / helpers
 // -----------------------------------------------------------------------------
-
 export const unitTypeSchema = z.enum(UNIT_TYPES);
 export const billingFrequencySchema = z.enum(BILLING_FREQUENCIES);
 
@@ -37,35 +34,54 @@ const optionalString = (label: string, max = 80) =>
     .optional();
 
 // -----------------------------------------------------------------------------
-// Master onboarding schema
+// Step schemas (each standalone — source of truth for its step)
 // -----------------------------------------------------------------------------
 
-export const onboardingSyndicSchema = z.object({
-  // Property
+// Property -------------------------------------------------------------------
+export const propertySchema = z.object({
   propertyName: requiredString('Property name', 3),
   propertyAddress: optionalString('Address'),
   propertyCity: requiredString('City', 3),
+});
 
-  // Fiscal year
+// Fiscal year ------------------------------------------------------------------
+const fiscalYearBaseSchema = z.object({
   fiscalYearStart: fiscalDateSchema,
   fiscalYearEnd: fiscalDateSchema,
-
   annualTargetBudget: z
     .number()
     .min(50, 'Annual target budget must be at least 50'),
-
   lockBudget: z.boolean(),
+});
 
-  // Unit
+export const fiscalYearSchema = fiscalYearBaseSchema.refine(
+  (data) => data.fiscalYearEnd >= data.fiscalYearStart,
+  {
+    path: ['fiscalYearEnd'],
+    message: 'End of fiscal year must be after the start date',
+  },
+);
+
+// Unit (single item) + Units (array step) ---------------------------------------
+export const unitItemSchema = z.object({
   unitLabel: requiredString('Unit label', 1),
   unitType: unitTypeSchema,
   unitFloor: requiredString('Floor', 1).optional().or(z.literal('')),
-
   weightCoefficient: z
-    .number()
-    .positive('Weight coefficient must be greater than 0'),
+    .number({ error: 'Weight coefficient is required' })
+    .positive('Weight coefficient must be greater than 0')
+    .optional(),
+});
 
-  // Co-owner
+export const unitsSchema = z.object({
+  units: z
+    .array(unitItemSchema)
+    .min(1, 'Add at least one unit')
+    .max(50, 'You can add up to 50 units'),
+});
+
+// Co-owner ---------------------------------------------------------------------
+export const coOwnerSchema = z.object({
   coOwnerName: requiredString('Name', 3),
   coOwnerEmail: z
     .email('Enter a valid email address')
@@ -77,52 +93,21 @@ export const onboardingSyndicSchema = z.object({
 });
 
 // -----------------------------------------------------------------------------
-// Step schemas
+// Master onboarding schema (composed from step schemas)
 // -----------------------------------------------------------------------------
-
-export const onboardingPropertySchema = onboardingSyndicSchema.pick({
-  propertyName: true,
-  propertyAddress: true,
-  propertyCity: true,
-});
-
-export const onboardingFiscalYearSchema = onboardingSyndicSchema
-  .pick({
-    fiscalYearStart: true,
-    fiscalYearEnd: true,
-    annualTargetBudget: true,
-    lockBudget: true,
-  })
-  .refine((data) => data.fiscalYearEnd >= data.fiscalYearStart, {
-    path: ['fiscalYearEnd'],
-    message: 'End of fiscal year must be after the start date',
-  });
-
-export const onboardingUnitSchema = onboardingSyndicSchema.pick({
-  unitLabel: true,
-  unitType: true,
-  unitFloor: true,
-  weightCoefficient: true,
-});
-
-export const onboardingCoOwnerSchema = onboardingSyndicSchema.pick({
-  coOwnerName: true,
-  coOwnerEmail: true,
-  coOwnerPhone: true,
-  billingFrequency: true,
-  designatedSyndic: true,
-});
+export const onboardingSyndicFormSchema = propertySchema
+  .extend(fiscalYearBaseSchema.shape)
+  .extend(unitsSchema.shape)
+  .extend(coOwnerSchema.shape);
 
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
-
-export type OnboardingSyndicSchema = z.infer<typeof onboardingSyndicSchema>;
-
-export type OnboardingProperty = z.infer<typeof onboardingPropertySchema>;
-
-export type OnboardingFiscalYear = z.infer<typeof onboardingFiscalYearSchema>;
-
-export type OnboardingUnit = z.infer<typeof onboardingUnitSchema>;
-
-export type OnboardingCoOwner = z.infer<typeof onboardingCoOwnerSchema>;
+export type OnboardingSyndicFormSchema = z.infer<
+  typeof onboardingSyndicFormSchema
+>;
+export type OnboardingProperty = z.infer<typeof propertySchema>;
+export type OnboardingFiscalYear = z.infer<typeof fiscalYearSchema>;
+export type UnitItem = z.infer<typeof unitItemSchema>;
+export type OnboardingUnits = z.infer<typeof unitsSchema>;
+export type OnboardingCoOwner = z.infer<typeof coOwnerSchema>;

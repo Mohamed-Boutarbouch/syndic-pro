@@ -23,10 +23,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import {
-  OnboardingFiscalYear,
-  onboardingFiscalYearSchema,
-} from '@/features/schema';
+import { OnboardingFiscalYear, fiscalYearSchema } from '@/features/schema';
 
 import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/month-year-picker';
@@ -36,7 +33,7 @@ export function OnboardingFiscalYearForm() {
   const router = useRouter();
 
   const form = useForm<OnboardingFiscalYear>({
-    resolver: zodResolver(onboardingFiscalYearSchema),
+    resolver: zodResolver(fiscalYearSchema),
 
     defaultValues: {
       fiscalYearStart: undefined,

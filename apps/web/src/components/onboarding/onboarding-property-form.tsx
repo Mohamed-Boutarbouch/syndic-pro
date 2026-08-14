@@ -18,15 +18,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import {
-  OnboardingProperty,
-  onboardingPropertySchema,
-} from '@/features/schema';
+import { OnboardingProperty, propertySchema } from '@/features/schema';
 
 export function OnboardingPropertyForm() {
   const router = useRouter();
   const form = useForm<OnboardingProperty>({
-    resolver: zodResolver(onboardingPropertySchema),
+    resolver: zodResolver(propertySchema),
     defaultValues: {
       propertyName: '',
       propertyAddress: '',

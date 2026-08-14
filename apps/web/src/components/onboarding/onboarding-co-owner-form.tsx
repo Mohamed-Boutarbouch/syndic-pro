@@ -35,14 +35,14 @@ import {
 import {
   BILLING_FREQUENCIES,
   OnboardingCoOwner,
-  onboardingCoOwnerSchema,
+  coOwnerSchema,
 } from '@/features/schema';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export function OnboardingCoOwnerForm() {
   const form = useForm<OnboardingCoOwner>({
-    resolver: zodResolver(onboardingCoOwnerSchema),
+    resolver: zodResolver(coOwnerSchema),
 
     defaultValues: {
       coOwnerName: '',
