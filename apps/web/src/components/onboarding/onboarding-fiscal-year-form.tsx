@@ -14,7 +14,6 @@ import {
   FieldSeparator,
   FieldTitle,
 } from '@/components/ui/field';
-
 import {
   Card,
   CardContent,
@@ -22,20 +21,24 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
-import { OnboardingFiscalYear, fiscalYearSchema } from '@/features/schema';
+import {
+  OnboardingFiscalYear,
+  fiscalYearSchema,
+} from '@/features/onboarding/schema';
 
 import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/month-year-picker';
 import { Switch } from '@/components/ui/switch';
+import { useOnboardingStore } from '@/features/onboarding/store';
 
 export function OnboardingFiscalYearForm() {
+  const { fiscalYear, setFiscalYear } = useOnboardingStore();
   const router = useRouter();
 
   const form = useForm<OnboardingFiscalYear>({
     resolver: zodResolver(fiscalYearSchema),
 
-    defaultValues: {
+    defaultValues: fiscalYear ?? {
       fiscalYearStart: undefined,
       fiscalYearEnd: undefined,
       annualTargetBudget: undefined,
@@ -45,7 +48,7 @@ export function OnboardingFiscalYearForm() {
 
   function submitHandler(data: OnboardingFiscalYear) {
     console.log(data);
-
+    setFiscalYear(data);
     router.push('/onboarding/units');
   }
 

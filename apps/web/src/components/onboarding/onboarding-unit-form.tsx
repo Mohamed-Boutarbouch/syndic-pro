@@ -40,26 +40,40 @@ import {
   OnboardingUnits,
   unitsSchema,
   UnitItem,
-} from '@/features/schema';
+} from '@/features/onboarding/schema';
 import { Input } from '@/components/ui/input';
+import { useOnboardingStore } from '@/features/onboarding/store';
+import { useEffect } from 'react';
 
 const MAX_UNITS = 50;
 
-const emptyUnit: UnitItem = {
-  unitLabel: '',
-  unitType: 'Apartment',
-  unitFloor: '',
-  weightCoefficient: undefined,
-};
+function createEmptyUnit(): UnitItem {
+  return {
+    clientId: crypto.randomUUID(),
+    unitLabel: '',
+    unitType: 'Apartment',
+    unitFloor: '',
+    weightCoefficient: undefined,
+  };
+}
 
 export function OnboardingUnitForm() {
+  const hasHydrated = useOnboardingStore((s) => s._hasHydrated);
+  const units = useOnboardingStore((s) => s.units);
+  const setUnits = useOnboardingStore((s) => s.setUnits);
   const router = useRouter();
   const form = useForm<OnboardingUnits>({
     resolver: zodResolver(unitsSchema),
     defaultValues: {
-      units: [emptyUnit],
+      units: units.length > 0 ? units : [createEmptyUnit()],
     },
   });
+
+  useEffect(() => {
+    if (hasHydrated && units.length > 0) {
+      form.reset({ units });
+    }
+  }, [hasHydrated]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -68,6 +82,7 @@ export function OnboardingUnitForm() {
 
   function submitHandler(data: OnboardingUnits) {
     console.log(data);
+    setUnits(data.units);
     router.push('/onboarding/co-owners');
   }
 
@@ -248,7 +263,7 @@ export function OnboardingUnitForm() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => append(emptyUnit)}
+              onClick={() => append(createEmptyUnit())}
               disabled={fields.length >= MAX_UNITS}
             >
               <Plus data-icon="inline-start" />

@@ -70,6 +70,7 @@ export const fiscalYearSchema = fiscalYearBaseSchema.superRefine(
 
 // Unit (single item) + Units (array step) ---------------------------------------
 export const unitItemSchema = z.object({
+  clientId: z.string(),
   unitLabel: requiredString('Unit label', 1),
   unitType: unitTypeSchema,
   unitFloor: optionalString('Floor', 10),

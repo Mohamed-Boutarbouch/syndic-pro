@@ -36,7 +36,7 @@ import {
   BILLING_FREQUENCIES,
   OnboardingCoOwner,
   coOwnerSchema,
-} from '@/features/schema';
+} from '@/features/onboarding/schema';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 

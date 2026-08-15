@@ -18,13 +18,18 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { OnboardingProperty, propertySchema } from '@/features/schema';
+import {
+  OnboardingProperty,
+  propertySchema,
+} from '@/features/onboarding/schema';
+import { useOnboardingStore } from '@/features/onboarding/store';
 
 export function OnboardingPropertyForm() {
+  const { property, setProperty } = useOnboardingStore();
   const router = useRouter();
   const form = useForm<OnboardingProperty>({
     resolver: zodResolver(propertySchema),
-    defaultValues: {
+    defaultValues: property ?? {
       propertyName: '',
       propertyAddress: '',
       propertyCity: '',
@@ -33,6 +38,7 @@ export function OnboardingPropertyForm() {
 
   function submitHandler(data: OnboardingProperty) {
     console.log(data);
+    setProperty(data);
     router.push('/onboarding/fiscal-year');
   }
 
