@@ -4,14 +4,19 @@ import { createDbClient } from '@syndic-pro/db/client';
 
 const db = createDbClient(process.env.DATABASE_URL!);
 
-// apps/api/src/auth/auth.config.ts
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: 'pg' }),
   baseURL: process.env.BETTER_AUTH_URL,
-  basePath: '/api/auth', // full path — Nest's global prefix does NOT apply to this
+  basePath: '/api/auth',
   secret: process.env.BETTER_AUTH_SECRET,
   trustedOrigins: [process.env.WEB_ORIGIN!],
   emailAndPassword: { enabled: true },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
   user: {
     additionalFields: {
       phone: { type: 'string', required: false },
