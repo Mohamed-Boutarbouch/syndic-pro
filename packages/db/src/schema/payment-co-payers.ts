@@ -1,8 +1,8 @@
-import { index, integer, numeric, unique } from 'drizzle-orm/pg-core';
+import { index, text, integer, numeric, unique } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { paymentSchedules } from './payment-schedules.js';
-import { users } from './users.js';
+import { user } from './auth/index.js';
 
 export const paymentCoPayers = pgTable(
   'payment_co_payers',
@@ -11,9 +11,9 @@ export const paymentCoPayers = pgTable(
     paymentScheduleId: integer('payment_schedule_id')
       .notNull()
       .references(() => paymentSchedules.id, { onDelete: 'cascade' }),
-    userId: integer('user_id')
+    userId: text('user_id')
       .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
+      .references(() => user.id, { onDelete: 'restrict' }),
     expectedShare: numeric('expected_share', {
       precision: 12,
       scale: 2,

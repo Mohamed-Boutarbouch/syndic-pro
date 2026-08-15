@@ -1,9 +1,9 @@
 import { relations } from 'drizzle-orm';
 import { budgetCycles } from '../schema/budget-cycles.js';
 import { properties } from '../schema/properties.js';
-import { users } from '../schema/users.js';
 import { cycleAdjustments } from '../schema/cycle-adjustments.js';
 import { cycleObligations } from '../schema/cycle-obligations.js';
+import { user } from '../schema/index.js';
 
 export const budgetCyclesRelations = relations(
   budgetCycles,
@@ -12,9 +12,9 @@ export const budgetCyclesRelations = relations(
       fields: [budgetCycles.propertyId],
       references: [properties.id],
     }),
-    activatedByUser: one(users, {
+    activatedByUser: one(user, {
       fields: [budgetCycles.activatedByUserId],
-      references: [users.id],
+      references: [user.id],
     }),
     adjustments: many(cycleAdjustments),
     obligations: many(cycleObligations),

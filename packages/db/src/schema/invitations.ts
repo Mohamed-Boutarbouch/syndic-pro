@@ -1,6 +1,7 @@
 import {
   index,
   integer,
+  text,
   timestamp,
   unique,
   varchar,
@@ -8,7 +9,7 @@ import {
 import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { properties } from './properties.js';
-import { users } from './users.js';
+import { user } from './auth/index.js';
 
 export const invitations = pgTable(
   'invitations',
@@ -17,10 +18,10 @@ export const invitations = pgTable(
     propertyId: integer('property_id').references(() => properties.id, {
       onDelete: 'cascade',
     }),
-    invitedByUserId: integer('invited_by_user_id')
+    invitedByUserId: text('invited_by_user_id')
       .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
-    userId: integer('user_id').references(() => users.id, {
+      .references(() => user.id, { onDelete: 'restrict' }),
+    userId: text('user_id').references(() => user.id, {
       onDelete: 'set null',
     }),
     email: varchar('email', { length: 255 }).notNull(),

@@ -3,7 +3,7 @@ import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { syndicEvent } from './enums.js';
 import { properties } from './properties.js';
-import { users } from './users.js';
+import { user } from './auth/index.js';
 
 export const propertySyndics = pgTable(
   'property_syndics',
@@ -12,12 +12,12 @@ export const propertySyndics = pgTable(
     propertyId: integer('property_id')
       .notNull()
       .references(() => properties.id, { onDelete: 'cascade' }),
-    userId: integer('user_id')
+    userId: text('user_id')
       .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
+      .references(() => user.id, { onDelete: 'restrict' }),
     event: syndicEvent('event').notNull().default('assigned'),
-    transferredFromUserId: integer('transferred_from_user_id').references(
-      () => users.id,
+    transferredFromUserId: text('transferred_from_user_id').references(
+      () => user.id,
       { onDelete: 'set null' },
     ),
     assignedAt: timestamp('assigned_at', { mode: 'date', withTimezone: true })

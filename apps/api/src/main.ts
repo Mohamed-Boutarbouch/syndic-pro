@@ -2,14 +2,24 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
-import { AppModule } from './app/app.module';
+import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: false, // required by @thallesp/nestjs-better-auth
+  });
+
   const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
+  app.setGlobalPrefix(globalPrefix, {
+    exclude: [{ path: 'auth/(.*)', method: -1 as any }], // don't double-prefix if basePath already includes /api/auth — verify against your version, see note below
+  });
+
+  app.enableCors({
+    origin: [process.env.WEB_ORIGIN!],
+    credentials: true, // required for Better Auth cookies
+  });
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
@@ -19,18 +29,13 @@ async function bootstrap() {
     .setDescription('Property/syndic management API')
     .setVersion('1.0')
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
-
-  const cleanedDocument = cleanupOpenApiDoc(document);
-
-  SwaggerModule.setup('api/docs', app, cleanedDocument);
+  SwaggerModule.setup('api/docs', app, cleanupOpenApiDoc(document));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
-  Logger.log(`📘 Swagger docs at: http://localhost:${port}/api/docs`);
 }
 bootstrap();

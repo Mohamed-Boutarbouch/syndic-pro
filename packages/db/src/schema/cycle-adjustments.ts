@@ -4,7 +4,7 @@ import { baseId } from './helpers/columns.js';
 import { adjustmentType } from './enums.js';
 import { budgetCycles } from './budget-cycles.js';
 import { ownerships } from './ownerships.js';
-import { users } from './users.js';
+import { user } from './auth/index.js';
 
 export const cycleAdjustments = pgTable(
   'cycle_adjustments',
@@ -24,9 +24,9 @@ export const cycleAdjustments = pgTable(
       () => ownerships.id,
       { onDelete: 'set null' },
     ),
-    createdByUserId: integer('created_by_user_id')
+    createdByUserId: text('created_by_user_id')
       .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
+      .references(() => user.id, { onDelete: 'restrict' }),
     createdAt: timestamp('created_at', { mode: 'date', withTimezone: true })
       .notNull()
       .defaultNow(),

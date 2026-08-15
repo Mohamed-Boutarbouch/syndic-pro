@@ -2,7 +2,7 @@ import { relations } from 'drizzle-orm';
 import { payments } from '../schema/payments.js';
 import { cycleObligations } from '../schema/cycle-obligations.js';
 import { paymentSchedules } from '../schema/payment-schedules.js';
-import { users } from '../schema/users.js';
+import { user } from '../schema/index.js';
 
 export const paymentsRelations = relations(payments, ({ one }) => ({
   cycleObligation: one(cycleObligations, {
@@ -13,19 +13,19 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
     fields: [payments.paymentScheduleId],
     references: [paymentSchedules.id],
   }),
-  paidByUser: one(users, {
+  paidByUser: one(user, {
     fields: [payments.paidByUserId],
-    references: [users.id],
+    references: [user.id],
     relationName: 'paymentsAsPayer',
   }),
-  recordedByUser: one(users, {
+  recordedByUser: one(user, {
     fields: [payments.recordedByUserId],
-    references: [users.id],
+    references: [user.id],
     relationName: 'paymentsAsRecorder',
   }),
-  voidedByUser: one(users, {
+  voidedByUser: one(user, {
     fields: [payments.voidedByUserId],
-    references: [users.id],
+    references: [user.id],
     relationName: 'paymentsAsVoider',
   }),
 }));

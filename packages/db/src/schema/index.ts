@@ -1,5 +1,5 @@
 export * from './enums.js';
-export * from './users.js';
+export * from './auth/index.js';
 export * from './properties.js';
 export * from './units.js';
 export * from './ownerships.js';

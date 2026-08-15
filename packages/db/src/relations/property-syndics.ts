@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { propertySyndics } from '../schema/property-syndics.js';
 import { properties } from '../schema/properties.js';
-import { users } from '../schema/users.js';
+import { user } from '../schema/index.js';
 
 export const propertySyndicsRelations = relations(
   propertySyndics,
@@ -10,14 +10,14 @@ export const propertySyndicsRelations = relations(
       fields: [propertySyndics.propertyId],
       references: [properties.id],
     }),
-    user: one(users, {
+    user: one(user, {
       fields: [propertySyndics.userId],
-      references: [users.id],
+      references: [user.id],
       relationName: 'syndic',
     }),
-    transferredFromUser: one(users, {
+    transferredFromUser: one(user, {
       fields: [propertySyndics.transferredFromUserId],
-      references: [users.id],
+      references: [user.id],
       relationName: 'transferredFromSyndic',
     }),
   }),

@@ -89,6 +89,8 @@
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/swagger": "^11.4.6",
     "@syndic-pro/db": "*",
+    "@thallesp/nestjs-better-auth": "^2.7.0",
+    "better-auth": "^1.6.29",
     "nestjs-zod": "^5.5.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0",

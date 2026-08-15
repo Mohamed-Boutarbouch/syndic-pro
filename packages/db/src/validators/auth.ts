@@ -4,26 +4,21 @@ import {
   createUpdateSchema,
 } from 'drizzle-zod';
 import { z } from 'zod';
-import { users } from '../schema/users.js';
 import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
+import { user } from '../schema/index.js';
 
-export const selectUserSchema = createSelectSchema(users, {
+export const selectAuthSchema = createSelectSchema(user, {
   createdAt: dateAsIsoString,
   updatedAt: dateAsIsoString,
 });
-export const userResponseSchema = selectUserSchema.omit({
-  passwordHash: true,
-  rememberToken: true,
-});
+export const authResponseSchema = selectAuthSchema.omit({});
 
-export const insertUserSchema = createInsertSchema(users, {
+export const insertAuthSchema = createInsertSchema(user, {
   name: (schema) => schema.min(1).max(150),
   email: () => z.email(),
-  passwordHash: (schema) => schema.min(1),
 }).omit(SERVER_OMIT);
 
-export const updateUserSchema = createUpdateSchema(users, {
+export const updateAuthSchema = createUpdateSchema(user, {
   name: (schema) => schema.min(1).max(150),
   email: () => z.email(),
-  passwordHash: (schema) => schema.min(1),
 }).omit(SERVER_OMIT);

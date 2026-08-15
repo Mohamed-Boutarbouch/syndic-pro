@@ -11,7 +11,7 @@ import { baseId, timestamps } from './helpers/columns.js';
 import { paymentMethod } from './enums.js';
 import { cycleObligations } from './cycle-obligations.js';
 import { paymentSchedules } from './payment-schedules.js';
-import { users } from './users.js';
+import { user } from './auth/index.js';
 
 export const payments = pgTable(
   'payments',
@@ -24,12 +24,12 @@ export const payments = pgTable(
       () => paymentSchedules.id,
       { onDelete: 'restrict' },
     ),
-    paidByUserId: integer('paid_by_user_id')
+    paidByUserId: text('paid_by_user_id')
       .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
-    recordedByUserId: integer('recorded_by_user_id')
+      .references(() => user.id, { onDelete: 'restrict' }),
+    recordedByUserId: text('recorded_by_user_id')
       .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
+      .references(() => user.id, { onDelete: 'restrict' }),
     amount: numeric('amount', {
       precision: 12,
       scale: 2,
@@ -42,7 +42,7 @@ export const payments = pgTable(
     reference: varchar('reference', { length: 100 }),
     notes: text('notes'),
     voidedAt: timestamp('voided_at', { mode: 'date', withTimezone: true }),
-    voidedByUserId: integer('voided_by_user_id').references(() => users.id, {
+    voidedByUserId: text('voided_by_user_id').references(() => user.id, {
       onDelete: 'set null',
     }),
     voidReason: text('void_reason'),

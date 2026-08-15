@@ -12,7 +12,7 @@ import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { budgetCycleStatus } from './enums.js';
 import { properties } from './properties.js';
-import { users } from './users.js';
+import { user } from './auth/index.js';
 
 export const budgetCycles = pgTable(
   'budget_cycles',
@@ -31,12 +31,9 @@ export const budgetCycles = pgTable(
     }).notNull(),
     status: budgetCycleStatus('status').notNull().default('draft'),
     snapshotDate: date('snapshot_date', { mode: 'date' }),
-    activatedByUserId: integer('activated_by_user_id').references(
-      () => users.id,
-      {
-        onDelete: 'set null',
-      },
-    ),
+    activatedByUserId: text('activated_by_user_id').references(() => user.id, {
+      onDelete: 'set null',
+    }),
     activatedAt: timestamp('activated_at', {
       mode: 'date',
       withTimezone: true,
