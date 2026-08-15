@@ -8,17 +8,16 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    bodyParser: false, // required by @thallesp/nestjs-better-auth
+    bodyParser: false,
   });
 
   const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix, {
-    exclude: [{ path: 'auth/(.*)', method: -1 as any }], // don't double-prefix if basePath already includes /api/auth — verify against your version, see note below
-  });
+
+  app.setGlobalPrefix(globalPrefix);
 
   app.enableCors({
-    origin: [process.env.WEB_ORIGIN!],
-    credentials: true, // required for Better Auth cookies
+    origin: [process.env.WEB_ORIGIN ?? 'http://localhost:3000'],
+    credentials: true,
   });
 
   app.useGlobalFilters(new GlobalExceptionFilter());
@@ -29,13 +28,18 @@ async function bootstrap() {
     .setDescription('Property/syndic management API')
     .setVersion('1.0')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('api/docs', app, cleanupOpenApiDoc(document));
 
   const port = process.env.PORT || 3000;
+
   await app.listen(port);
+
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
 }
+
 bootstrap();

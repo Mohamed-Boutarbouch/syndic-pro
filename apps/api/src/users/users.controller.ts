@@ -30,6 +30,17 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('me')
+  async me(@Session() session: UserSession) {
+    return session.user;
+  }
+
+  @Get('health')
+  @AllowAnonymous()
+  async health() {
+    return { ok: true };
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
@@ -43,16 +54,5 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
-  }
-
-  @Get('me')
-  async me(@Session() session: UserSession) {
-    return session.user;
-  }
-
-  @Get('health')
-  @AllowAnonymous()
-  async health() {
-    return { ok: true };
   }
 }

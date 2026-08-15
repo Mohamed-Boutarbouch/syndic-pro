@@ -4,12 +4,13 @@ import { createDbClient } from '@syndic-pro/db/client';
 
 const db = createDbClient(process.env.DATABASE_URL!);
 
+// apps/api/src/auth/auth.config.ts
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: 'pg' }),
-  baseURL: process.env.BETTER_AUTH_URL, // e.g. http://localhost:3000
-  basePath: '/auth', // matches your existing global prefix
+  baseURL: process.env.BETTER_AUTH_URL,
+  basePath: '/api/auth', // full path — Nest's global prefix does NOT apply to this
   secret: process.env.BETTER_AUTH_SECRET,
-  trustedOrigins: [process.env.WEB_ORIGIN!], // your Next.js app origin
+  trustedOrigins: [process.env.WEB_ORIGIN!],
   emailAndPassword: { enabled: true },
   user: {
     additionalFields: {
@@ -19,7 +20,6 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    // keep cross-subdomain/cross-origin cookies working if web and api are on different origins
-    crossSubDomainCookies: { enabled: false }, // enable + set domain if you use subdomains
+    crossSubDomainCookies: { enabled: false },
   },
 });

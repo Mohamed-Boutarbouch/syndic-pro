@@ -12,8 +12,9 @@ import {
   MoonIcon,
   MonitorIcon,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,6 +36,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { authClient } from '@/lib/auth-client';
 
 export function NavUser({
   user,
@@ -47,6 +50,19 @@ export function NavUser({
 }) {
   const { theme, setTheme } = useTheme();
   const { isMobile } = useSidebar();
+  const router = useRouter();
+
+  async function handleLogout() {
+    const { error } = await authClient.signOut();
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    router.push('/login');
+    router.refresh();
+  }
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -143,7 +159,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} variant="destructive">
                 <LogOut />
                 Log out
               </DropdownMenuItem>

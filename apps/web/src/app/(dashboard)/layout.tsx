@@ -1,3 +1,6 @@
+import { redirect } from 'next/navigation';
+import { getServerSession } from '@/lib/get-session';
+
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import {
   Breadcrumb,
@@ -40,11 +43,13 @@ const notifications: Notification[] = [
     read: true,
   },
 ];
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession();
+  if (!session) redirect('/login');
   return (
     <SidebarProvider>
       <AppSidebar />

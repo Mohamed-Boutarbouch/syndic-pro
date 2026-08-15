@@ -25,7 +25,7 @@ export default function OnboardingLayout({
         </div>
       </header>
 
-      <main className="flex flex-1">
+      <main className="flex flex-1 bg-muted">
         <div className="container mx-auto flex flex-1 items-center justify-center px-4 py-10">
           <div className="w-full max-w-2xl">
             <OnboardingStepper />
