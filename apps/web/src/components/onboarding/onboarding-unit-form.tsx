@@ -188,24 +188,37 @@ export function OnboardingUnitForm() {
                             Weight coefficient
                             <span className="text-destructive">*</span>
                           </FieldLabel>
-                          <Input
-                            id={`weight-coefficient-${index}`}
-                            type="number"
-                            min={0}
-                            step="0.1"
-                            placeholder="1.0"
-                            aria-invalid={fieldState.invalid}
-                            name={controllerField.name}
-                            ref={controllerField.ref}
-                            onBlur={controllerField.onBlur}
-                            value={controllerField.value ?? ''}
-                            onChange={(event) => {
-                              const value = event.target.value;
-                              controllerField.onChange(
-                                value === '' ? undefined : Number(value),
-                              );
-                            }}
-                          />
+
+                          <div className="relative">
+                            <span
+                              aria-hidden="true"
+                              className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-xl font-medium text-muted-foreground"
+                            >
+                              ×
+                            </span>
+
+                            <Input
+                              id={`weight-coefficient-${index}`}
+                              type="number"
+                              min={0}
+                              step="0.1"
+                              placeholder="1.0"
+                              aria-invalid={fieldState.invalid}
+                              name={controllerField.name}
+                              ref={controllerField.ref}
+                              onBlur={controllerField.onBlur}
+                              value={controllerField.value ?? ''}
+                              onChange={(event) => {
+                                const value = event.target.value;
+
+                                controllerField.onChange(
+                                  value === '' ? undefined : Number(value),
+                                );
+                              }}
+                              className="pl-8"
+                            />
+                          </div>
+
                           {fieldState.invalid && (
                             <FieldError errors={[fieldState.error]} />
                           )}

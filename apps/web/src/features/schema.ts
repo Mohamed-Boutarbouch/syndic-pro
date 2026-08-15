@@ -19,19 +19,21 @@ export const billingFrequencySchema = z.enum(BILLING_FREQUENCIES);
 
 const fiscalDateSchema = z.iso.date('Enter a valid date');
 
-const requiredString = (label: string, min: number, max = 80) =>
-  z
+function requiredString(label: string, min: number, max = 80) {
+  return z
     .string()
     .trim()
     .min(min, `${label} must be at least ${min} characters`)
     .max(max, `${label} must be at most ${max} characters`);
+}
 
-const optionalString = (label: string, max = 80) =>
-  z
+function optionalString(label: string, max = 80) {
+  return z
     .string()
     .trim()
     .max(max, `${label} must be at most ${max} characters`)
     .optional();
+}
 
 // -----------------------------------------------------------------------------
 // Step schemas (each standalone — source of truth for its step)
@@ -54,11 +56,15 @@ const fiscalYearBaseSchema = z.object({
   lockBudget: z.boolean(),
 });
 
-export const fiscalYearSchema = fiscalYearBaseSchema.refine(
-  (data) => data.fiscalYearEnd >= data.fiscalYearStart,
-  {
-    path: ['fiscalYearEnd'],
-    message: 'End of fiscal year must be after the start date',
+export const fiscalYearSchema = fiscalYearBaseSchema.superRefine(
+  (data, ctx) => {
+    if (data.fiscalYearEnd <= data.fiscalYearStart) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['fiscalYearEnd'],
+        message: 'End of fiscal year must be after the start date',
+      });
+    }
   },
 );
 
@@ -66,11 +72,13 @@ export const fiscalYearSchema = fiscalYearBaseSchema.refine(
 export const unitItemSchema = z.object({
   unitLabel: requiredString('Unit label', 1),
   unitType: unitTypeSchema,
-  unitFloor: requiredString('Floor', 1).optional().or(z.literal('')),
+  unitFloor: optionalString('Floor', 10),
   weightCoefficient: z
-    .number({ error: 'Weight coefficient is required' })
-    .positive('Weight coefficient must be greater than 0')
-    .optional(),
+    .number()
+    .optional()
+    .refine((val) => val !== undefined && val > 0, {
+      message: 'Weight coefficient is required and must be greater than 0',
+    }),
 });
 
 export const unitsSchema = z.object({
@@ -83,10 +91,7 @@ export const unitsSchema = z.object({
 // Co-owner ---------------------------------------------------------------------
 export const coOwnerSchema = z.object({
   coOwnerName: requiredString('Name', 3),
-  coOwnerEmail: z
-    .email('Enter a valid email address')
-    .optional()
-    .or(z.literal('')),
+  coOwnerEmail: optionalString('Email', 100),
   coOwnerPhone: optionalString('Phone number', 15),
   billingFrequency: billingFrequencySchema,
   designatedSyndic: z.boolean(),
