@@ -22,3 +22,10 @@ export const updateAuthSchema = createUpdateSchema(user, {
   name: (schema) => schema.min(1).max(150),
   email: () => z.email(),
 }).omit(SERVER_OMIT);
+
+export const updateAuthSelfSchema = updateAuthSchema.pick({
+  name: true,
+  phone: true,
+  locale: true,
+  image: true,
+});

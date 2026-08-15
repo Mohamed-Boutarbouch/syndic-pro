@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
+import { createZodDto } from 'nestjs-zod';
+import { updateAuthSchema } from '@syndic-pro/db';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+export class UpdateUserDto extends createZodDto(updateAuthSchema) {}

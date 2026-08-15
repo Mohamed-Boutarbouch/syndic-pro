@@ -1,26 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { eq } from '@syndic-pro/db';
+import { user } from '@syndic-pro/db/schema';
+
 import { UpdateUserDto } from './dto/update-user.dto';
+import { DatabaseService } from '../database/database.service';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly database: DatabaseService) {}
+
+  async findOne(id: string) {
+    return this.database.db.query.user.findFirst({ where: eq(user.id, id) });
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: string, dto: UpdateUserDto) {
+    const [updated] = await this.database.db
+      .update(user)
+      .set(dto)
+      .where(eq(user.id, id))
+      .returning();
+    return updated;
   }
 }
