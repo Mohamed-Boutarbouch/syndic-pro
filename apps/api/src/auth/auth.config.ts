@@ -1,20 +1,21 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { createDbClient } from '@syndic-pro/db/client';
+import { env } from '../config/env';
 
-const db = createDbClient(process.env.DATABASE_URL!);
+const db = createDbClient(env.DATABASE_URL);
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: 'pg' }),
   baseURL: process.env.BETTER_AUTH_URL,
   basePath: '/api/auth',
   secret: process.env.BETTER_AUTH_SECRET,
-  trustedOrigins: [process.env.WEB_ORIGIN!],
+  trustedOrigins: [env.WEB_ORIGIN],
   emailAndPassword: { enabled: true },
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
   user: {

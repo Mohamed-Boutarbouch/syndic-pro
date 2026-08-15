@@ -1,4 +1,5 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { env } from '../config/env';
 
 import { createDbClient, type Db } from '@syndic-pro/db/client';
 
@@ -7,7 +8,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   readonly db: Db;
 
   constructor() {
-    this.db = createDbClient(process.env.DATABASE_URL!);
+    this.db = createDbClient(env.DATABASE_URL);
   }
 
   async onModuleInit() {
