@@ -1,16 +1,11 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { Info, Shield } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import {
   Field,
   FieldContent,
@@ -20,50 +15,122 @@ import {
   FieldTitle,
 } from '@/components/ui/field';
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-} from '@/components/ui/item';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Input } from '@/components/ui/input';
+
 import {
   BILLING_FREQUENCIES,
-  OnboardingCoOwner,
-  coOwnerSchema,
+  CoOwnerItem,
+  OnboardingCoOwners,
+  coOwnersSchema,
 } from '@/features/onboarding/schema';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
+
+import { useOnboardingStore } from '@/features/onboarding/store';
+
+function createEmptyCoOwner(unitClientId: string): CoOwnerItem {
+  return {
+    unitClientId,
+    coOwnerName: '',
+    coOwnerEmail: '',
+    coOwnerPhone: '',
+    billingFrequency: 'Monthly',
+    designatedSyndic: false,
+  };
+}
 
 export function OnboardingCoOwnerForm() {
-  const form = useForm<OnboardingCoOwner>({
-    resolver: zodResolver(coOwnerSchema),
+  const hasHydrated = useOnboardingStore((s) => s._hasHydrated);
+  const units = useOnboardingStore((s) => s.units);
+  const coOwners = useOnboardingStore((s) => s.coOwners);
+  const setCoOwners = useOnboardingStore((s) => s.setCoOwners);
 
+  const router = useRouter();
+
+  const form = useForm<OnboardingCoOwners>({
+    resolver: zodResolver(coOwnersSchema),
     defaultValues: {
-      coOwnerName: '',
-      coOwnerEmail: '',
-      coOwnerPhone: '',
-      billingFrequency: 'Monthly',
-      designatedSyndic: false,
+      coOwners:
+        coOwners.length > 0
+          ? coOwners
+          : units.map((unit) => createEmptyCoOwner(unit.clientId)),
     },
   });
 
-  function submitHandler(data: OnboardingCoOwner) {
-    console.log(data);
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    const existingByUnit = new Map(coOwners.map((c) => [c.unitClientId, c]));
+
+    const reconciled = units.map(
+      (unit) =>
+        existingByUnit.get(unit.clientId) ?? createEmptyCoOwner(unit.clientId),
+    );
+
+    form.reset({ coOwners: reconciled });
+  }, [hasHydrated]);
+
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'coOwners',
+  });
+
+  const watchedCoOwners = useWatch({
+    control: form.control,
+    name: 'coOwners',
+  });
+
+  const selectedSyndic =
+    watchedCoOwners.find((coOwner) => coOwner.designatedSyndic)?.unitClientId ??
+    '';
+
+  function handleSyndicChange(unitClientId: string) {
+    form.setValue(
+      'coOwners',
+      form.getValues('coOwners').map((coOwner) => ({
+        ...coOwner,
+        designatedSyndic: coOwner.unitClientId === unitClientId,
+      })),
+      {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      },
+    );
   }
+
+  function submitHandler(data: OnboardingCoOwners) {
+    setCoOwners(data.coOwners);
+    router.push('/onboarding/review');
+  }
+
+  const unitByClientId = new Map(units.map((u) => [u.clientId, u]));
 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Assign co-owner</CardTitle>
-
+        <CardTitle>Assign co-owners</CardTitle>
         <CardDescription>
-          Add the co-owner and configure their billing preferences.
+          Add a co-owner for each unit and configure their billing preferences.
         </CardDescription>
       </CardHeader>
 
@@ -72,160 +139,172 @@ export function OnboardingCoOwnerForm() {
           id="onboarding-co-owners-form"
           onSubmit={form.handleSubmit(submitHandler)}
         >
-          <FieldGroup>
-            <div className="grid gap-6 md:grid-cols-2">
-              <Controller
-                name="coOwnerName"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="owner-name">
-                      Owner name
-                      <span className="text-destructive">*</span>
-                    </FieldLabel>
+          <RadioGroup value={selectedSyndic} onValueChange={handleSyndicChange}>
+            <FieldGroup className="gap-6">
+              {fields.map((field, index) => {
+                const unit = unitByClientId.get(field.unitClientId);
 
-                    <Input
-                      {...field}
-                      id="owner-name"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="e.g. John Doe"
-                      autoComplete="name"
-                    />
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="coOwnerEmail"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="owner-email">Email</FieldLabel>
-
-                    <Input
-                      {...field}
-                      type="email"
-                      id="owner-email"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="owner@email.com"
-                      autoComplete="email"
-                    />
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="coOwnerPhone"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="owner-phone">Phone</FieldLabel>
-
-                    <Input
-                      {...field}
-                      type="tel"
-                      id="owner-phone"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="+212 6XX XXX XXX"
-                      autoComplete="tel"
-                    />
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="billingFrequency"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="billing-frequency">
-                      Billing frequency
-                    </FieldLabel>
-
-                    <Select
-                      name={field.name}
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger
-                        id="billing-frequency"
-                        aria-invalid={fieldState.invalid}
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        {BILLING_FREQUENCIES.map((frequency) => (
-                          <SelectItem key={frequency} value={frequency}>
-                            {frequency}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="designatedSyndic"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field
-                    className="md:col-span-2"
-                    data-invalid={fieldState.invalid}
+                return (
+                  <Item
+                    key={field.id}
+                    variant="outline"
+                    className="relative flex-col items-stretch gap-4"
                   >
-                    <FieldLabel
-                      htmlFor="designated-syndic"
-                      className="cursor-pointer"
-                    >
-                      <Field orientation="horizontal">
-                        <Checkbox
-                          id="designated-syndic"
-                          name={field.name}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          onBlur={field.onBlur}
-                          ref={field.ref}
-                          aria-invalid={fieldState.invalid}
-                        />
+                    <ItemTitle>
+                      Unit {unit?.unitLabel ?? index + 1}
+                      {unit?.unitType ? ` · ${unit.unitType}` : ''}
+                    </ItemTitle>
 
-                        <FieldContent>
-                          <FieldTitle className="flex items-center gap-2">
-                            <Shield className="size-5" />
-                            Designate as syndic
-                          </FieldTitle>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <Controller
+                        name={`coOwners.${index}.coOwnerName`}
+                        control={form.control}
+                        render={({ field: f, fieldState }) => (
+                          <Field data-invalid={fieldState.invalid}>
+                            <FieldLabel htmlFor={`owner-name-${index}`}>
+                              Owner name
+                              <span className="text-destructive">*</span>
+                            </FieldLabel>
 
-                          <span className="text-muted-foreground text-sm">
-                            This co-owner will manage the property.
-                          </span>
-                        </FieldContent>
+                            <Input
+                              {...f}
+                              id={`owner-name-${index}`}
+                              aria-invalid={fieldState.invalid}
+                              placeholder="e.g. John Doe"
+                              autoComplete="name"
+                            />
+
+                            {fieldState.invalid && (
+                              <FieldError errors={[fieldState.error]} />
+                            )}
+                          </Field>
+                        )}
+                      />
+
+                      <Controller
+                        name={`coOwners.${index}.coOwnerEmail`}
+                        control={form.control}
+                        render={({ field: f, fieldState }) => (
+                          <Field data-invalid={fieldState.invalid}>
+                            <FieldLabel htmlFor={`owner-email-${index}`}>
+                              Email
+                            </FieldLabel>
+
+                            <Input
+                              {...f}
+                              type="email"
+                              id={`owner-email-${index}`}
+                              aria-invalid={fieldState.invalid}
+                              placeholder="owner@email.com"
+                              autoComplete="email"
+                            />
+
+                            {fieldState.invalid && (
+                              <FieldError errors={[fieldState.error]} />
+                            )}
+                          </Field>
+                        )}
+                      />
+
+                      <Controller
+                        name={`coOwners.${index}.coOwnerPhone`}
+                        control={form.control}
+                        render={({ field: f, fieldState }) => (
+                          <Field data-invalid={fieldState.invalid}>
+                            <FieldLabel htmlFor={`owner-phone-${index}`}>
+                              Phone
+                            </FieldLabel>
+
+                            <Input
+                              {...f}
+                              type="tel"
+                              id={`owner-phone-${index}`}
+                              aria-invalid={fieldState.invalid}
+                              placeholder="+212 6XX XXX XXX"
+                              autoComplete="tel"
+                            />
+
+                            {fieldState.invalid && (
+                              <FieldError errors={[fieldState.error]} />
+                            )}
+                          </Field>
+                        )}
+                      />
+
+                      <Controller
+                        name={`coOwners.${index}.billingFrequency`}
+                        control={form.control}
+                        render={({ field: f, fieldState }) => (
+                          <Field data-invalid={fieldState.invalid}>
+                            <FieldLabel htmlFor={`billing-frequency-${index}`}>
+                              Billing frequency
+                            </FieldLabel>
+
+                            <Select
+                              name={f.name}
+                              value={f.value}
+                              onValueChange={f.onChange}
+                            >
+                              <SelectTrigger
+                                id={`billing-frequency-${index}`}
+                                aria-invalid={fieldState.invalid}
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+
+                              <SelectContent>
+                                {BILLING_FREQUENCIES.map((frequency) => (
+                                  <SelectItem key={frequency} value={frequency}>
+                                    {frequency}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+
+                            {fieldState.invalid && (
+                              <FieldError errors={[fieldState.error]} />
+                            )}
+                          </Field>
+                        )}
+                      />
+
+                      <Field className="md:col-span-2">
+                        <FieldLabel
+                          htmlFor={`designated-syndic-${index}`}
+                          className="cursor-pointer"
+                        >
+                          <Field
+                            orientation="horizontal"
+                            className="items-start"
+                          >
+                            <RadioGroupItem
+                              value={field.unitClientId}
+                              id={`designated-syndic-${index}`}
+                            />
+
+                            <FieldContent>
+                              <FieldTitle className="flex items-center gap-2">
+                                <Shield className="size-5" />
+                                Designate as syndic
+                              </FieldTitle>
+
+                              <span className="text-muted-foreground text-sm">
+                                This co-owner will manage the property.
+                              </span>
+                            </FieldContent>
+                          </Field>
+                        </FieldLabel>
                       </Field>
-                    </FieldLabel>
+                    </div>
+                  </Item>
+                );
+              })}
 
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
-          </FieldGroup>
+              {form.formState.errors.coOwners?.root && (
+                <FieldError errors={[form.formState.errors.coOwners.root]} />
+              )}
+            </FieldGroup>
+          </RadioGroup>
         </form>
 
         <Item className="mt-4" variant="outline" size="sm">

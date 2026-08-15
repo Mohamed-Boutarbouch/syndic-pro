@@ -89,13 +89,29 @@ export const unitsSchema = z.object({
     .max(50, 'You can add up to 50 units'),
 });
 
-// Co-owner ---------------------------------------------------------------------
-export const coOwnerSchema = z.object({
+// Co-owner (single item, now linked to a unit) --------------------------------
+export const coOwnerItemSchema = z.object({
+  unitClientId: z.string(), // links back to unitItemSchema.clientId
   coOwnerName: requiredString('Name', 3),
   coOwnerEmail: optionalString('Email', 100),
   coOwnerPhone: optionalString('Phone number', 15),
   billingFrequency: billingFrequencySchema,
   designatedSyndic: z.boolean(),
+});
+
+export const coOwnersSchema = z.object({
+  coOwners: z
+    .array(coOwnerItemSchema)
+    .min(1, 'Add at least one co-owner')
+    .superRefine((coOwners, ctx) => {
+      const syndicCount = coOwners.filter((c) => c.designatedSyndic).length;
+      if (syndicCount > 1) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Only one co-owner can be designated as syndic',
+        });
+      }
+    }),
 });
 
 // -----------------------------------------------------------------------------
@@ -104,7 +120,7 @@ export const coOwnerSchema = z.object({
 export const onboardingSyndicFormSchema = propertySchema
   .extend(fiscalYearBaseSchema.shape)
   .extend(unitsSchema.shape)
-  .extend(coOwnerSchema.shape);
+  .extend(coOwnersSchema.shape);
 
 // -----------------------------------------------------------------------------
 // Types
@@ -116,4 +132,5 @@ export type OnboardingProperty = z.infer<typeof propertySchema>;
 export type OnboardingFiscalYear = z.infer<typeof fiscalYearSchema>;
 export type UnitItem = z.infer<typeof unitItemSchema>;
 export type OnboardingUnits = z.infer<typeof unitsSchema>;
-export type OnboardingCoOwner = z.infer<typeof coOwnerSchema>;
+export type CoOwnerItem = z.infer<typeof coOwnerItemSchema>;
+export type OnboardingCoOwners = z.infer<typeof coOwnersSchema>;
