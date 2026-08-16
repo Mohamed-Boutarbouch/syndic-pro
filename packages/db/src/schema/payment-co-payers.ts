@@ -1,5 +1,11 @@
-import { index, text, integer, numeric, unique } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
+import {
+  index,
+  integer,
+  numeric,
+  pgTable,
+  text,
+  unique,
+} from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { paymentSchedules } from './payment-schedules.js';
 import { user } from './auth/index.js';

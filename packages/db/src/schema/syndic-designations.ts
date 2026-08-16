@@ -1,12 +1,11 @@
-import { index, integer, timestamp, text } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
+import { index, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { syndicEvent } from './enums.js';
 import { properties } from './properties.js';
 import { user } from './auth/index.js';
 
-export const propertySyndics = pgTable(
-  'property_syndics',
+export const syndicDesignations = pgTable(
+  'syndic_designations',
   {
     ...baseId,
     propertyId: integer('property_id')
@@ -28,7 +27,7 @@ export const propertySyndics = pgTable(
     ...timestamps,
   },
   (table) => [
-    index('idx_property_syndics_property_id').on(table.propertyId),
-    index('idx_property_syndics_user_id').on(table.userId),
+    index('idx_syndic_designations_property_id').on(table.propertyId),
+    index('idx_syndic_designations_user_id').on(table.userId),
   ],
 );

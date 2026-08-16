@@ -1,28 +1,28 @@
 import {
   date,
-  text,
   index,
   integer,
   numeric,
+  pgTable,
   smallint,
+  text,
   unique,
 } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { obligationStatus } from './enums.js';
-import { budgetCycles } from './budget-cycles.js';
-import { ownerships } from './ownerships.js';
+import { annualTargetBudgets } from './annual-target-budgets.js';
+import { unitCoOwners } from './unit-co-owners.js';
 
 export const cycleObligations = pgTable(
   'cycle_obligations',
   {
     ...baseId,
-    budgetCycleId: integer('budget_cycle_id')
+    annualTargetBudgetId: integer('annual_target_budget_id')
       .notNull()
-      .references(() => budgetCycles.id, { onDelete: 'restrict' }),
+      .references(() => annualTargetBudgets.id, { onDelete: 'restrict' }),
     ownershipId: integer('ownership_id')
       .notNull()
-      .references(() => ownerships.id, { onDelete: 'restrict' }),
+      .references(() => unitCoOwners.id, { onDelete: 'restrict' }),
     shareAmount: numeric('share_amount', {
       precision: 12,
       scale: 2,
@@ -54,12 +54,15 @@ export const cycleObligations = pgTable(
     ...timestamps,
   },
   (table) => [
-    unique('cycle_obligations_unique_per_cycle_ownership').on(
-      table.budgetCycleId,
+    unique('cycle_obligations_unique_per_budget_ownership').on(
+      table.annualTargetBudgetId,
       table.ownershipId,
     ),
-    index('idx_cycle_obligations_cycle_id').on(table.budgetCycleId),
+    index('idx_cycle_obligations_budget_id').on(table.annualTargetBudgetId),
     index('idx_cycle_obligations_ownership_id').on(table.ownershipId),
-    index('idx_cycle_obligations_status').on(table.budgetCycleId, table.status),
+    index('idx_cycle_obligations_status').on(
+      table.annualTargetBudgetId,
+      table.status,
+    ),
   ],
 );

@@ -2,11 +2,11 @@ import {
   index,
   integer,
   numeric,
+  pgTable,
   text,
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { paymentMethod } from './enums.js';
 import { cycleObligations } from './cycle-obligations.js';

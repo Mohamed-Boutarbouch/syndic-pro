@@ -9,6 +9,8 @@ import { dateAsIsoString, SERVER_OMIT } from './helpers.js';
 export const selectPaymentSchema = createSelectSchema(payments, {
   createdAt: dateAsIsoString,
   updatedAt: dateAsIsoString,
+  paidAt: dateAsIsoString,
+  voidedAt: dateAsIsoString.optional(),
 });
 export const paymentResponseSchema = selectPaymentSchema;
 

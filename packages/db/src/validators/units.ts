@@ -13,11 +13,11 @@ export const selectUnitSchema = createSelectSchema(units, {
 export const unitResponseSchema = selectUnitSchema;
 
 export const insertUnitSchema = createInsertSchema(units, {
-  unitNumber: (schema) => schema.min(1).max(30),
-  contributionWeight: (schema) => schema.positive(),
+  unitLabel: (schema) => schema.min(1).max(30),
+  weightCoefficient: (schema) => schema.positive(),
 }).omit(SERVER_OMIT);
 
 export const updateUnitSchema = createUpdateSchema(units, {
-  unitNumber: (schema) => schema.min(1).max(30),
-  contributionWeight: (schema) => schema.positive(),
+  unitLabel: (schema) => schema.min(1).max(30),
+  weightCoefficient: (schema) => schema.positive(),
 }).omit(SERVER_OMIT);

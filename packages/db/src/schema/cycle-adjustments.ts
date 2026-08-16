@@ -1,18 +1,17 @@
-import { index, integer, numeric, text, timestamp } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
-import { baseId } from './helpers/columns.js';
+import { index, integer, numeric, pgTable, text } from 'drizzle-orm/pg-core';
+import { baseId, timestamps } from './helpers/columns.js';
 import { adjustmentType } from './enums.js';
-import { budgetCycles } from './budget-cycles.js';
-import { ownerships } from './ownerships.js';
+import { annualTargetBudgets } from './annual-target-budgets.js';
+import { unitOwnerships } from './unit-ownerships.js';
 import { user } from './auth/index.js';
 
 export const cycleAdjustments = pgTable(
   'cycle_adjustments',
   {
     ...baseId,
-    budgetCycleId: integer('budget_cycle_id')
+    annualTargetBudgetId: integer('annual_target_budget_id')
       .notNull()
-      .references(() => budgetCycles.id, { onDelete: 'restrict' }),
+      .references(() => annualTargetBudgets.id, { onDelete: 'restrict' }),
     type: adjustmentType('type').notNull(),
     deltaAmount: numeric('delta_amount', {
       precision: 12,
@@ -21,18 +20,15 @@ export const cycleAdjustments = pgTable(
     }).notNull(),
     reason: text('reason').notNull(),
     relatedOwnershipId: integer('related_ownership_id').references(
-      () => ownerships.id,
+      () => unitOwnerships.id,
       { onDelete: 'set null' },
     ),
     createdByUserId: text('created_by_user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'restrict' }),
-    createdAt: timestamp('created_at', { mode: 'date', withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp('updated_at', { mode: 'date', withTimezone: true })
-      .$onUpdate(() => new Date())
-      .notNull(),
+    ...timestamps,
   },
-  (table) => [index('idx_cycle_adjustments_cycle_id').on(table.budgetCycleId)],
+  (table) => [
+    index('idx_cycle_adjustments_budget_id').on(table.annualTargetBudgetId),
+  ],
 );

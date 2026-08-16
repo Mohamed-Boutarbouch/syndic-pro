@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { invitations } from '../schema/invitations.js';
 import { properties } from '../schema/properties.js';
-import { user } from '../schema/index.js';
+import { user } from '../schema/auth/index.js';
 
 export const invitationsRelations = relations(invitations, ({ one }) => ({
   property: one(properties, {

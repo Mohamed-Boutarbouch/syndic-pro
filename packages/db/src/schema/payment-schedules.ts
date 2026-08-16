@@ -4,10 +4,10 @@ import {
   index,
   integer,
   numeric,
+  pgTable,
   smallint,
   unique,
 } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { scheduleStatus } from './enums.js';
 import { cycleObligations } from './cycle-obligations.js';

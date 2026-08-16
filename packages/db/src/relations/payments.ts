@@ -2,7 +2,7 @@ import { relations } from 'drizzle-orm';
 import { payments } from '../schema/payments.js';
 import { cycleObligations } from '../schema/cycle-obligations.js';
 import { paymentSchedules } from '../schema/payment-schedules.js';
-import { user } from '../schema/index.js';
+import { user } from '../schema/auth/index.js';
 
 export const paymentsRelations = relations(payments, ({ one }) => ({
   cycleObligation: one(cycleObligations, {

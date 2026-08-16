@@ -3,12 +3,10 @@ import {
   index,
   integer,
   numeric,
-  smallint,
-  text,
+  pgTable,
   unique,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { unitType } from './enums.js';
 import { properties } from './properties.js';
@@ -20,24 +18,23 @@ export const units = pgTable(
     propertyId: integer('property_id')
       .notNull()
       .references(() => properties.id, { onDelete: 'cascade' }),
-    unitNumber: varchar('unit_number', { length: 30 }).notNull(),
-    floor: smallint('floor'),
+    unitLabel: varchar('unit_number', { length: 30 }).notNull(),
+    floor: varchar('floor', { length: 30 }),
     type: unitType('type').notNull().default('residential'),
-    contributionWeight: numeric('contribution_weight', {
+    weightCoefficient: numeric('weight_coefficient', {
       precision: 5,
       scale: 2,
       mode: 'number',
     })
       .notNull()
       .default(1),
-    notes: text('notes'),
     isActive: boolean('is_active').notNull().default(true),
     ...timestamps,
   },
   (table) => [
-    unique('units_unique_number_per_property').on(
+    unique('units_unique_label_per_property').on(
       table.propertyId,
-      table.unitNumber,
+      table.unitLabel,
     ),
     index('idx_units_property_id').on(table.propertyId),
     index('idx_units_type').on(table.propertyId, table.type),

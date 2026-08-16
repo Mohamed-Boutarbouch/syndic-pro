@@ -1,12 +1,12 @@
 import {
   index,
   integer,
+  pgTable,
   text,
   timestamp,
   unique,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
 import { properties } from './properties.js';
 import { user } from './auth/index.js';

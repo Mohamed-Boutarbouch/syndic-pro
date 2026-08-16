@@ -1,9 +1,143 @@
 {
-  "id": "7abe1320-7989-4bb3-8abe-6a4061f453f4",
+  "id": "d796eb03-8253-4ebf-b193-62cd154aa80e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.annual_target_budgets": {
+      "name": "annual_target_budgets",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "property_id": {
+          "name": "property_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_budget": {
+          "name": "total_budget",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "budget_cycle_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unlocked'"
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "idx_annual_target_budgets_property_id": {
+          "name": "idx_annual_target_budgets_property_id",
+          "columns": [
+            {
+              "expression": "property_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_annual_target_budgets_status": {
+          "name": "idx_annual_target_budgets_status",
+          "columns": [
+            {
+              "expression": "property_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "annual_target_budgets_property_id_properties_id_fk": {
+          "name": "annual_target_budgets_property_id_properties_id_fk",
+          "tableFrom": "annual_target_budgets",
+          "tableTo": "properties",
+          "columnsFrom": [
+            "property_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "annual_target_budgets_created_by_user_id_user_id_fk": {
+          "name": "annual_target_budgets_created_by_user_id_user_id_fk",
+          "tableFrom": "annual_target_budgets",
+          "tableTo": "user",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.account": {
       "name": "account",
       "schema": "",
@@ -379,8 +513,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.budget_cycles": {
-      "name": "budget_cycles",
+    "public.co_owners": {
+      "name": "co_owners",
       "schema": "",
       "columns": {
         "id": {
@@ -389,73 +523,36 @@
           "primaryKey": true,
           "notNull": true
         },
-        "property_id": {
-          "name": "property_id",
-          "type": "integer",
+        "name": {
+          "name": "name",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "label": {
-          "name": "label",
-          "type": "varchar(50)",
+        "email": {
+          "name": "email",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "start_month": {
-          "name": "start_month",
-          "type": "date",
+        "phone": {
+          "name": "phone",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "end_month": {
-          "name": "end_month",
-          "type": "date",
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "total_budget": {
-          "name": "total_budget",
-          "type": "numeric(12, 2)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "budget_cycle_status",
-          "typeSchema": "public",
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": "'draft'"
-        },
-        "snapshot_date": {
-          "name": "snapshot_date",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "activated_by_user_id": {
-          "name": "activated_by_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "activated_at": {
-          "name": "activated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "closed_at": {
-          "name": "closed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "notes": {
-          "name": "notes",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "default": true
         },
         "created_at": {
           "name": "created_at",
@@ -471,64 +568,14 @@
           "notNull": true
         }
       },
-      "indexes": {
-        "idx_budget_cycles_property_id": {
-          "name": "idx_budget_cycles_property_id",
-          "columns": [
-            {
-              "expression": "property_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "idx_budget_cycles_status": {
-          "name": "idx_budget_cycles_status",
-          "columns": [
-            {
-              "expression": "property_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "status",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
-        "budget_cycles_property_id_properties_id_fk": {
-          "name": "budget_cycles_property_id_properties_id_fk",
-          "tableFrom": "budget_cycles",
-          "tableTo": "properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "budget_cycles_activated_by_user_id_user_id_fk": {
-          "name": "budget_cycles_activated_by_user_id_user_id_fk",
-          "tableFrom": "budget_cycles",
+        "co_owners_user_id_user_id_fk": {
+          "name": "co_owners_user_id_user_id_fk",
+          "tableFrom": "co_owners",
           "tableTo": "user",
           "columnsFrom": [
-            "activated_by_user_id"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -538,16 +585,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "budget_cycles_unique_label_per_property": {
-          "name": "budget_cycles_unique_label_per_property",
-          "nullsNotDistinct": false,
-          "columns": [
-            "property_id",
-            "label"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -562,8 +600,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "budget_cycle_id": {
-          "name": "budget_cycle_id",
+        "annual_target_budget_id": {
+          "name": "annual_target_budget_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -614,11 +652,11 @@
         }
       },
       "indexes": {
-        "idx_cycle_adjustments_cycle_id": {
-          "name": "idx_cycle_adjustments_cycle_id",
+        "idx_cycle_adjustments_budget_id": {
+          "name": "idx_cycle_adjustments_budget_id",
           "columns": [
             {
-              "expression": "budget_cycle_id",
+              "expression": "annual_target_budget_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -631,12 +669,12 @@
         }
       },
       "foreignKeys": {
-        "cycle_adjustments_budget_cycle_id_budget_cycles_id_fk": {
-          "name": "cycle_adjustments_budget_cycle_id_budget_cycles_id_fk",
+        "cycle_adjustments_annual_target_budget_id_annual_target_budgets_id_fk": {
+          "name": "cycle_adjustments_annual_target_budget_id_annual_target_budgets_id_fk",
           "tableFrom": "cycle_adjustments",
-          "tableTo": "budget_cycles",
+          "tableTo": "annual_target_budgets",
           "columnsFrom": [
-            "budget_cycle_id"
+            "annual_target_budget_id"
           ],
           "columnsTo": [
             "id"
@@ -644,10 +682,10 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "cycle_adjustments_related_ownership_id_ownerships_id_fk": {
-          "name": "cycle_adjustments_related_ownership_id_ownerships_id_fk",
+        "cycle_adjustments_related_ownership_id_unit_ownerships_id_fk": {
+          "name": "cycle_adjustments_related_ownership_id_unit_ownerships_id_fk",
           "tableFrom": "cycle_adjustments",
-          "tableTo": "ownerships",
+          "tableTo": "unit_ownerships",
           "columnsFrom": [
             "related_ownership_id"
           ],
@@ -687,8 +725,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "budget_cycle_id": {
-          "name": "budget_cycle_id",
+        "annual_target_budget_id": {
+          "name": "annual_target_budget_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -766,11 +804,11 @@
         }
       },
       "indexes": {
-        "idx_cycle_obligations_cycle_id": {
-          "name": "idx_cycle_obligations_cycle_id",
+        "idx_cycle_obligations_budget_id": {
+          "name": "idx_cycle_obligations_budget_id",
           "columns": [
             {
-              "expression": "budget_cycle_id",
+              "expression": "annual_target_budget_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -800,7 +838,7 @@
           "name": "idx_cycle_obligations_status",
           "columns": [
             {
-              "expression": "budget_cycle_id",
+              "expression": "annual_target_budget_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -819,12 +857,12 @@
         }
       },
       "foreignKeys": {
-        "cycle_obligations_budget_cycle_id_budget_cycles_id_fk": {
-          "name": "cycle_obligations_budget_cycle_id_budget_cycles_id_fk",
+        "cycle_obligations_annual_target_budget_id_annual_target_budgets_id_fk": {
+          "name": "cycle_obligations_annual_target_budget_id_annual_target_budgets_id_fk",
           "tableFrom": "cycle_obligations",
-          "tableTo": "budget_cycles",
+          "tableTo": "annual_target_budgets",
           "columnsFrom": [
-            "budget_cycle_id"
+            "annual_target_budget_id"
           ],
           "columnsTo": [
             "id"
@@ -832,10 +870,10 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "cycle_obligations_ownership_id_ownerships_id_fk": {
-          "name": "cycle_obligations_ownership_id_ownerships_id_fk",
+        "cycle_obligations_ownership_id_unit_co_owners_id_fk": {
+          "name": "cycle_obligations_ownership_id_unit_co_owners_id_fk",
           "tableFrom": "cycle_obligations",
-          "tableTo": "ownerships",
+          "tableTo": "unit_co_owners",
           "columnsFrom": [
             "ownership_id"
           ],
@@ -848,11 +886,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "cycle_obligations_unique_per_cycle_ownership": {
-          "name": "cycle_obligations_unique_per_cycle_ownership",
+        "cycle_obligations_unique_per_budget_ownership": {
+          "name": "cycle_obligations_unique_per_budget_ownership",
           "nullsNotDistinct": false,
           "columns": [
-            "budget_cycle_id",
+            "annual_target_budget_id",
             "ownership_id"
           ]
         }
@@ -881,7 +919,7 @@
           "name": "address",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "city": {
           "name": "city",
@@ -899,8 +937,7 @@
           "name": "country_code",
           "type": "char(2)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'MA'"
+          "notNull": false
         },
         "is_active": {
           "name": "is_active",
@@ -955,7 +992,7 @@
         },
         "floor": {
           "name": "floor",
-          "type": "smallint",
+          "type": "varchar(30)",
           "primaryKey": false,
           "notNull": false
         },
@@ -967,18 +1004,12 @@
           "notNull": true,
           "default": "'residential'"
         },
-        "contribution_weight": {
-          "name": "contribution_weight",
+        "weight_coefficient": {
+          "name": "weight_coefficient",
           "type": "numeric(5, 2)",
           "primaryKey": false,
           "notNull": true,
           "default": 1
-        },
-        "notes": {
-          "name": "notes",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "is_active": {
           "name": "is_active",
@@ -1056,8 +1087,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "units_unique_number_per_property": {
-          "name": "units_unique_number_per_property",
+        "units_unique_label_per_property": {
+          "name": "units_unique_label_per_property",
           "nullsNotDistinct": false,
           "columns": [
             "property_id",
@@ -1069,8 +1100,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.ownerships": {
-      "name": "ownerships",
+    "public.unit_co_owners": {
+      "name": "unit_co_owners",
       "schema": "",
       "columns": {
         "id": {
@@ -1085,29 +1116,24 @@
           "primaryKey": false,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
+        "co_owner_id": {
+          "name": "co_owner_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "started_at": {
-          "name": "started_at",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ended_at": {
-          "name": "ended_at",
-          "type": "date",
+        "ownership_percentage": {
+          "name": "ownership_percentage",
+          "type": "numeric(5, 2)",
           "primaryKey": false,
           "notNull": false
         },
-        "notes": {
-          "name": "notes",
-          "type": "text",
+        "is_designated_syndic": {
+          "name": "is_designated_syndic",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -1123,63 +1149,11 @@
           "notNull": true
         }
       },
-      "indexes": {
-        "idx_ownerships_unit_id": {
-          "name": "idx_ownerships_unit_id",
-          "columns": [
-            {
-              "expression": "unit_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "idx_ownerships_user_id": {
-          "name": "idx_ownerships_user_id",
-          "columns": [
-            {
-              "expression": "user_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "idx_ownerships_active": {
-          "name": "idx_ownerships_active",
-          "columns": [
-            {
-              "expression": "unit_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "started_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
-        "ownerships_unit_id_units_id_fk": {
-          "name": "ownerships_unit_id_units_id_fk",
-          "tableFrom": "ownerships",
+        "unit_co_owners_unit_id_units_id_fk": {
+          "name": "unit_co_owners_unit_id_units_id_fk",
+          "tableFrom": "unit_co_owners",
           "tableTo": "units",
           "columnsFrom": [
             "unit_id"
@@ -1187,31 +1161,40 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "ownerships_user_id_user_id_fk": {
-          "name": "ownerships_user_id_user_id_fk",
-          "tableFrom": "ownerships",
-          "tableTo": "user",
+        "unit_co_owners_co_owner_id_co_owners_id_fk": {
+          "name": "unit_co_owners_co_owner_id_co_owners_id_fk",
+          "tableFrom": "unit_co_owners",
+          "tableTo": "co_owners",
           "columnsFrom": [
-            "user_id"
+            "co_owner_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "restrict",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "uq_unit_co_owners_unit_co_owner": {
+          "name": "uq_unit_co_owners_unit_co_owner",
+          "nullsNotDistinct": false,
+          "columns": [
+            "unit_id",
+            "co_owner_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.property_syndics": {
-      "name": "property_syndics",
+    "public.syndic_designations": {
+      "name": "syndic_designations",
       "schema": "",
       "columns": {
         "id": {
@@ -1280,8 +1263,8 @@
         }
       },
       "indexes": {
-        "idx_property_syndics_property_id": {
-          "name": "idx_property_syndics_property_id",
+        "idx_syndic_designations_property_id": {
+          "name": "idx_syndic_designations_property_id",
           "columns": [
             {
               "expression": "property_id",
@@ -1295,8 +1278,8 @@
           "method": "btree",
           "with": {}
         },
-        "idx_property_syndics_user_id": {
-          "name": "idx_property_syndics_user_id",
+        "idx_syndic_designations_user_id": {
+          "name": "idx_syndic_designations_user_id",
           "columns": [
             {
               "expression": "user_id",
@@ -1312,9 +1295,9 @@
         }
       },
       "foreignKeys": {
-        "property_syndics_property_id_properties_id_fk": {
-          "name": "property_syndics_property_id_properties_id_fk",
-          "tableFrom": "property_syndics",
+        "syndic_designations_property_id_properties_id_fk": {
+          "name": "syndic_designations_property_id_properties_id_fk",
+          "tableFrom": "syndic_designations",
           "tableTo": "properties",
           "columnsFrom": [
             "property_id"
@@ -1325,9 +1308,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "property_syndics_user_id_user_id_fk": {
-          "name": "property_syndics_user_id_user_id_fk",
-          "tableFrom": "property_syndics",
+        "syndic_designations_user_id_user_id_fk": {
+          "name": "syndic_designations_user_id_user_id_fk",
+          "tableFrom": "syndic_designations",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -1338,9 +1321,9 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "property_syndics_transferred_from_user_id_user_id_fk": {
-          "name": "property_syndics_transferred_from_user_id_user_id_fk",
-          "tableFrom": "property_syndics",
+        "syndic_designations_transferred_from_user_id_user_id_fk": {
+          "name": "syndic_designations_transferred_from_user_id_user_id_fk",
+          "tableFrom": "syndic_designations",
           "tableTo": "user",
           "columnsFrom": [
             "transferred_from_user_id"
@@ -2007,6 +1990,147 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.unit_ownerships": {
+      "name": "unit_ownerships",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "unit_id": {
+          "name": "unit_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ended_at": {
+          "name": "ended_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "idx_unit_ownerships_unit_id": {
+          "name": "idx_unit_ownerships_unit_id",
+          "columns": [
+            {
+              "expression": "unit_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_unit_ownerships_user_id": {
+          "name": "idx_unit_ownerships_user_id",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_unit_ownerships_active": {
+          "name": "idx_unit_ownerships_active",
+          "columns": [
+            {
+              "expression": "unit_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "started_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "unit_ownerships_unit_id_units_id_fk": {
+          "name": "unit_ownerships_unit_id_units_id_fk",
+          "tableFrom": "unit_ownerships",
+          "tableTo": "units",
+          "columnsFrom": [
+            "unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "unit_ownerships_user_id_user_id_fk": {
+          "name": "unit_ownerships_user_id_user_id_fk",
+          "tableFrom": "unit_ownerships",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -2025,9 +2149,8 @@
       "name": "budget_cycle_status",
       "schema": "public",
       "values": [
-        "draft",
-        "active",
-        "closed"
+        "locked",
+        "unlocked"
       ]
     },
     "public.obligation_status": {
@@ -2078,7 +2201,6 @@
         "residential",
         "commercial",
         "storage",
-        "parking",
         "other"
       ]
     }

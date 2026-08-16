@@ -1,19 +1,19 @@
 import { relations } from 'drizzle-orm';
 import { cycleAdjustments } from '../schema/cycle-adjustments.js';
-import { budgetCycles } from '../schema/budget-cycles.js';
-import { ownerships } from '../schema/ownerships.js';
-import { user } from '../schema/index.js';
+import { annualTargetBudgets } from '../schema/annual-target-budgets.js';
+import { unitOwnerships } from '../schema/unit-ownerships.js';
+import { user } from '../schema/auth/index.js';
 
 export const cycleAdjustmentsRelations = relations(
   cycleAdjustments,
   ({ one }) => ({
-    budgetCycle: one(budgetCycles, {
-      fields: [cycleAdjustments.budgetCycleId],
-      references: [budgetCycles.id],
+    annualTargetBudget: one(annualTargetBudgets, {
+      fields: [cycleAdjustments.annualTargetBudgetId],
+      references: [annualTargetBudgets.id],
     }),
-    relatedOwnership: one(ownerships, {
+    relatedOwnership: one(unitOwnerships, {
       fields: [cycleAdjustments.relatedOwnershipId],
-      references: [ownerships.id],
+      references: [unitOwnerships.id],
     }),
     createdByUser: one(user, {
       fields: [cycleAdjustments.createdByUserId],

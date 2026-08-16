@@ -4,14 +4,12 @@ export const unitType = pgEnum('unit_type', [
   'residential',
   'commercial',
   'storage',
-  'parking',
   'other',
 ]);
 
 export const budgetCycleStatus = pgEnum('budget_cycle_status', [
-  'draft',
-  'active',
-  'closed',
+  'locked',
+  'unlocked',
 ]);
 
 export const obligationStatus = pgEnum('obligation_status', [
