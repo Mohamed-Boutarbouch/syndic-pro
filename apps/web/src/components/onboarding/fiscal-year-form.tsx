@@ -31,7 +31,7 @@ import { MonthYearPicker } from '@/components/month-year-picker';
 import { Switch } from '@/components/ui/switch';
 import { useOnboardingStore } from '@/features/onboarding/store';
 
-export function OnboardingFiscalYearForm() {
+export function FiscalYearForm() {
   const { fiscalYear, setFiscalYear } = useOnboardingStore();
   const router = useRouter();
 

@@ -58,7 +58,7 @@ function createEmptyCoOwner(unitClientId: string): CoOwnerItem {
   };
 }
 
-export function OnboardingCoOwnerForm() {
+export function CoOwnerForm() {
   const hasHydrated = useOnboardingStore((s) => s._hasHydrated);
   const units = useOnboardingStore((s) => s.units);
   const coOwners = useOnboardingStore((s) => s.coOwners);

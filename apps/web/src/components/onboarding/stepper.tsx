@@ -11,7 +11,7 @@ const steps = [
   { href: '/onboarding/co-owners', label: 'Co-Owners', icon: Users },
 ] as const;
 
-export function OnboardingStepper() {
+export function Stepper() {
   const pathname = usePathname();
   const currentIndex = steps.findIndex((s) => s.href === pathname);
 

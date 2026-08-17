@@ -1,9 +1,9 @@
-import { OnboardingPropertyForm } from '@/components/onboarding/onboarding-property-form';
+import { PropertyForm } from '@/components/onboarding/property-form';
 
 export default function PropertyPage() {
   return (
     <div>
-      <OnboardingPropertyForm />
+      <PropertyForm />
     </div>
   );
 }

@@ -24,7 +24,7 @@ import {
 } from '@/features/onboarding/schema';
 import { useOnboardingStore } from '@/features/onboarding/store';
 
-export function OnboardingPropertyForm() {
+export function PropertyForm() {
   const { property, setProperty } = useOnboardingStore();
   const router = useRouter();
   const form = useForm<OnboardingProperty>({

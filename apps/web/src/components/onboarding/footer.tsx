@@ -32,7 +32,7 @@ const steps = {
   },
 } as const;
 
-export function OnboardingFooter() {
+export function Footer() {
   const pathname = usePathname();
   const router = useRouter();
 

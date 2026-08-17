@@ -1,9 +1,9 @@
-import { OnboardingFiscalYearForm } from '@/components/onboarding/onboarding-fiscal-year-form';
+import { FiscalYearForm } from '@/components/onboarding/fiscal-year-form';
 
 export default function FiscalYearPage() {
   return (
     <div>
-      <OnboardingFiscalYearForm />
+      <FiscalYearForm />
     </div>
   );
 }

@@ -57,7 +57,7 @@ function createEmptyUnit(): UnitItem {
   };
 }
 
-export function OnboardingUnitForm() {
+export function UnitForm() {
   const hasHydrated = useOnboardingStore((s) => s._hasHydrated);
   const units = useOnboardingStore((s) => s.units);
   const setUnits = useOnboardingStore((s) => s.setUnits);
