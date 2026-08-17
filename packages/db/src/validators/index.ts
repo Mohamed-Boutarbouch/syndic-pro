@@ -5,6 +5,7 @@ export * from './syndic-designations.js';
 export * from './co-owners.js';
 export * from './unit-co-owners.js';
 export * from './unit-ownerships.js';
+export * from './onboarding.js';
 export * from './annual-target-budgets.js';
 export * from './cycle-adjustments.js';
 export * from './cycle-obligations.js';

@@ -8,6 +8,7 @@ import {
 import { baseId, timestamps } from './helpers/columns.js';
 import { units } from './units.js';
 import { coOwners } from './co-owners.js';
+import { billingFrequency } from './enums.js';
 
 export const unitCoOwners = pgTable(
   'unit_co_owners',
@@ -27,6 +28,10 @@ export const unitCoOwners = pgTable(
       scale: 2,
       mode: 'number',
     }),
+
+    billingFrequency: billingFrequency('billing_frequency')
+      .notNull()
+      .default('monthly'),
 
     isDesignatedSyndic: boolean('is_designated_syndic')
       .default(false)

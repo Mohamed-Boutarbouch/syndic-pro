@@ -12,6 +12,13 @@ export const budgetCycleStatus = pgEnum('budget_cycle_status', [
   'unlocked',
 ]);
 
+export const billingFrequency = pgEnum('billing_frequency', [
+  'monthly',
+  'bimonthly',
+  'quarterly',
+  'semi_annual',
+]);
+
 export const obligationStatus = pgEnum('obligation_status', [
   'active',
   'departed',
