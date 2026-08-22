@@ -1,4 +1,4 @@
 import { createZodDto } from 'nestjs-zod';
-import { unitResponseSchema } from '@syndic-pro/db/validators';
+import { unitResponseSchema } from '@syndic-pro/validators';
 
 export class UnitResponseDto extends createZodDto(unitResponseSchema) {}

@@ -11,7 +11,7 @@ import { Session, type UserSession } from '@thallesp/nestjs-better-auth';
 import {
   onboardingPayloadSchema,
   type OnboardingPayload,
-} from '@syndic-pro/db/validators';
+} from '@syndic-pro/validators';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe.js';
 import { SyndicOnboardingService } from './syndic-onboarding.service';

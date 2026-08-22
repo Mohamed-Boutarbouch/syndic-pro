@@ -3,10 +3,11 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.spec.json" },
-    { "path": "../../packages/db/tsconfig.lib.json" },
-    { "path": "../../packages/validators/tsconfig.lib.json" },
-    { "path": "../../packages/types/tsconfig.lib.json" },
-  ],
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

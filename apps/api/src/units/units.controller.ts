@@ -14,7 +14,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { insertUnitSchema, updateUnitSchema } from '@syndic-pro/db/validators';
+import { createUnitSchema, updateUnitSchema } from '@syndic-pro/validators';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import { UnitsService } from './units.service';
 import { CreateUnitDto } from './dto/create-unit.dto';
@@ -31,7 +31,7 @@ export class UnitsController {
   @ApiBody({ type: CreateUnitDto })
   @ApiOkResponse({ type: UnitResponseDto })
   async create(
-    @Body(new ZodValidationPipe(insertUnitSchema)) body: CreateUnitDto,
+    @Body(new ZodValidationPipe(createUnitSchema)) body: CreateUnitDto,
   ) {
     return this.unitsService.create(body);
   }
