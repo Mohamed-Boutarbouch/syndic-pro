@@ -8,5 +8,6 @@
     { "path": "./apps/web" },
     { "path": "./packages/db" },
     { "path": "./packages/validators" },
+    { "path": "./packages/types" },
   ],
 }
