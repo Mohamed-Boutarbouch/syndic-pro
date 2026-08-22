@@ -8,7 +8,6 @@ import {
   type OnboardingPayload,
 } from '@syndic-pro/db';
 import { DatabaseService } from '../database/database.service';
-import { CreateSyndicOnboardingDto } from './dto/create-syndic-onboarding.dto';
 
 @Injectable()
 export class SyndicOnboardingService {
@@ -120,25 +119,5 @@ export class SyndicOnboardingService {
         pendingSyndicAssignment,
       };
     });
-  }
-
-  create(createSyndicOnboardingDto: CreateSyndicOnboardingDto) {
-    return 'This action adds a new syndicOnboarding';
-  }
-
-  findAll() {
-    return `This action returns all syndicOnboarding`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} syndicOnboarding`;
-  }
-
-  // update(id: number, updateSyndicOnboardingDto: UpdateSyndicOnboardingDto) {
-  //   return `This action updates a #${id} syndicOnboarding`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} syndicOnboarding`;
   }
 }
