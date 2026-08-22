@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@syndic-pro/validators": "*",
     "@base-ui/react": "^1.7.0",
     "@hookform/resolvers": "^5.8.0",
     "@shadcn/react": "^0.3.0",
