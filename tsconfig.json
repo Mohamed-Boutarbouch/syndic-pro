@@ -3,17 +3,10 @@
   "compileOnSave": false,
   "files": [],
   "references": [
-    {
-      "path": "./apps/api-e2e"
-    },
-    {
-      "path": "./apps/api"
-    },
-    {
-      "path": "./apps/web"
-    },
-    {
-      "path": "./packages/db"
-    }
-  ]
+    { "path": "./apps/api-e2e" },
+    { "path": "./apps/api" },
+    { "path": "./apps/web" },
+    { "path": "./packages/db" },
+    { "path": "./packages/validators" },
+  ],
 }
