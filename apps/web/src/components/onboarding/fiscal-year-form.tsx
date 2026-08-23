@@ -21,10 +21,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  OnboardingFiscalYear,
-  fiscalYearSchema,
-} from '@/features/onboarding/schema';
+
+import { createAnnualTargetBudgetSchema } from '@syndic-pro/validators';
+import type { CreateAnnualTargetBudget } from '@syndic-pro/types';
 
 import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/month-year-picker';
@@ -35,18 +34,18 @@ export function FiscalYearForm() {
   const { fiscalYear, setFiscalYear } = useOnboardingStore();
   const router = useRouter();
 
-  const form = useForm<OnboardingFiscalYear>({
-    resolver: zodResolver(fiscalYearSchema),
+  const form = useForm<CreateAnnualTargetBudget>({
+    resolver: zodResolver(createAnnualTargetBudgetSchema),
 
     defaultValues: fiscalYear ?? {
-      fiscalYearStart: undefined,
-      fiscalYearEnd: undefined,
-      annualTargetBudget: undefined,
-      lockBudget: false,
+      startDate: undefined,
+      endDate: undefined,
+      totalBudget: undefined,
+      isBudgetLocked: false,
     },
   });
 
-  function submitHandler(data: OnboardingFiscalYear) {
+  function submitHandler(data: CreateAnnualTargetBudget) {
     console.log(data);
     setFiscalYear(data);
     router.push('/onboarding/units');
@@ -70,7 +69,7 @@ export function FiscalYearForm() {
           <FieldGroup>
             <div className="grid gap-6 md:grid-cols-2">
               <Controller
-                name="fiscalYearStart"
+                name="startDate"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
@@ -93,7 +92,7 @@ export function FiscalYearForm() {
               />
 
               <Controller
-                name="fiscalYearEnd"
+                name="endDate"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
@@ -119,7 +118,7 @@ export function FiscalYearForm() {
             <FieldSeparator />
 
             <Controller
-              name="annualTargetBudget"
+              name="totalBudget"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -158,7 +157,7 @@ export function FiscalYearForm() {
             />
 
             <Controller
-              name="lockBudget"
+              name="isBudgetLocked"
               control={form.control}
               render={({ field }) => (
                 <FieldLabel htmlFor="lock-budget">

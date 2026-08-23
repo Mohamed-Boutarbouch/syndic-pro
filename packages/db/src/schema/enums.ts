@@ -1,7 +1,6 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
 import {
   unitTypeValues,
-  budgetCycleStatusValues,
   billingFrequencyValues,
   obligationStatusValues,
   scheduleStatusValues,
@@ -11,10 +10,6 @@ import {
 } from '@syndic-pro/validators';
 
 export const unitType = pgEnum('unit_type', unitTypeValues);
-export const budgetCycleStatus = pgEnum(
-  'budget_cycle_status',
-  budgetCycleStatusValues,
-);
 export const billingFrequency = pgEnum(
   'billing_frequency',
   billingFrequencyValues,

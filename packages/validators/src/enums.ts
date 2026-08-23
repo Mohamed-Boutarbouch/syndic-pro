@@ -8,9 +8,6 @@ export const unitTypeValues = [
 ] as const;
 export const unitTypeSchema = z.enum(unitTypeValues);
 
-export const budgetCycleStatusValues = ['locked', 'unlocked'] as const;
-export const budgetCycleStatusSchema = z.enum(budgetCycleStatusValues);
-
 export const billingFrequencyValues = [
   'monthly',
   'bimonthly',

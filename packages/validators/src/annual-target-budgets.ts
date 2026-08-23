@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { isoDateTime, isoDate } from './common.js';
-import { budgetCycleStatusSchema } from './enums.js';
 
 export const createAnnualTargetBudgetSchema = z
   .object({
@@ -8,7 +7,7 @@ export const createAnnualTargetBudgetSchema = z
     startDate: isoDate,
     endDate: isoDate,
     totalBudget: z.number().positive(),
-    status: budgetCycleStatusSchema.default('unlocked'),
+    isBudgetLocked: z.boolean(),
     createdByUserId: z.string().optional(),
   })
   .refine((data) => data.endDate > data.startDate, {
@@ -21,7 +20,7 @@ export const updateAnnualTargetBudgetSchema = z.object({
   startDate: isoDate.optional(),
   endDate: isoDate.optional(),
   totalBudget: z.number().positive().optional(),
-  status: budgetCycleStatusSchema.optional(),
+  isBudgetLocked: z.boolean().optional(),
   createdByUserId: z.string().optional(),
 });
 
@@ -31,7 +30,7 @@ export const annualTargetBudgetResponseSchema = z.object({
   startDate: isoDate,
   endDate: isoDate,
   totalBudget: z.number(),
-  status: budgetCycleStatusSchema,
+  isBudgetLocked: z.boolean(),
   createdByUserId: z.string().nullable(),
   createdAt: isoDateTime,
   updatedAt: isoDateTime,

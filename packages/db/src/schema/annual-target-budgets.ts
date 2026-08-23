@@ -5,9 +5,9 @@ import {
   numeric,
   pgTable,
   text,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import { baseId, timestamps } from './helpers/columns.js';
-import { budgetCycleStatus } from './enums.js';
 import { properties } from './properties.js';
 import { user } from './auth/index.js';
 
@@ -25,7 +25,7 @@ export const annualTargetBudgets = pgTable(
       scale: 2,
       mode: 'number',
     }).notNull(),
-    status: budgetCycleStatus('status').notNull().default('unlocked'),
+    isBudgedLocked: boolean('is_budged_locked').default(false),
     createdByUserId: text('created_by_user_id').references(() => user.id, {
       onDelete: 'set null',
     }),
@@ -33,9 +33,5 @@ export const annualTargetBudgets = pgTable(
   },
   (table) => [
     index('idx_annual_target_budgets_property_id').on(table.propertyId),
-    index('idx_annual_target_budgets_status').on(
-      table.propertyId,
-      table.status,
-    ),
   ],
 );
