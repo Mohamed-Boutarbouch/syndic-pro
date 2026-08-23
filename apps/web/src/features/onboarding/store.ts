@@ -3,17 +3,18 @@ import { persist } from 'zustand/middleware';
 import type {
   CreateAnnualTargetBudget,
   CreateProperty,
+  OnboardingUnit,
 } from '@syndic-pro/types';
 
 interface OnboardingState {
   property?: CreateProperty;
   fiscalYear?: CreateAnnualTargetBudget;
-  // units: UnitItem[];
+  units: OnboardingUnit[];
   // coOwners: OnboardingCoOwner[];
   _hasHydrated: boolean;
   setProperty: (data: CreateProperty) => void;
   setFiscalYear: (data: CreateAnnualTargetBudget) => void;
-  // setUnits: (data: UnitItem[]) => void;
+  setUnits: (data: OnboardingUnit[]) => void;
   // setCoOwners: (data: OnboardingCoOwner[]) => void;
   setHasHydrated: (state: boolean) => void;
   reset: () => void;
@@ -22,19 +23,19 @@ interface OnboardingState {
 export const useOnboardingStore = create<OnboardingState>()(
   persist(
     (set) => ({
-      // units: [],
+      units: [],
       // coOwners: [],
       _hasHydrated: false,
       setProperty: (data) => set({ property: data }),
       setFiscalYear: (data) => set({ fiscalYear: data }),
-      // setUnits: (data) => set({ units: data }),
+      setUnits: (data) => set({ units: data }),
       // setCoOwners: (data) => set({ coOwners: data }),
       setHasHydrated: (state) => set({ _hasHydrated: state }),
       reset: () =>
         set({
           property: undefined,
           fiscalYear: undefined,
-          // units: [],
+          units: [],
           // coOwners: [],
         }),
     }),

@@ -18,7 +18,7 @@ export const units = pgTable(
     propertyId: integer('property_id')
       .notNull()
       .references(() => properties.id, { onDelete: 'cascade' }),
-    unitLabel: varchar('unit_number', { length: 30 }).notNull(),
+    label: varchar('label', { length: 30 }).notNull(),
     floor: varchar('floor', { length: 30 }),
     type: unitType('type').notNull().default('residential'),
     weightCoefficient: numeric('weight_coefficient', {
@@ -32,10 +32,7 @@ export const units = pgTable(
     ...timestamps,
   },
   (table) => [
-    unique('units_unique_label_per_property').on(
-      table.propertyId,
-      table.unitLabel,
-    ),
+    unique('units_unique_label_per_property').on(table.propertyId, table.label),
     index('idx_units_property_id').on(table.propertyId),
     index('idx_units_type').on(table.propertyId, table.type),
   ],

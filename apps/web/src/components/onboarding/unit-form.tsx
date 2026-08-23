@@ -36,24 +36,25 @@ import {
 } from '@/components/ui/item';
 import { Button } from '@/components/ui/button';
 import {
-  UNIT_TYPES,
-  OnboardingUnits,
-  unitsSchema,
-  UnitItem,
-} from '@/features/onboarding/schema';
+  onboardingUnitsFormSchema,
+  unitTypeValues,
+} from '@syndic-pro/validators';
+import type {
+  OnboardingUnitsFormInput,
+  OnboardingUnitsFormOutput,
+} from '@syndic-pro/types';
 import { Input } from '@/components/ui/input';
 import { useOnboardingStore } from '@/features/onboarding/store';
 import { useEffect } from 'react';
 
 const MAX_UNITS = 50;
 
-function createEmptyUnit(): UnitItem {
+function createEmptyUnit(): OnboardingUnitsFormInput['units'][number] {
   return {
-    clientId: crypto.randomUUID(),
-    unitLabel: '',
-    unitType: 'Apartment',
-    unitFloor: '',
-    weightCoefficient: undefined,
+    label: '',
+    floor: '',
+    type: 'residential',
+    weightCoefficient: 1,
   };
 }
 
@@ -62,8 +63,13 @@ export function UnitForm() {
   const units = useOnboardingStore((s) => s.units);
   const setUnits = useOnboardingStore((s) => s.setUnits);
   const router = useRouter();
-  const form = useForm<OnboardingUnits>({
-    resolver: zodResolver(unitsSchema),
+
+  const form = useForm<
+    OnboardingUnitsFormInput,
+    any,
+    OnboardingUnitsFormOutput
+  >({
+    resolver: zodResolver(onboardingUnitsFormSchema),
     defaultValues: {
       units: units.length > 0 ? units : [createEmptyUnit()],
     },
@@ -80,8 +86,7 @@ export function UnitForm() {
     name: 'units',
   });
 
-  function submitHandler(data: OnboardingUnits) {
-    console.log(data);
+  function submitHandler(data: OnboardingUnitsFormOutput) {
     setUnits(data.units);
     router.push('/onboarding/co-owners');
   }
@@ -121,7 +126,7 @@ export function UnitForm() {
                   <ItemTitle>Unit {index + 1}</ItemTitle>
                   <ItemContent className="grid w-full gap-4 sm:grid-cols-2 md:grid-cols-4 md:items-start">
                     <Controller
-                      name={`units.${index}.unitLabel`}
+                      name={`units.${index}.label`}
                       control={form.control}
                       render={({ field: controllerField, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
@@ -142,7 +147,7 @@ export function UnitForm() {
                       )}
                     />
                     <Controller
-                      name={`units.${index}.unitType`}
+                      name={`units.${index}.type`}
                       control={form.control}
                       render={({ field: controllerField, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
@@ -161,7 +166,7 @@ export function UnitForm() {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              {UNIT_TYPES.map((type) => (
+                              {unitTypeValues.map((type) => (
                                 <SelectItem key={type} value={type}>
                                   {type}
                                 </SelectItem>
@@ -175,7 +180,7 @@ export function UnitForm() {
                       )}
                     />
                     <Controller
-                      name={`units.${index}.unitFloor`}
+                      name={`units.${index}.floor`}
                       control={form.control}
                       render={({ field: controllerField, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
@@ -203,7 +208,6 @@ export function UnitForm() {
                             Weight coefficient
                             <span className="text-destructive">*</span>
                           </FieldLabel>
-
                           <div className="relative">
                             <span
                               aria-hidden="true"
@@ -211,7 +215,6 @@ export function UnitForm() {
                             >
                               ×
                             </span>
-
                             <Input
                               id={`weight-coefficient-${index}`}
                               type="number"
@@ -225,7 +228,6 @@ export function UnitForm() {
                               value={controllerField.value ?? ''}
                               onChange={(event) => {
                                 const value = event.target.value;
-
                                 controllerField.onChange(
                                   value === '' ? undefined : Number(value),
                                 );
@@ -233,7 +235,6 @@ export function UnitForm() {
                               className="pl-8"
                             />
                           </div>
-
                           {fieldState.invalid && (
                             <FieldError errors={[fieldState.error]} />
                           )}
@@ -241,7 +242,6 @@ export function UnitForm() {
                       )}
                     />
                   </ItemContent>
-
                   {fields.length > 1 && (
                     <ItemActions>
                       <Button
