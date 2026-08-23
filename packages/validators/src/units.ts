@@ -25,10 +25,11 @@ export const unitResponseSchema = z.object({
   updatedAt: isoDateTime,
 });
 
-export const onboardingUnitSchema = createUnitSchema.omit({
-  propertyId: true,
-  isActive: true,
-});
+export const onboardingUnitSchema = createUnitSchema
+  .omit({ propertyId: true, isActive: true })
+  .extend({
+    clientId: z.string(),
+  });
 
 export const onboardingUnitsFormSchema = z.object({
   units: z.array(onboardingUnitSchema).min(1).max(50),

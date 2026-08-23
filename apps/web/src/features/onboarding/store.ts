@@ -4,18 +4,19 @@ import type {
   CreateAnnualTargetBudget,
   CreateProperty,
   OnboardingUnit,
+  CoOwnerItemInput,
 } from '@syndic-pro/types';
 
 interface OnboardingState {
   property?: CreateProperty;
   fiscalYear?: CreateAnnualTargetBudget;
   units: OnboardingUnit[];
-  // coOwners: OnboardingCoOwner[];
+  coOwners: CoOwnerItemInput[];
   _hasHydrated: boolean;
   setProperty: (data: CreateProperty) => void;
   setFiscalYear: (data: CreateAnnualTargetBudget) => void;
   setUnits: (data: OnboardingUnit[]) => void;
-  // setCoOwners: (data: OnboardingCoOwner[]) => void;
+  setCoOwners: (data: CoOwnerItemInput[]) => void;
   setHasHydrated: (state: boolean) => void;
   reset: () => void;
 }
@@ -24,19 +25,19 @@ export const useOnboardingStore = create<OnboardingState>()(
   persist(
     (set) => ({
       units: [],
-      // coOwners: [],
+      coOwners: [],
       _hasHydrated: false,
       setProperty: (data) => set({ property: data }),
       setFiscalYear: (data) => set({ fiscalYear: data }),
       setUnits: (data) => set({ units: data }),
-      // setCoOwners: (data) => set({ coOwners: data }),
+      setCoOwners: (data) => set({ coOwners: data }),
       setHasHydrated: (state) => set({ _hasHydrated: state }),
       reset: () =>
         set({
           property: undefined,
           fiscalYear: undefined,
           units: [],
-          // coOwners: [],
+          coOwners: [],
         }),
     }),
     {

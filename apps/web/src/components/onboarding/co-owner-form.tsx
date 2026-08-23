@@ -5,7 +5,6 @@ import { Info, Shield } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-
 import {
   Field,
   FieldContent,
@@ -37,23 +36,21 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
-
-import {
-  BILLING_FREQUENCIES,
-  CoOwnerItem,
-  OnboardingCoOwners,
-  coOwnersSchema,
-} from '@/features/onboarding/schema';
-
+import { BILLING_FREQUENCIES, coOwnersSchema } from '@syndic-pro/validators';
+import type {
+  CoOwnerItemInput,
+  OnboardingCoOwnersInput,
+  OnboardingCoOwnersOutput,
+} from '@syndic-pro/types';
 import { useOnboardingStore } from '@/features/onboarding/store';
 
-function createEmptyCoOwner(unitClientId: string): CoOwnerItem {
+function createEmptyCoOwner(unitClientId: string): CoOwnerItemInput {
   return {
     unitClientId,
     coOwnerName: '',
     coOwnerEmail: '',
     coOwnerPhone: '',
-    billingFrequency: 'Monthly',
+    billingFrequency: 'monthly',
     designatedSyndic: false,
   };
 }
@@ -63,10 +60,9 @@ export function CoOwnerForm() {
   const units = useOnboardingStore((s) => s.units);
   const coOwners = useOnboardingStore((s) => s.coOwners);
   const setCoOwners = useOnboardingStore((s) => s.setCoOwners);
-
   const router = useRouter();
 
-  const form = useForm<OnboardingCoOwners>({
+  const form = useForm<OnboardingCoOwnersInput, any, OnboardingCoOwnersOutput>({
     resolver: zodResolver(coOwnersSchema),
     defaultValues: {
       coOwners:
@@ -78,14 +74,11 @@ export function CoOwnerForm() {
 
   useEffect(() => {
     if (!hasHydrated) return;
-
     const existingByUnit = new Map(coOwners.map((c) => [c.unitClientId, c]));
-
     const reconciled = units.map(
       (unit) =>
         existingByUnit.get(unit.clientId) ?? createEmptyCoOwner(unit.clientId),
     );
-
     form.reset({ coOwners: reconciled });
   }, [hasHydrated]);
 
@@ -100,8 +93,8 @@ export function CoOwnerForm() {
   });
 
   const selectedSyndic =
-    watchedCoOwners.find((coOwner) => coOwner.designatedSyndic)?.unitClientId ??
-    '';
+    (watchedCoOwners ?? []).find((coOwner) => coOwner?.designatedSyndic)
+      ?.unitClientId ?? '';
 
   function handleSyndicChange(unitClientId: string) {
     form.setValue(
@@ -118,7 +111,7 @@ export function CoOwnerForm() {
     );
   }
 
-  function submitHandler(data: OnboardingCoOwners) {
+  function submitHandler(data: OnboardingCoOwnersOutput) {
     setCoOwners(data.coOwners);
     router.push('/onboarding/review');
   }
@@ -133,7 +126,6 @@ export function CoOwnerForm() {
           Add a co-owner for each unit and configure their billing preferences.
         </CardDescription>
       </CardHeader>
-
       <CardContent>
         <form
           id="onboarding-co-owners-form"
@@ -143,7 +135,6 @@ export function CoOwnerForm() {
             <FieldGroup className="gap-6">
               {fields.map((field, index) => {
                 const unit = unitByClientId.get(field.unitClientId);
-
                 return (
                   <Item
                     key={field.id}
@@ -151,10 +142,9 @@ export function CoOwnerForm() {
                     className="relative flex-col items-stretch gap-4"
                   >
                     <ItemTitle>
-                      Unit {unit?.unitLabel ?? index + 1}
-                      {unit?.unitType ? ` · ${unit.unitType}` : ''}
+                      Unit {unit?.label ?? index + 1}
+                      {unit?.type ? ` · ${unit.type}` : ''}
                     </ItemTitle>
-
                     <div className="grid gap-6 md:grid-cols-2">
                       <Controller
                         name={`coOwners.${index}.coOwnerName`}
@@ -165,7 +155,6 @@ export function CoOwnerForm() {
                               Owner name
                               <span className="text-destructive">*</span>
                             </FieldLabel>
-
                             <Input
                               {...f}
                               id={`owner-name-${index}`}
@@ -173,14 +162,12 @@ export function CoOwnerForm() {
                               placeholder="e.g. John Doe"
                               autoComplete="name"
                             />
-
                             {fieldState.invalid && (
                               <FieldError errors={[fieldState.error]} />
                             )}
                           </Field>
                         )}
                       />
-
                       <Controller
                         name={`coOwners.${index}.coOwnerEmail`}
                         control={form.control}
@@ -189,7 +176,6 @@ export function CoOwnerForm() {
                             <FieldLabel htmlFor={`owner-email-${index}`}>
                               Email
                             </FieldLabel>
-
                             <Input
                               {...f}
                               type="email"
@@ -198,14 +184,12 @@ export function CoOwnerForm() {
                               placeholder="owner@email.com"
                               autoComplete="email"
                             />
-
                             {fieldState.invalid && (
                               <FieldError errors={[fieldState.error]} />
                             )}
                           </Field>
                         )}
                       />
-
                       <Controller
                         name={`coOwners.${index}.coOwnerPhone`}
                         control={form.control}
@@ -214,7 +198,6 @@ export function CoOwnerForm() {
                             <FieldLabel htmlFor={`owner-phone-${index}`}>
                               Phone
                             </FieldLabel>
-
                             <Input
                               {...f}
                               type="tel"
@@ -223,14 +206,12 @@ export function CoOwnerForm() {
                               placeholder="+212 6XX XXX XXX"
                               autoComplete="tel"
                             />
-
                             {fieldState.invalid && (
                               <FieldError errors={[fieldState.error]} />
                             )}
                           </Field>
                         )}
                       />
-
                       <Controller
                         name={`coOwners.${index}.billingFrequency`}
                         control={form.control}
@@ -239,7 +220,6 @@ export function CoOwnerForm() {
                             <FieldLabel htmlFor={`billing-frequency-${index}`}>
                               Billing frequency
                             </FieldLabel>
-
                             <Select
                               name={f.name}
                               value={f.value}
@@ -251,7 +231,6 @@ export function CoOwnerForm() {
                               >
                                 <SelectValue />
                               </SelectTrigger>
-
                               <SelectContent>
                                 {BILLING_FREQUENCIES.map((frequency) => (
                                   <SelectItem key={frequency} value={frequency}>
@@ -260,14 +239,12 @@ export function CoOwnerForm() {
                                 ))}
                               </SelectContent>
                             </Select>
-
                             {fieldState.invalid && (
                               <FieldError errors={[fieldState.error]} />
                             )}
                           </Field>
                         )}
                       />
-
                       <Field className="md:col-span-2">
                         <FieldLabel
                           htmlFor={`designated-syndic-${index}`}
@@ -281,13 +258,11 @@ export function CoOwnerForm() {
                               value={field.unitClientId}
                               id={`designated-syndic-${index}`}
                             />
-
                             <FieldContent>
                               <FieldTitle className="flex items-center gap-2">
                                 <Shield className="size-5" />
                                 Designate as syndic
                               </FieldTitle>
-
                               <span className="text-muted-foreground text-sm">
                                 This co-owner will manage the property.
                               </span>
@@ -299,19 +274,16 @@ export function CoOwnerForm() {
                   </Item>
                 );
               })}
-
               {form.formState.errors.coOwners?.root && (
                 <FieldError errors={[form.formState.errors.coOwners.root]} />
               )}
             </FieldGroup>
           </RadioGroup>
         </form>
-
         <Item className="mt-4" variant="outline" size="sm">
           <ItemMedia>
             <Info />
           </ItemMedia>
-
           <ItemContent>
             <ItemDescription>
               Only one co-owner can be the syndic. You can change this later

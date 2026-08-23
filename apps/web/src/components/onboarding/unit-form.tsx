@@ -51,6 +51,7 @@ const MAX_UNITS = 50;
 
 function createEmptyUnit(): OnboardingUnitsFormInput['units'][number] {
   return {
+    clientId: crypto.randomUUID(),
     label: '',
     floor: '',
     type: 'residential',
