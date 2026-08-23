@@ -18,26 +18,28 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import {
-  OnboardingProperty,
-  propertySchema,
-} from '@/features/onboarding/schema';
+
+import { createPropertySchema } from '@syndic-pro/validators';
+import type { CreateProperty } from '@syndic-pro/types';
+
 import { useOnboardingStore } from '@/features/onboarding/store';
 
 export function PropertyForm() {
   const { property, setProperty } = useOnboardingStore();
   const router = useRouter();
-  const form = useForm<OnboardingProperty>({
-    resolver: zodResolver(propertySchema),
+
+  const form = useForm<CreateProperty>({
+    resolver: zodResolver(createPropertySchema),
     defaultValues: property ?? {
-      propertyName: '',
-      propertyAddress: '',
-      propertyCity: '',
+      name: '',
+      address: '',
+      city: '',
+      postalCode: '',
+      countryCode: '',
     },
   });
 
-  function submitHandler(data: OnboardingProperty) {
-    console.log(data);
+  function submitHandler(data: CreateProperty) {
     setProperty(data);
     router.push('/onboarding/fiscal-year');
   }
@@ -58,7 +60,7 @@ export function PropertyForm() {
         >
           <FieldGroup>
             <Controller
-              name="propertyName"
+              name="name"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -82,7 +84,7 @@ export function PropertyForm() {
             />
 
             <Controller
-              name="propertyAddress"
+              name="address"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -106,7 +108,7 @@ export function PropertyForm() {
             />
 
             <Controller
-              name="propertyCity"
+              name="city"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>

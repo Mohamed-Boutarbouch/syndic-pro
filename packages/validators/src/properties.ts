@@ -7,7 +7,6 @@ export const createPropertySchema = z.object({
   city: z.string().min(1).max(100),
   postalCode: z.string().max(20).optional(),
   countryCode: z.string().length(2).optional(),
-  isActive: z.boolean().default(true),
 });
 
 export const updatePropertySchema = createPropertySchema.partial();

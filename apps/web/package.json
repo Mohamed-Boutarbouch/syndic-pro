@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@syndic-pro/validators": "*",
+    "@syndic-pro/types": "*",
     "@base-ui/react": "^1.7.0",
     "@hookform/resolvers": "^5.8.0",
     "@shadcn/react": "^0.3.0",
