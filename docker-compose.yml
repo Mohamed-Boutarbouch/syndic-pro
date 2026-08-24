@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: syndic-pro-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: syndic
+      POSTGRES_PASSWORD: syndic_dev_password
+      POSTGRES_DB: syndic_pro
+    ports:
+      - '5432:5432'
+    volumes:
+      - syndic-pro-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U syndic -d syndic_pro']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  syndic-pro-pgdata:
