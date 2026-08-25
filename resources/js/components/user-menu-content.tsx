@@ -26,37 +26,38 @@ export function UserMenuContent({ user }: Props) {
 
     return (
         <>
-            <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <UserInfo user={user} showEmail={true} />
-                </div>
-            </DropdownMenuLabel>
+            <DropdownMenuGroup>
+                <DropdownMenuLabel className="p-0 font-normal">
+                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                        <UserInfo user={user} showEmail={true} />
+                    </div>
+                </DropdownMenuLabel>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                    <Link
-                        className="block w-full cursor-pointer"
-                        href={edit()}
-                        prefetch
-                        onClick={cleanup}
-                    >
-                        <Settings className="mr-2" />
-                        Settings
-                    </Link>
+                <DropdownMenuItem
+                    render={<Link href={edit()} prefetch onClick={cleanup} />}
+                    className="cursor-pointer"
+                >
+                    <Settings className="mr-2" />
+                    Settings
                 </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-                <Link
-                    className="block w-full cursor-pointer"
-                    href={logout()}
-                    as="button"
-                    onClick={handleLogout}
-                    data-test="logout-button"
-                >
-                    <LogOut className="mr-2" />
-                    Log out
-                </Link>
+            <DropdownMenuItem
+                render={
+                    <Link
+                        href={logout()}
+                        as="button"
+                        onClick={handleLogout}
+                        data-test="logout-button"
+                    />
+                }
+                nativeButton
+                className="cursor-pointer"
+            >
+                <LogOut className="mr-2" />
+                Log out
             </DropdownMenuItem>
         </>
     );

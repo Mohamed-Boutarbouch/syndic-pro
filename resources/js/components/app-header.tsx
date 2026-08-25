@@ -76,15 +76,18 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                     {/* Mobile Menu */}
                     <div className="lg:hidden">
                         <Sheet>
-                            <SheetTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="mr-2 h-[34px] w-[34px]"
-                                >
-                                    <Menu className="h-5 w-5" />
-                                </Button>
+                            <SheetTrigger
+                                render={
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="mr-2 h-8.5 w-8.5"
+                                    />
+                                }
+                            >
+                                <Menu className="h-5 w-5" />
                             </SheetTrigger>
+
                             <SheetContent
                                 side="left"
                                 className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar"
@@ -92,9 +95,11 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 <SheetTitle className="sr-only">
                                     Navigation menu
                                 </SheetTitle>
+
                                 <SheetHeader className="flex justify-start text-left">
                                     <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
                                 </SheetHeader>
+
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">
                                         <div className="flex flex-col space-y-4">
@@ -167,8 +172,9 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                             )}
                                             {item.title}
                                         </Link>
+
                                         {isCurrentUrl(item.href) && (
-                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
+                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white" />
                                         )}
                                     </NavigationMenuItem>
                                 ))}
@@ -183,8 +189,9 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 size="icon"
                                 className="group h-9 w-9 cursor-pointer"
                             >
-                                <Search className="!size-5 opacity-80 group-hover:opacity-100" />
+                                <Search className="size-5! opacity-80 group-hover:opacity-100" />
                             </Button>
+
                             <div className="ml-1 hidden gap-1 lg:flex">
                                 {rightNavItems.map((item) => (
                                     <Tooltip key={item.title}>
@@ -198,11 +205,13 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                                 <span className="sr-only">
                                                     {item.title}
                                                 </span>
+
                                                 {item.icon && (
                                                     <item.icon className="size-5 opacity-80 group-hover:opacity-100" />
                                                 )}
                                             </a>
                                         </TooltipTrigger>
+
                                         <TooltipContent>
                                             <p>{item.title}</p>
                                         </TooltipContent>
@@ -210,23 +219,27 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 ))}
                             </div>
                         </div>
+
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="size-10 rounded-full p-1"
-                                >
-                                    <Avatar className="size-8 overflow-hidden rounded-full">
-                                        <AvatarImage
-                                            src={auth.user?.avatar}
-                                            alt={auth.user?.name}
-                                        />
-                                        <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                            {getInitials(auth.user?.name ?? '')}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                </Button>
+                            <DropdownMenuTrigger
+                                render={
+                                    <Button
+                                        variant="ghost"
+                                        className="size-10 rounded-full p-1"
+                                    />
+                                }
+                            >
+                                <Avatar className="size-8 overflow-hidden rounded-full">
+                                    <AvatarImage
+                                        src={auth.user?.avatar}
+                                        alt={auth.user?.name}
+                                    />
+                                    <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                        {getInitials(auth.user?.name ?? '')}
+                                    </AvatarFallback>
+                                </Avatar>
                             </DropdownMenuTrigger>
+
                             <DropdownMenuContent className="w-56" align="end">
                                 {auth.user && (
                                     <UserMenuContent user={auth.user} />
@@ -236,6 +249,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                     </div>
                 </div>
             </div>
+
             {breadcrumbs.length > 1 && (
                 <div className="flex w-full border-b border-sidebar-border/70">
                     <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">

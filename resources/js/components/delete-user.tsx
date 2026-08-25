@@ -26,6 +26,7 @@ export default function DeleteUser() {
                 title="Delete account"
                 description="Delete your account and all of its resources"
             />
+
             <div className="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
                 <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
                     <p className="font-medium">Warning</p>
@@ -35,18 +36,22 @@ export default function DeleteUser() {
                 </div>
 
                 <Dialog>
-                    <DialogTrigger asChild>
-                        <Button
-                            variant="destructive"
-                            data-test="delete-user-button"
-                        >
-                            Delete account
-                        </Button>
+                    <DialogTrigger
+                        render={
+                            <Button
+                                variant="destructive"
+                                data-test="delete-user-button"
+                            />
+                        }
+                    >
+                        Delete account
                     </DialogTrigger>
+
                     <DialogContent>
                         <DialogTitle>
                             Are you sure you want to delete your account?
                         </DialogTitle>
+
                         <DialogDescription>
                             Once your account is deleted, all of its resources
                             and data will also be permanently deleted. Please
@@ -85,28 +90,24 @@ export default function DeleteUser() {
                                     </div>
 
                                     <DialogFooter className="gap-2">
-                                        <DialogClose asChild>
-                                            <Button
-                                                variant="secondary"
-                                                onClick={() =>
-                                                    resetAndClearErrors()
-                                                }
-                                            >
-                                                Cancel
-                                            </Button>
+                                        <DialogClose
+                                            render={
+                                                <Button variant="secondary" />
+                                            }
+                                            onClick={() =>
+                                                resetAndClearErrors()
+                                            }
+                                        >
+                                            Cancel
                                         </DialogClose>
 
                                         <Button
                                             variant="destructive"
+                                            type="submit"
                                             disabled={processing}
-                                            asChild
+                                            data-test="confirm-delete-user-button"
                                         >
-                                            <button
-                                                type="submit"
-                                                data-test="confirm-delete-user-button"
-                                            >
-                                                Delete account
-                                            </button>
+                                            Delete account
                                         </Button>
                                     </DialogFooter>
                                 </>

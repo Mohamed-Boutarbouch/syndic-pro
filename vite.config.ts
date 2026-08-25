@@ -11,23 +11,34 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
             refresh: true,
+
             fonts: [
-                bunny('Instrument Sans', {
-                    weights: [400, 500, 600],
+                bunny('Inter', {
+                    weights: [400, 500, 600, 700],
+                    optimizedFallbacks: false,
+                }),
+                bunny('Space Grotesk', {
+                    weights: [500, 600, 700],
+                    optimizedFallbacks: false,
                 }),
             ],
         }),
+
         inertia(),
+
         react({
             babel: {
                 plugins: ['babel-plugin-react-compiler'],
             },
         }),
+
         tailwindcss(),
+
         wayfinder({
             formVariants: true,
         }),
     ],
+
     server: {
         watch: {
             ignored: [
