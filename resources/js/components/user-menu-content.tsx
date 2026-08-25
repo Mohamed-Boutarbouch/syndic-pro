@@ -54,7 +54,7 @@ export function UserMenuContent({ user }: Props) {
                     />
                 }
                 nativeButton
-                className="cursor-pointer"
+                className="w-full cursor-pointer"
             >
                 <LogOut className="mr-2" />
                 Log out
