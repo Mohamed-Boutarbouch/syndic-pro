@@ -5,22 +5,22 @@ import { cn } from '@/lib/utils';
 
 const steps = [
     {
-        href: '/onboarding/property',
+        match: '/onboarding/property',
         label: 'Property',
         icon: Building2,
     },
     {
-        href: '/onboarding/fiscal-year',
+        match: '/onboarding/property/:property/budget',
         label: 'Fiscal Year',
         icon: Calendar,
     },
     {
-        href: '/onboarding/units',
+        match: '/onboarding/property/:property/units',
         label: 'Units',
         icon: Home,
     },
     {
-        href: '/onboarding/co-owners',
+        match: '/onboarding/property/:property/co-owners',
         label: 'Co-Owners',
         icon: Users,
     },
@@ -29,7 +29,27 @@ const steps = [
 export function Stepper() {
     const { url } = usePage();
 
-    const currentIndex = steps.findIndex((step) => url.startsWith(step.href));
+    const pathname = new URL(url, window.location.origin).pathname;
+
+    const currentIndex = (() => {
+        if (/^\/onboarding\/property\/\d+\/budget$/.test(pathname)) {
+            return 1;
+        }
+
+        if (/^\/onboarding\/property\/\d+\/units$/.test(pathname)) {
+            return 2;
+        }
+
+        if (/^\/onboarding\/property\/\d+\/co-owners$/.test(pathname)) {
+            return 3;
+        }
+
+        if (/^\/onboarding\/property\/\d+$/.test(pathname)) {
+            return 0;
+        }
+
+        return -1;
+    })();
 
     if (currentIndex === -1) {
         return null;
@@ -45,7 +65,7 @@ export function Stepper() {
 
                 return (
                     <div
-                        key={step.href}
+                        key={step.match}
                         className="flex flex-1 items-center last:flex-initial"
                     >
                         <div className="flex flex-col items-center gap-2">
