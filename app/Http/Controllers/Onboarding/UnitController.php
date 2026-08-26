@@ -60,10 +60,12 @@ class UnitController
 
         Unit::insert($units);
 
-        return to_route('dashboard')
-            ->with(
-                'success',
-                'Units created successfully.',
-            );
+        return to_route(
+            'onboarding.co-owners.create',
+            ['property' => $property],
+        )->with(
+            'success',
+            'Units created successfully.',
+        );
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Onboarding\AnnualTargetBudgetController;
+use App\Http\Controllers\Onboarding\CoOwnerController;
 use App\Http\Controllers\Onboarding\PropertyController;
 use App\Http\Controllers\Onboarding\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +35,14 @@ Route::middleware('auth')
             UnitController::class,
             'store',
         ])->name('units.store');
+
+        Route::get('property/{property}/co-owners', [
+            CoOwnerController::class,
+            'create',
+        ])->name('co-owners.create');
+
+        Route::post('property/{property}/co-owners', [
+            CoOwnerController::class,
+            'store',
+        ])->name('co-owners.store');
     });
