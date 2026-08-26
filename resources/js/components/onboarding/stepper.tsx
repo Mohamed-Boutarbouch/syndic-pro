@@ -44,7 +44,7 @@ export function Stepper() {
             return 3;
         }
 
-        if (/^\/onboarding\/property\/\d+$/.test(pathname)) {
+        if (pathname === '/onboarding/property') {
             return 0;
         }
 

@@ -1,4 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import { valibotResolver } from '@hookform/resolvers/valibot';
 import { router } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
@@ -29,7 +29,7 @@ import { Textarea } from '@/components/ui/textarea';
 
 export function PropertyForm() {
     const form = useForm<PropertyFormValues>({
-        resolver: zodResolver(propertySchema),
+        resolver: valibotResolver(propertySchema),
         defaultValues: propertyDefaultValues,
         mode: 'onBlur',
     });
