@@ -3,6 +3,7 @@ import { router } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { store } from '@/actions/App/Http/Controllers/Onboarding/PropertyController';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -11,21 +12,20 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
-import type { PropertyFormValues } from '@/schemas/onboarding/property';
-import {
-    propertyDefaultValues,
-    propertySchema,
-} from '@/schemas/onboarding/property';
-import { store } from '@/actions/App/Http/Controllers/Onboarding/PropertyController';
 import {
     Field,
     FieldError,
     FieldGroup,
     FieldLabel,
 } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
+import type { PropertyFormValues } from '@/schemas/onboarding/property';
+import {
+    propertyDefaultValues,
+    propertySchema,
+} from '@/schemas/onboarding/property';
 
 export function PropertyForm() {
     const form = useForm<PropertyFormValues>({
@@ -76,6 +76,9 @@ export function PropertyForm() {
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="property-name">
                                         Property name
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
                                     </FieldLabel>
 
                                     <Input
@@ -131,6 +134,9 @@ export function PropertyForm() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="property-city">
                                             City
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
                                         </FieldLabel>
 
                                         <Input

@@ -14,14 +14,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Spinner } from '@/components/ui/spinner';
-import { Switch } from '@/components/ui/switch';
-import type { AnnualTargetBudgetFormValues } from '@/schemas/onboarding/budget';
-import {
-    annualTargetBudgetDefaultValues,
-    annualTargetBudgetSchema,
-} from '@/schemas/onboarding/budget';
 import {
     Field,
     FieldContent,
@@ -32,6 +24,14 @@ import {
     FieldSeparator,
     FieldTitle,
 } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
+import type { AnnualTargetBudgetFormValues } from '@/schemas/onboarding/budget';
+import {
+    annualTargetBudgetDefaultValues,
+    annualTargetBudgetSchema,
+} from '@/schemas/onboarding/budget';
 
 type BudgetFormProps = {
     property: {

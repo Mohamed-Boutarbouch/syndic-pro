@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Onboarding\AnnualTargetBudgetController;
 use App\Http\Controllers\Onboarding\PropertyController;
+use App\Http\Controllers\Onboarding\UnitController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')
@@ -23,4 +24,14 @@ Route::middleware('auth')
             AnnualTargetBudgetController::class,
             'store',
         ])->name('budget.store');
+
+        Route::get('property/{property}/units', [
+            UnitController::class,
+            'create',
+        ])->name('units.create');
+
+        Route::post('property/{property}/units', [
+            UnitController::class,
+            'store',
+        ])->name('units.store');
     });
