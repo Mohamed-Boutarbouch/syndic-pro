@@ -6,6 +6,7 @@ use App\Enums\UnitTypes;
 use App\Http\Requests\Onboarding\StoreUnitsRequest;
 use App\Models\Property;
 use App\Models\Unit;
+use App\Services\Onboarding\UnitBudgetCalculator;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,21 +24,18 @@ class UnitController
                 'id' => $property->id,
                 'name' => $property->name,
             ],
-
             'budget' => [
                 'id' => $budget->id,
                 'start_date' => $budget->start_date->toDateString(),
                 'end_date' => $budget->end_date->toDateString(),
                 'total_budget' => $budget->total_budget,
             ],
-
             'unitTypes' => collect(UnitTypes::cases())
                 ->map(fn (UnitTypes $type) => [
                     'value' => $type->value,
                     'label' => $type->name,
                 ])
                 ->values(),
-
             'maxUnits' => config('onboarding.max_units'),
         ]);
     }
@@ -46,16 +44,29 @@ class UnitController
         StoreUnitsRequest $request,
         Property $property,
     ): RedirectResponse {
+        $budget = $property->annualTargetBudgets()
+            ->latest('id')
+            ->firstOrFail();
+
+        $unitsInput = $request->validated('units');
+
+        $shares = UnitBudgetCalculator::calculate(
+            array_column($unitsInput, 'weight_coefficient'),
+            (float) $budget->total_budget,
+        );
+
         $now = now();
 
         $units = array_map(
-            fn (array $unit) => [
+            fn (array $unit, int $index) => [
                 ...$unit,
                 'property_id' => $property->id,
+                'calculated_annual_budget' => $shares[$index],
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
-            $request->validated('units'),
+            $unitsInput,
+            array_keys($unitsInput),
         );
 
         Unit::insert($units);

@@ -4,6 +4,7 @@ import { ArrowRight, Plus, X } from 'lucide-react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 
 import { store } from '@/actions/App/Http/Controllers/Onboarding/UnitController';
+import { UnitBudgetShare } from '@/components/onboarding/unit-budget-share';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -92,10 +93,10 @@ export function UnitForm({
             <CardContent>
                 <Item className="mb-4" variant="outline" size="sm">
                     <ItemMedia className="text-muted-foreground">
-                        Rate:
+                        Budget:
                     </ItemMedia>
                     <ItemContent>
-                        <ItemTitle>10,000 MAD/point/year</ItemTitle>
+                        <ItemTitle>{budget.total_budget} MAD/year</ItemTitle>
                     </ItemContent>
                 </Item>
                 <form
@@ -114,7 +115,16 @@ export function UnitForm({
                                     variant="outline"
                                     className="relative flex-col items-stretch gap-4"
                                 >
-                                    <ItemTitle>Unit {index + 1}</ItemTitle>
+                                    <ItemTitle className="flex items-center justify-between">
+                                        <span>Unit {index + 1}</span>
+                                        <UnitBudgetShare
+                                            control={form.control}
+                                            index={index}
+                                            totalBudget={Number(
+                                                budget.total_budget,
+                                            )}
+                                        />
+                                    </ItemTitle>
                                     <ItemContent className="grid w-full gap-4 sm:grid-cols-2 md:grid-cols-4 md:items-start">
                                         <Controller
                                             name={`units.${index}.label`}
@@ -274,7 +284,6 @@ export function UnitForm({
                                                             *
                                                         </span>
                                                     </FieldLabel>
-
                                                     <div className="relative">
                                                         <span
                                                             aria-hidden="true"
@@ -282,11 +291,13 @@ export function UnitForm({
                                                         >
                                                             ×
                                                         </span>
-
                                                         <Input
                                                             id={`weight-coefficient-${index}`}
-                                                            type="text"
+                                                            type="number"
                                                             inputMode="decimal"
+                                                            step={0.1}
+                                                            min={0}
+                                                            max={10}
                                                             placeholder="1.0"
                                                             aria-invalid={
                                                                 fieldState.invalid
@@ -307,15 +318,20 @@ export function UnitForm({
                                                             onChange={(
                                                                 event,
                                                             ) => {
-                                                                controllerField.onChange(
+                                                                const num =
                                                                     event.target
-                                                                        .value,
+                                                                        .valueAsNumber;
+                                                                controllerField.onChange(
+                                                                    Number.isNaN(
+                                                                        num,
+                                                                    )
+                                                                        ? undefined
+                                                                        : num,
                                                                 );
                                                             }}
                                                             className="pl-8"
                                                         />
                                                     </div>
-
                                                     {fieldState.invalid && (
                                                         <FieldError
                                                             errors={[

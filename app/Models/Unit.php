@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $floor
  * @property UnitTypes $type
  * @property string $weight_coefficient
+ * @property string $calculated_annual_budget
  * @property bool $is_active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -27,6 +28,7 @@ use Illuminate\Support\Carbon;
     'floor',
     'type',
     'weight_coefficient',
+    'calculated_annual_budget',
     'is_active',
 ])]
 class Unit extends Model
@@ -74,6 +76,7 @@ class Unit extends Model
         return [
             'type' => UnitTypes::class,
             'weight_coefficient' => 'decimal:2',
+            'calculated_annual_budget' => 'decimal:2',
             'is_active' => 'boolean',
         ];
     }

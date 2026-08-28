@@ -30,6 +30,9 @@ return new class extends Migration
             $table->decimal('weight_coefficient', 5, 2)
                 ->default(1);
 
+            $table->decimal('calculated_annual_budget', 12, 2)
+                ->default(0);
+
             $table->boolean('is_active')
                 ->default(true);
 

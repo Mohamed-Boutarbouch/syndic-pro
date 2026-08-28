@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
-import OnboardingLayout from '@/layouts/onboarding/layout';
 import { CoOwnerForm } from '@/components/onboarding/co-owner-form';
+import OnboardingLayout from '@/layouts/onboarding/layout';
 
 export type CoOwnerPageProps = {
     property: {
@@ -17,6 +17,7 @@ export type CoOwnerPageProps = {
         floor: string;
         type: string;
         weight_coefficient: number;
+        calculated_annual_budget: number;
         is_active: boolean;
     }[];
 

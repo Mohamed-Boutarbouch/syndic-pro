@@ -54,7 +54,7 @@ class StoreUnitsRequest extends FormRequest
                 'required',
                 'numeric',
                 'decimal:0,1',
-                'between:0,999',
+                'between:0,10',
             ],
 
             'units.*.is_active' => [
