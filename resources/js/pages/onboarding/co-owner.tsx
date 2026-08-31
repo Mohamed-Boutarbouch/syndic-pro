@@ -10,6 +10,8 @@ export type CoOwnerPageProps = {
         name: string;
     };
 
+    budget: string;
+
     units: {
         id: number;
         property_id: number;
@@ -29,15 +31,19 @@ export type CoOwnerPageProps = {
 
 export default function CoOwnerPage({
     property,
+    budget,
     units,
     billingFrequency,
 }: CoOwnerPageProps) {
+    console.log(units);
+
     return (
         <>
             <Head title="Onboarding — Co-Owners" />
 
             <CoOwnerForm
                 property={property}
+                budget={budget}
                 units={units}
                 billingFrequency={billingFrequency}
             />

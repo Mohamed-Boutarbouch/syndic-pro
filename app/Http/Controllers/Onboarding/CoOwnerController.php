@@ -6,7 +6,9 @@ use App\Enums\BillingFrequency;
 use App\Http\Requests\Onboarding\StoreCoOwnersRequest;
 use App\Models\CoOwner;
 use App\Models\Property;
+use App\Models\Unit;
 use App\Models\UnitCoOwner;
+use App\Services\Onboarding\CoOwnerCycleObligation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -14,10 +16,14 @@ use Inertia\Response;
 
 class CoOwnerController
 {
+    public function __construct(
+        private readonly CoOwnerCycleObligation $cycleObligations,
+    ) {}
+
     public function create(Property $property): Response
     {
         $units = $property->units()
-            ->latest('id')
+            ->orderBy('id', 'asc')
             ->get([
                 'id',
                 'property_id',
@@ -25,14 +31,18 @@ class CoOwnerController
                 'floor',
                 'type',
                 'weight_coefficient',
+                'calculated_annual_budget',
                 'is_active',
             ]);
+
+        $budget = $property->currentAnnualTargetBudget()->first();
 
         return Inertia::render('onboarding/co-owner', [
             'property' => [
                 'id' => $property->id,
                 'name' => $property->name,
             ],
+            'budget' => $budget?->total_budget,
             'units' => $units,
             'billingFrequency' => collect(BillingFrequency::cases())
                 ->map(fn (BillingFrequency $type) => [
@@ -47,13 +57,27 @@ class CoOwnerController
         StoreCoOwnersRequest $request,
         Property $property,
     ): RedirectResponse {
-        $now = now();
         $syndicUnitId = (int) $request->validated('syndicUnitId');
 
-        DB::transaction(function () use ($request, $syndicUnitId) {
+        $annualTargetBudget = $property->currentAnnualTargetBudget()->first();
+
+        if ($annualTargetBudget === null) {
+            return back()->withErrors([
+                'coOwners' => 'This property has no annual target budget set up yet. Create one before assigning co-owners.',
+            ]);
+        }
+
+        DB::transaction(function () use ($request, $syndicUnitId, $annualTargetBudget) {
             $coOwnersInput = $request->validated('coOwners');
 
+            // Load all referenced units up front, keyed by id, so every
+            // amount below comes from the DB row — never from the request.
+            $unitIds = collect($coOwnersInput)->pluck('unitId');
+            $units = Unit::whereIn('id', $unitIds)->get()->keyBy('id');
+
             foreach ($coOwnersInput as $input) {
+                $unit = $units->get($input['unitId']);
+
                 $coOwner = CoOwner::create([
                     'name' => $input['name'],
                     'email' => $input['email'] ?: null,
@@ -61,12 +85,20 @@ class CoOwnerController
                     'is_active' => $input['is_active'],
                 ]);
 
-                UnitCoOwner::create([
-                    'unit_id' => $input['unitId'],
+                $unitCoOwner = UnitCoOwner::create([
+                    'unit_id' => $unit->id,
                     'co_owner_id' => $coOwner->id,
+                    // Single co-owner per unit in this flow => full share.
+                    'ownership_percentage' => 100,
                     'billing_frequency' => $input['billing_frequency'],
-                    'is_designated_syndic' => $input['unitId'] === $syndicUnitId,
+                    'is_designated_syndic' => $unit->id === $syndicUnitId,
                 ]);
+
+                $this->cycleObligations->createForUnitCoOwner(
+                    $unit,
+                    $unitCoOwner,
+                    $annualTargetBudget,
+                );
             }
         });
 

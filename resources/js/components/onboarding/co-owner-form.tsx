@@ -2,6 +2,7 @@ import { valibotResolver } from '@hookform/resolvers/valibot';
 import { router } from '@inertiajs/react';
 import { Check, Info, Shield } from 'lucide-react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
+
 import { store } from '@/actions/App/Http/Controllers/Onboarding/CoOwnerController';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,14 +36,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { UnitTypeBadge } from '@/components/unit-type-badge';
+import { calculateInstallmentAmount, formatMAD } from '@/lib/billing';
 import type { CoOwnerPageProps } from '@/pages/onboarding/co-owner';
 import {
     coOwnersSchema,
     createEmptyCoOwner,
 } from '@/schemas/onboarding/co-owners';
 import type { CoOwnerFormValues } from '@/schemas/onboarding/co-owners';
+
 export function CoOwnerForm({
     property,
+    budget,
     units,
     billingFrequency: BILLING_FREQUENCY,
 }: CoOwnerPageProps) {
@@ -79,11 +84,23 @@ export function CoOwnerForm({
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Assign co-owners</CardTitle>
-                <CardDescription>
-                    Add a co-owner for each unit and configure their billing
-                    preferences.
-                </CardDescription>
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <CardTitle>Assign co-owners</CardTitle>
+                        <CardDescription>
+                            Add a co-owner for each unit and configure their
+                            billing preferences.
+                        </CardDescription>
+                    </div>
+                    <div className="shrink-0 rounded-lg border bg-muted/30 px-4 py-2 text-right">
+                        <div className="text-xs text-muted-foreground">
+                            Overall budget
+                        </div>
+                        <div className="text-lg font-semibold tabular-nums">
+                            {formatMAD(Number(budget))} MAD
+                        </div>
+                    </div>
+                </div>
             </CardHeader>
             <CardContent>
                 <form
@@ -118,12 +135,36 @@ export function CoOwnerForm({
                                                     variant="outline"
                                                     className="relative flex-col items-stretch gap-4"
                                                 >
-                                                    <ItemTitle>
-                                                        Unit {unit.label}
-                                                        {unit.type
-                                                            ? ` · ${unit.type}`
-                                                            : ''}
-                                                    </ItemTitle>
+                                                    <div className="flex items-center justify-between gap-4">
+                                                        <ItemTitle className="flex items-center gap-2">
+                                                            Unit {unit.label}
+                                                            {unit.type && (
+                                                                <UnitTypeBadge
+                                                                    type={
+                                                                        unit.type
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </ItemTitle>
+
+                                                        <div className="text-right">
+                                                            <span className="text-sm font-semibold tabular-nums">
+                                                                {Number(
+                                                                    unit.calculated_annual_budget,
+                                                                ).toLocaleString(
+                                                                    'fr-MA',
+                                                                    {
+                                                                        minimumFractionDigits: 2,
+                                                                        maximumFractionDigits: 2,
+                                                                    },
+                                                                )}{' '}
+                                                                MAD
+                                                            </span>
+                                                            <div className="text-xs text-muted-foreground">
+                                                                Annual budget
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div className="grid gap-6 md:grid-cols-2">
                                                         <Controller
                                                             name={`coOwners.${index}.name`}
@@ -253,67 +294,112 @@ export function CoOwnerForm({
                                                             render={({
                                                                 field: f,
                                                                 fieldState,
-                                                            }) => (
-                                                                <Field
-                                                                    data-invalid={
-                                                                        fieldState.invalid
-                                                                    }
-                                                                >
-                                                                    <FieldLabel
-                                                                        htmlFor={`billing-frequency-${index}`}
-                                                                    >
-                                                                        Billing
-                                                                        frequency
-                                                                    </FieldLabel>
-                                                                    <Select
-                                                                        name={
-                                                                            f.name
-                                                                        }
-                                                                        value={
-                                                                            f.value
-                                                                        }
-                                                                        onValueChange={
-                                                                            f.onChange
+                                                            }) => {
+                                                                const installmentAmount =
+                                                                    calculateInstallmentAmount(
+                                                                        Number(
+                                                                            unit.calculated_annual_budget,
+                                                                        ),
+                                                                        f.value,
+                                                                    );
+
+                                                                return (
+                                                                    <Field
+                                                                        data-invalid={
+                                                                            fieldState.invalid
                                                                         }
                                                                     >
-                                                                        <SelectTrigger
-                                                                            id={`billing-frequency-${index}`}
-                                                                            aria-invalid={
-                                                                                fieldState.invalid
+                                                                        <FieldLabel
+                                                                            htmlFor={`billing-frequency-${index}`}
+                                                                        >
+                                                                            Billing
+                                                                            frequency
+                                                                        </FieldLabel>
+                                                                        <Select
+                                                                            name={
+                                                                                f.name
+                                                                            }
+                                                                            value={
+                                                                                f.value
+                                                                            }
+                                                                            onValueChange={
+                                                                                f.onChange
                                                                             }
                                                                         >
-                                                                            <SelectValue />
-                                                                        </SelectTrigger>
-                                                                        <SelectContent>
-                                                                            {BILLING_FREQUENCY.map(
-                                                                                (
-                                                                                    frequency,
-                                                                                ) => (
-                                                                                    <SelectItem
-                                                                                        key={
-                                                                                            frequency.value
-                                                                                        }
-                                                                                        value={
-                                                                                            frequency.value
-                                                                                        }
-                                                                                    >
-                                                                                        {
-                                                                                            frequency.label
-                                                                                        }
-                                                                                    </SelectItem>
-                                                                                ),
+                                                                            <SelectTrigger
+                                                                                id={`billing-frequency-${index}`}
+                                                                                aria-invalid={
+                                                                                    fieldState.invalid
+                                                                                }
+                                                                            >
+                                                                                <SelectValue />
+                                                                            </SelectTrigger>
+                                                                            <SelectContent>
+                                                                                {BILLING_FREQUENCY.map(
+                                                                                    (
+                                                                                        frequency,
+                                                                                    ) => {
+                                                                                        const amount =
+                                                                                            calculateInstallmentAmount(
+                                                                                                Number(
+                                                                                                    unit.calculated_annual_budget,
+                                                                                                ),
+                                                                                                frequency.value,
+                                                                                            );
+
+                                                                                        return (
+                                                                                            <SelectItem
+                                                                                                key={
+                                                                                                    frequency.value
+                                                                                                }
+                                                                                                value={
+                                                                                                    frequency.value
+                                                                                                }
+                                                                                            >
+                                                                                                <span className="flex w-full items-center justify-between gap-4">
+                                                                                                    <span>
+                                                                                                        {
+                                                                                                            frequency.label
+                                                                                                        }
+                                                                                                    </span>
+                                                                                                    {amount !==
+                                                                                                        null && (
+                                                                                                        <span className="text-xs text-muted-foreground tabular-nums">
+                                                                                                            {formatMAD(
+                                                                                                                amount,
+                                                                                                            )}{' '}
+                                                                                                            MAD
+                                                                                                        </span>
+                                                                                                    )}
+                                                                                                </span>
+                                                                                            </SelectItem>
+                                                                                        );
+                                                                                    },
+                                                                                )}
+                                                                            </SelectContent>
+                                                                        </Select>
+                                                                        {installmentAmount !==
+                                                                            null &&
+                                                                            !fieldState.invalid && (
+                                                                                <span className="text-xs text-muted-foreground">
+                                                                                    {formatMAD(
+                                                                                        installmentAmount,
+                                                                                    )}{' '}
+                                                                                    MAD
+                                                                                    per
+                                                                                    installment
+                                                                                </span>
                                                                             )}
-                                                                        </SelectContent>
-                                                                    </Select>
-                                                                    {fieldState.invalid && (
-                                                                        <FieldError
-                                                                            errors={[
-                                                                                fieldState.error,
-                                                                            ]}
-                                                                        />
-                                                                    )}
-                                                                </Field>
-                                                            )}
+                                                                        {fieldState.invalid && (
+                                                                            <FieldError
+                                                                                errors={[
+                                                                                    fieldState.error,
+                                                                                ]}
+                                                                            />
+                                                                        )}
+                                                                    </Field>
+                                                                );
+                                                            }}
                                                         />
                                                         <Field className="md:col-span-2">
                                                             <FieldLabel
