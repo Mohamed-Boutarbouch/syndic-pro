@@ -10,7 +10,7 @@ class DashboardController
 {
     public function __invoke(Property $property): Response
     {
-        return Inertia::render('dashboard', [
+        return Inertia::render('properties/dashboard', [
             'property' => [
                 'id' => $property->id,
                 'name' => $property->name,
