@@ -1,5 +1,13 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import {
+    BookOpen,
+    Building2,
+    FolderGit2,
+    LayoutGrid,
+    ReceiptText,
+    Wallet,
+} from 'lucide-react';
+
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -25,13 +33,31 @@ type SharedProps = {
 export function AppSidebar() {
     const { property } = usePage<SharedProps>().props;
 
-    const dashboardHref = `/properties/${property.id}/dashboard`;
-
     const mainNavItems: NavItem[] = [
         {
             title: 'Dashboard',
-            href: dashboardHref,
+            href: `/properties/${property.id}/dashboard`,
             icon: LayoutGrid,
+        },
+        {
+            title: 'Financial Budget',
+            href: `/properties/${property.id}/budget`,
+            icon: Wallet,
+        },
+        {
+            title: 'Co-Owners',
+            href: `/properties/${property.id}/co-owners`,
+            icon: Building2,
+        },
+        {
+            title: 'Billing',
+            href: `/properties/${property.id}/billing`,
+            icon: ReceiptText,
+        },
+        {
+            title: 'Ledger',
+            href: `/properties/${property.id}/ledger`,
+            icon: BookOpen,
         },
     ];
 
@@ -55,7 +81,12 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             size="lg"
-                            render={<Link href={dashboardHref} prefetch />}
+                            render={
+                                <Link
+                                    href={`/properties/${property.id}/dashboard`}
+                                    prefetch
+                                />
+                            }
                         >
                             <AppLogo />
                         </SidebarMenuButton>
