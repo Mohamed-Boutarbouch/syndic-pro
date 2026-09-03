@@ -14,7 +14,7 @@ export type UnitPageProps = {
         id: number;
         start_date: string;
         end_date: string;
-        total_budget: string;
+        total_budget: number;
     };
 
     unitTypes: {

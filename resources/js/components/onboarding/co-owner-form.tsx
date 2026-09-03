@@ -37,7 +37,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { UnitTypeBadge } from '@/components/unit-type-badge';
-import { calculateInstallmentAmount, formatMAD } from '@/lib/billing';
+import { calculateInstallmentAmount } from '@/lib/billing';
+import { formatCurrency } from '@/lib/format-currency';
 import type { CoOwnerPageProps } from '@/pages/onboarding/co-owner';
 import {
     coOwnersSchema,
@@ -97,7 +98,7 @@ export function CoOwnerForm({
                             Overall budget
                         </div>
                         <div className="text-lg font-semibold tabular-nums">
-                            {formatMAD(Number(budget))} MAD
+                            {formatCurrency(budget)}
                         </div>
                     </div>
                 </div>
@@ -117,9 +118,9 @@ export function CoOwnerForm({
                             <>
                                 <RadioGroup
                                     value={
-                                        syndicField.value !== undefined
+                                        syndicField.value != null
                                             ? String(syndicField.value)
-                                            : undefined
+                                            : ''
                                     }
                                     onValueChange={(value) =>
                                         syndicField.onChange(Number(value))
@@ -149,16 +150,9 @@ export function CoOwnerForm({
 
                                                         <div className="text-right">
                                                             <span className="text-sm font-semibold tabular-nums">
-                                                                {Number(
+                                                                {formatCurrency(
                                                                     unit.calculated_annual_budget,
-                                                                ).toLocaleString(
-                                                                    'fr-MA',
-                                                                    {
-                                                                        minimumFractionDigits: 2,
-                                                                        maximumFractionDigits: 2,
-                                                                    },
-                                                                )}{' '}
-                                                                MAD
+                                                                )}
                                                             </span>
                                                             <div className="text-xs text-muted-foreground">
                                                                 Annual budget
@@ -365,10 +359,9 @@ export function CoOwnerForm({
                                                                                                     {amount !==
                                                                                                         null && (
                                                                                                         <span className="text-xs text-muted-foreground tabular-nums">
-                                                                                                            {formatMAD(
+                                                                                                            {formatCurrency(
                                                                                                                 amount,
-                                                                                                            )}{' '}
-                                                                                                            MAD
+                                                                                                            )}
                                                                                                         </span>
                                                                                                     )}
                                                                                                 </span>
@@ -382,10 +375,9 @@ export function CoOwnerForm({
                                                                             null &&
                                                                             !fieldState.invalid && (
                                                                                 <span className="text-xs text-muted-foreground">
-                                                                                    {formatMAD(
+                                                                                    {formatCurrency(
                                                                                         installmentAmount,
                                                                                     )}{' '}
-                                                                                    MAD
                                                                                     per
                                                                                     installment
                                                                                 </span>

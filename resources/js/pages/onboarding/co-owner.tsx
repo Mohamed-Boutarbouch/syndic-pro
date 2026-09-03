@@ -10,13 +10,13 @@ export type CoOwnerPageProps = {
         name: string;
     };
 
-    budget: string;
+    budget: number;
 
     units: {
         id: number;
         property_id: number;
         label: string;
-        floor: string;
+        floor: number;
         type: string;
         weight_coefficient: number;
         calculated_annual_budget: number;

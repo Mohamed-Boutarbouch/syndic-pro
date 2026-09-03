@@ -42,8 +42,19 @@ class CoOwnerController
                 'id' => $property->id,
                 'name' => $property->name,
             ],
-            'budget' => $budget?->total_budget,
-            'units' => $units,
+            'budget' => (float) $budget?->total_budget,
+
+            'units' => $units->map(fn ($unit) => [
+                'id' => $unit->id,
+                'property_id' => $unit->property_id,
+                'label' => $unit->label,
+                'floor' => $unit->floor,
+                'type' => $unit->type,
+                'weight_coefficient' => (float) $unit->weight_coefficient,
+                'calculated_annual_budget' => (float) $unit->calculated_annual_budget,
+                'is_active' => $unit->is_active,
+            ])->values(),
+
             'billingFrequency' => collect(BillingFrequency::cases())
                 ->map(fn (BillingFrequency $type) => [
                     'value' => $type->value,

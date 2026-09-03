@@ -38,6 +38,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
+import { formatCurrency } from '@/lib/format-currency';
 import type { UnitPageProps } from '@/pages/onboarding/unit';
 import type {
     UnitsFormOutputValues,
@@ -51,7 +52,6 @@ export function UnitForm({
     unitTypes,
     maxUnits: MAX_UNITS,
 }: UnitPageProps) {
-    console.log(budget);
     const form = useForm<UnitsFormValues, any, UnitsFormOutputValues>({
         resolver: valibotResolver(unitsSchema),
         defaultValues: {
@@ -96,7 +96,9 @@ export function UnitForm({
                         Budget:
                     </ItemMedia>
                     <ItemContent>
-                        <ItemTitle>{budget.total_budget} MAD/year</ItemTitle>
+                        <ItemTitle>
+                            {formatCurrency(budget.total_budget)}/year
+                        </ItemTitle>
                     </ItemContent>
                 </Item>
                 <form
@@ -120,9 +122,7 @@ export function UnitForm({
                                         <UnitBudgetShare
                                             control={form.control}
                                             index={index}
-                                            totalBudget={Number(
-                                                budget.total_budget,
-                                            )}
+                                            totalBudget={budget.total_budget}
                                         />
                                     </ItemTitle>
                                     <ItemContent className="grid w-full gap-4 sm:grid-cols-2 md:grid-cols-4 md:items-start">

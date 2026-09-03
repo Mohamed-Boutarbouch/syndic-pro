@@ -21,9 +21,3 @@ export function calculateUnitBudgets(
         (coefficient) => (coefficient / sumOfCoefficients) * totalBudget,
     );
 }
-
-export function formatBudget(amount: number): string {
-    return new Intl.NumberFormat('fr-MA', {
-        maximumFractionDigits: 0,
-    }).format(amount);
-}

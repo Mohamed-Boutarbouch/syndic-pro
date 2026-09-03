@@ -28,7 +28,7 @@ class UnitController
                 'id' => $budget->id,
                 'start_date' => $budget->start_date->toDateString(),
                 'end_date' => $budget->end_date->toDateString(),
-                'total_budget' => $budget->total_budget,
+                'total_budget' => (float) $budget->total_budget,
             ],
             'unitTypes' => collect(UnitTypes::cases())
                 ->map(fn (UnitTypes $type) => [

@@ -1,9 +1,7 @@
 import { useWatch } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
-import {
-    calculateUnitBudgets,
-    formatBudget,
-} from '@/lib/onboarding/unit-budget';
+import { formatCurrency } from '@/lib/format-currency';
+import { calculateUnitBudgets } from '@/lib/onboarding/unit-budget';
 import type { UnitsFormValues } from '@/schemas/onboarding/units';
 
 export function UnitBudgetShare({
@@ -25,7 +23,7 @@ export function UnitBudgetShare({
 
     return (
         <span className="text-sm text-muted-foreground">
-            {formatBudget(share)} MAD/year
+            {formatCurrency(share)}/year
         </span>
     );
 }
