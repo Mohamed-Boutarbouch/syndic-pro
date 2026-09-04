@@ -1,8 +1,8 @@
+import { cn } from 'cn';
 import { ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import {
     Popover,
     PopoverContent,

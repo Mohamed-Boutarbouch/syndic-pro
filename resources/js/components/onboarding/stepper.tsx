@@ -1,7 +1,6 @@
 import { usePage } from '@inertiajs/react';
+import { cn } from 'cn';
 import { Building2, Calendar, Check, Home, Users } from 'lucide-react';
-
-import { cn } from '@/lib/utils';
 
 const steps = [
     {
