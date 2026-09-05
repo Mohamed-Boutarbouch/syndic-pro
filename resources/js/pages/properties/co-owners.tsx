@@ -1,11 +1,15 @@
 import { ActiveSyndic } from '@/components/co-owners/active-syndic';
 import { CoOwnersCards } from '@/components/co-owners/co-owners-cards';
+import { columns } from '@/components/co-owners/columns';
+import { DataTable } from '@/components/co-owners/data-table';
+import { getUnitShares } from '@/components/co-owners/get-unit-shares';
 
 export default function CoOwners() {
+    const data = getUnitShares();
+
     return (
         <main className="p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-7xl space-y-6">
-                {/* Page header */}
                 <header>
                     <h1 className="text-2xl font-semibold tracking-tight">
                         Property Financial Budget
@@ -18,48 +22,11 @@ export default function CoOwners() {
                 </header>
 
                 <div className="grid grid-cols-1 items-start gap-6">
-                    <section
-                        aria-labelledby="co-owners-heading"
-                        className="min-w-0"
-                    >
-                        <h2 id="co-owners-heading" className="sr-only">
-                            Co-owners
-                        </h2>
+                    <CoOwnersCards />
 
-                        <CoOwnersCards />
-                    </section>
+                    <ActiveSyndic />
 
-                    <section
-                        aria-labelledby="co-owners-heading"
-                        className="min-w-0"
-                    >
-                        <h2 id="co-owners-heading" className="sr-only">
-                            Co-owners
-                        </h2>
-
-                        <ActiveSyndic />
-                    </section>
-                    {/* Sidebar */}
-                    {/*<aside className="space-y-6 lg:sticky lg:top-6 lg:col-span-4">
-                        <section aria-labelledby="budget-actions-heading">
-                            <h2 id="budget-actions-heading" className="sr-only">
-                                Budget actions
-                            </h2>
-
-                            <BudgetActions />
-                        </section>
-
-                        <section aria-labelledby="current-distribution-heading">
-                            <h2
-                                id="current-distribution-heading"
-                                className="sr-only"
-                            >
-                                Current distribution
-                            </h2>
-
-                            <CurrentDistribution />
-                        </section>
-                    </aside>*/}
+                    <DataTable columns={columns} data={data} />
                 </div>
             </div>
         </main>
