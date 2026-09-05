@@ -1,3 +1,4 @@
+import { ActiveSyndic } from '@/components/co-owners/active-syndic';
 import { CoOwnersCards } from '@/components/co-owners/co-owners-cards';
 
 export default function CoOwners() {
@@ -28,6 +29,16 @@ export default function CoOwners() {
                         <CoOwnersCards />
                     </section>
 
+                    <section
+                        aria-labelledby="co-owners-heading"
+                        className="min-w-0"
+                    >
+                        <h2 id="co-owners-heading" className="sr-only">
+                            Co-owners
+                        </h2>
+
+                        <ActiveSyndic />
+                    </section>
                     {/* Sidebar */}
                     {/*<aside className="space-y-6 lg:sticky lg:top-6 lg:col-span-4">
                         <section aria-labelledby="budget-actions-heading">
