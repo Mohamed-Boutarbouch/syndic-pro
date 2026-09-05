@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CoOwnerController;
 use App\Http\Controllers\DashboardController;
@@ -22,6 +23,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/co-owners',
         CoOwnerController::class,
     )->name('properties.co-owners');
+
+    Route::get(
+        'properties/{property}/billing',
+        BillingController::class,
+    )->name('properties.billing');
 });
 
 require __DIR__.'/onboarding.php';
