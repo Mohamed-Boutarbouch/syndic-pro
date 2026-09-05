@@ -4,6 +4,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CoOwnerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LedgerController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -28,6 +29,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/billing',
         BillingController::class,
     )->name('properties.billing');
+
+    Route::get(
+        'properties/{property}/ledger',
+        LedgerController::class,
+    )->name('properties.ledger');
 });
 
 require __DIR__.'/onboarding.php';

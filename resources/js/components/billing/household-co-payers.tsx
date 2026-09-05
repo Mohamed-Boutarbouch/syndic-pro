@@ -70,8 +70,8 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                             <DialogHeader>
                                 <DialogTitle>Add Co-Payer</DialogTitle>
                                 <DialogDescription>
-                                    Household of Sara El Fassi · Quota: 6,000
-                                    MAD/yr
+                                    Household of Sara El Fassi · Quota:{' '}
+                                    {formatCurrency(6000)}/yr
                                 </DialogDescription>
                             </DialogHeader>
                             <FieldGroup>
