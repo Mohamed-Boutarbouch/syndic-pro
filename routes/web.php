@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\CoOwnerController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/budget',
         BudgetController::class,
     )->name('properties.budget');
+
+    Route::get(
+        'properties/{property}/co-owners',
+        CoOwnerController::class,
+    )->name('properties.co-owners');
 });
 
 require __DIR__.'/onboarding.php';
