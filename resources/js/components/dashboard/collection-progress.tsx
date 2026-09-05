@@ -10,6 +10,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { formatCurrency } from '@/lib/format-currency';
 
 type Owner = {
     name: string;
@@ -38,10 +39,6 @@ function initials(name: string) {
         .toUpperCase();
 }
 
-function formatMAD(n: number) {
-    return `${n.toLocaleString('en-US').replace(/,/g, '.')} MAD`;
-}
-
 export function CollectionProgress() {
     const hiddenCount = totalOwners - owners.length;
 
@@ -62,13 +59,16 @@ export function CollectionProgress() {
             <CardContent className="space-y-6">
                 {/* Overall progress */}
                 <div className="space-y-2">
-                    <Progress value={overallPct} className="h-4" />
+                    <Progress
+                        value={overallPct}
+                        className="**:data-[slot=progress-track]:h-2"
+                    />
                     <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">
-                            {formatMAD(collected)} collected
+                            {formatCurrency(collected)} collected
                         </span>
                         <span className="text-muted-foreground">
-                            Target: {formatMAD(target)}
+                            Target: {formatCurrency(target)}
                         </span>
                     </div>
                 </div>

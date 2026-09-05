@@ -1,6 +1,7 @@
 import { CollectionProgress } from '@/components/dashboard/collection-progress';
 import { Kpis } from '@/components/dashboard/kpis';
 import { MonthlyCollection } from '@/components/dashboard/monthly-collection';
+import { RecentPayments } from '@/components/dashboard/recent-payments';
 
 export default function Dashboard() {
     return (
@@ -57,7 +58,7 @@ export default function Dashboard() {
                         Recent payments
                     </h2>
 
-                    {/* <RecentPayments /> */}
+                    <RecentPayments />
                 </section>
             </div>
         </main>

@@ -25,10 +25,3 @@ export function calculateInstallmentAmount(
 
     return annualBudget / divisor;
 }
-
-export function formatMAD(amount: number): string {
-    return amount.toLocaleString('fr-MA', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
-}
