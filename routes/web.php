@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/dashboard',
         DashboardController::class,
     )->name('properties.dashboard');
+
+    Route::get(
+        'properties/{property}/budget',
+        BudgetController::class,
+    )->name('properties.budget');
 });
 
 require __DIR__.'/onboarding.php';
