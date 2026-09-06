@@ -173,7 +173,7 @@ export function CoOwnerPaymentCard({
                                 <div className="mt-3 flex items-center gap-2 pl-11">
                                     <Progress
                                         value={progress}
-                                        className="h-4"
+                                        className="min-w-0 flex-1 **:data-[slot=progress-track]:h-2"
                                     />
 
                                     <span className="shrink-0 text-xs text-muted-foreground">
