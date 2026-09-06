@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 
+import ledger from '@/actions/App/Http/Controllers/LedgerController';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { buttonVariants } from '@/components/ui/button';
 import {
@@ -17,6 +18,15 @@ type Owner = {
     pct: number;
 };
 
+type Property = {
+    id: number;
+    name: string;
+};
+
+type CollectionProgressProps = {
+    property: Property;
+};
+
 const owners: Owner[] = [
     { name: 'Ahmed Benali', pct: 58 },
     { name: 'Karim Alaoui', pct: 100 },
@@ -24,7 +34,6 @@ const owners: Owner[] = [
     { name: 'Hassan Tazi', pct: 100 },
     { name: 'Laila Mansouri', pct: 25 },
 ];
-
 const totalOwners = 10;
 const collected = 38000;
 const target = 60000;
@@ -39,7 +48,7 @@ function initials(name: string) {
         .toUpperCase();
 }
 
-export function CollectionProgress() {
+export function CollectionProgress({ property }: CollectionProgressProps) {
     const hiddenCount = totalOwners - owners.length;
 
     return (
@@ -55,9 +64,7 @@ export function CollectionProgress() {
                     {overallPct}%
                 </span>
             </CardHeader>
-
             <CardContent className="space-y-6">
-                {/* Overall progress */}
                 <div className="space-y-2">
                     <Progress
                         value={overallPct}
@@ -72,7 +79,6 @@ export function CollectionProgress() {
                         </span>
                     </div>
                 </div>
-                {/* Per-owner rows */}
                 <div className="space-y-4 pt-2">
                     {owners.map((owner) => (
                         <div
@@ -98,10 +104,9 @@ export function CollectionProgress() {
                         </div>
                     ))}
                 </div>
-
                 {hiddenCount > 0 && (
                     <Link
-                        href="/ledger"
+                        href={ledger(property.id).url}
                         className={buttonVariants({
                             variant: 'secondary',
                             size: 'sm',

@@ -3,7 +3,16 @@ import { Kpis } from '@/components/dashboard/kpis';
 import { MonthlyCollection } from '@/components/dashboard/monthly-collection';
 import { RecentPayments } from '@/components/dashboard/recent-payments';
 
-export default function Dashboard() {
+type Property = {
+    id: number;
+    name: string;
+};
+
+type DashboardProps = {
+    property: Property;
+};
+
+export default function Dashboard({ property }: DashboardProps) {
     return (
         <main className="p-4 sm:p-6">
             <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12">
@@ -16,7 +25,6 @@ export default function Dashboard() {
                         payments.
                     </p>
                 </header>
-
                 <section
                     aria-labelledby="dashboard-overview"
                     className="lg:col-span-12"
@@ -26,7 +34,6 @@ export default function Dashboard() {
                     </h2>
                     <Kpis />
                 </section>
-
                 <section
                     aria-labelledby="collection-progress"
                     className="lg:col-span-12"
@@ -34,9 +41,8 @@ export default function Dashboard() {
                     <h2 id="collection-progress" className="sr-only">
                         Collection progress
                     </h2>
-                    <CollectionProgress />
+                    <CollectionProgress property={property} />
                 </section>
-
                 <section
                     aria-labelledby="monthly-collection"
                     className="lg:col-span-8"
@@ -46,7 +52,6 @@ export default function Dashboard() {
                     </h2>
                     <MonthlyCollection />
                 </section>
-
                 <section
                     aria-labelledby="recent-payments"
                     className="lg:col-span-4"
