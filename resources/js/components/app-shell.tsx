@@ -8,8 +8,12 @@ type Props = {
     variant?: AppVariant;
 };
 
+type SharedProps = {
+    sidebarOpen: boolean;
+};
+
 export function AppShell({ children, variant = 'sidebar' }: Props) {
-    const isOpen = usePage().props.sidebarOpen;
+    const { sidebarOpen } = usePage<SharedProps>().props;
 
     if (variant === 'header') {
         return (
@@ -17,5 +21,7 @@ export function AppShell({ children, variant = 'sidebar' }: Props) {
         );
     }
 
-    return <SidebarProvider defaultOpen={isOpen}>{children}</SidebarProvider>;
+    return (
+        <SidebarProvider defaultOpen={sidebarOpen}>{children}</SidebarProvider>
+    );
 }

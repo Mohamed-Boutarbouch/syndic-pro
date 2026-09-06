@@ -24,7 +24,6 @@ export default function Dashboard() {
                     <h2 id="dashboard-overview" className="sr-only">
                         Property overview
                     </h2>
-
                     <Kpis />
                 </section>
 
@@ -35,7 +34,6 @@ export default function Dashboard() {
                     <h2 id="collection-progress" className="sr-only">
                         Collection progress
                     </h2>
-
                     <CollectionProgress />
                 </section>
 
@@ -46,7 +44,6 @@ export default function Dashboard() {
                     <h2 id="monthly-collection" className="sr-only">
                         Monthly collection
                     </h2>
-
                     <MonthlyCollection />
                 </section>
 
@@ -57,7 +54,6 @@ export default function Dashboard() {
                     <h2 id="recent-payments" className="sr-only">
                         Recent payments
                     </h2>
-
                     <RecentPayments />
                 </section>
             </div>

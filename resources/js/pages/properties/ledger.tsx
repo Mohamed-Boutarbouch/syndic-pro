@@ -10,19 +10,18 @@ export default function Ledger() {
             <div className="mx-auto max-w-7xl space-y-6">
                 <header>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Property Financial Budget
+                        Ledger
                     </h1>
-
                     <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                        Overview of your property finances, collections, and
-                        payments.
+                        Review the fiscal year collection, transaction history,
+                        and co-owner payment status.
                     </p>
                 </header>
 
                 <div className="grid grid-cols-1 items-start gap-6">
                     <FiscalYearCollectionCard />
                     <TransactionSummaryCard />
-                    {<CoOwnerStatus coOwners={coOwners} />}
+                    <CoOwnerStatus coOwners={coOwners} />
                     <PaymentJournal />
                 </div>
             </div>

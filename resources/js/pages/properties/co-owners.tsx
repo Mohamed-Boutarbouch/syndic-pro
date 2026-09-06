@@ -12,20 +12,17 @@ export default function CoOwners() {
             <div className="mx-auto max-w-7xl space-y-6">
                 <header>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Property Financial Budget
+                        Co-Owners
                     </h1>
-
                     <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                        Overview of your property finances, collections, and
-                        payments.
+                        Manage unit shares, ownership records, and the active
+                        syndic for this property.
                     </p>
                 </header>
 
                 <div className="grid grid-cols-1 items-start gap-6">
                     <CoOwnersCards />
-
                     <ActiveSyndic />
-
                     <DataTable columns={columns} data={data} />
                 </div>
             </div>
