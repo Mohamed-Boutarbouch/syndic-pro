@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AddMidYearUnitController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CoOwnerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LedgerController;
+use App\Http\Controllers\UpdateAnnualTargetBudgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -15,10 +17,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         DashboardController::class,
     )->name('properties.dashboard');
 
+    // Add alongside existing property routes (adjust prefix/middleware to match
+    // how properties/{property} routes are already grouped in your routes file).
     Route::get(
         'properties/{property}/budget',
         BudgetController::class,
     )->name('properties.budget');
+
+    Route::post('properties/{property}/budget/units', AddMidYearUnitController::class)
+        ->name('properties.budget.units.store');
+
+    // NOTE: scoping this route model binding (Route::scopedBindings()) so that
+    // {budget} is automatically constrained to the parent {property} would let
+    // you drop the manual abort_unless() check in the controller.
+    Route::patch(
+        'properties/{property}/budget/{budget}',
+        UpdateAnnualTargetBudgetController::class
+    )->name('properties.budget.update');
 
     Route::get(
         'properties/{property}/co-owners',

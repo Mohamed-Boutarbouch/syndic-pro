@@ -1,5 +1,6 @@
+import { router } from '@inertiajs/react';
 import { RefreshCw, TriangleAlert } from 'lucide-react';
-
+import { useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,16 +25,58 @@ import {
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { formatCurrency } from '@/lib/format-currency';
+import addMidYearUnit from '@/actions/App/Http/Controllers/AddMidYearUnitController';
 
-export function BudgetActions() {
+type BudgetActionsProps = {
+    propertyId: number;
+    sharePerPoint: number;
+    currentTotalBudget: number;
+};
+
+export function BudgetActions({
+    propertyId,
+    sharePerPoint,
+    currentTotalBudget,
+}: BudgetActionsProps) {
+    const [unitName, setUnitName] = useState('');
+    const [weightCoefficient, setWeightCoefficient] = useState('1.0');
+    const [open, setOpen] = useState(false);
+    const [processing, setProcessing] = useState(false);
+
+    const parsedWeight = Number.parseFloat(weightCoefficient) || 0;
+    const budgetImpact = parsedWeight * sharePerPoint;
+    const newTotal = currentTotalBudget + budgetImpact;
+
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        setProcessing(true);
+
+        router.post(
+            addMidYearUnit.url({ property: propertyId }),
+            {
+                label: unitName,
+                weight_coefficient: weightCoefficient,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setOpen(false);
+                    setUnitName('');
+                    setWeightCoefficient('1.0');
+                },
+                onFinish: () => setProcessing(false),
+            },
+        );
+    };
+
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Actions</CardTitle>
             </CardHeader>
             <CardContent>
-                <Dialog>
-                    <form>
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <form onSubmit={handleSubmit}>
                         <DialogTrigger
                             render={
                                 <Button
@@ -55,7 +98,6 @@ export function BudgetActions() {
                                     remain unchanged.
                                 </DialogDescription>
                             </DialogHeader>
-
                             <Alert>
                                 <TriangleAlert />
                                 <AlertTitle>Immutability Rules</AlertTitle>
@@ -74,6 +116,11 @@ export function BudgetActions() {
                                         id="unit-name"
                                         name="unit-name"
                                         placeholder="e.g. A-502"
+                                        value={unitName}
+                                        onChange={(event) =>
+                                            setUnitName(event.target.value)
+                                        }
+                                        required
                                     />
                                 </Field>
                                 <Field>
@@ -85,7 +132,13 @@ export function BudgetActions() {
                                         step="0.1"
                                         id="weight-coefficient"
                                         name="weight-coefficient"
-                                        defaultValue="1.0"
+                                        value={weightCoefficient}
+                                        onChange={(event) =>
+                                            setWeightCoefficient(
+                                                event.target.value,
+                                            )
+                                        }
+                                        required
                                     />
                                 </Field>
                             </FieldGroup>
@@ -93,8 +146,8 @@ export function BudgetActions() {
                                 <ItemContent>
                                     <ItemTitle>Budget Impact</ItemTitle>
                                     <ItemDescription>
-                                        + {formatCurrency(6000)} &rarr; New
-                                        total: {formatCurrency(66000)}
+                                        + {formatCurrency(budgetImpact)} &rarr;
+                                        New total: {formatCurrency(newTotal)}
                                     </ItemDescription>
                                 </ItemContent>
                             </Item>
@@ -106,7 +159,9 @@ export function BudgetActions() {
                                         </Button>
                                     }
                                 />
-                                <Button type="submit">Confirm</Button>
+                                <Button type="submit" disabled={processing}>
+                                    Confirm
+                                </Button>
                             </DialogFooter>
                         </DialogContent>
                     </form>

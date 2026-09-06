@@ -2,7 +2,35 @@ import { BudgetActions } from '@/components/budget/budget-actions';
 import { CurrentDistribution } from '@/components/budget/current-distribution';
 import { FiscalYear } from '@/components/budget/fiscal-year';
 
-export default function Budget() {
+type BudgetProps = {
+    property: {
+        id: number;
+        name: string;
+    };
+    budget: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        totalBudget: number;
+        isBudgetLocked: boolean;
+    } | null;
+    distribution: {
+        totalWeight: number;
+        sharePerPoint: number;
+        units: Array<{
+            unit: string;
+            name: string | null;
+            points: number;
+            amount: number;
+        }>;
+    };
+};
+
+export default function Budget({
+    property,
+    budget,
+    distribution,
+}: BudgetProps) {
     return (
         <main className="p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-7xl space-y-6">
@@ -15,7 +43,6 @@ export default function Budget() {
                         payments.
                     </p>
                 </header>
-
                 <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
                     <section
                         aria-labelledby="fiscal-year-heading"
@@ -24,15 +51,21 @@ export default function Budget() {
                         <h2 id="fiscal-year-heading" className="sr-only">
                             Fiscal year
                         </h2>
-                        <FiscalYear />
+                        <FiscalYear
+                            budget={budget}
+                            distribution={distribution}
+                        />
                     </section>
-
                     <aside className="space-y-6 lg:sticky lg:top-6 lg:col-span-4">
                         <section aria-labelledby="budget-actions-heading">
                             <h2 id="budget-actions-heading" className="sr-only">
                                 Budget actions
                             </h2>
-                            <BudgetActions />
+                            <BudgetActions
+                                propertyId={property.id}
+                                sharePerPoint={distribution.sharePerPoint}
+                                currentTotalBudget={budget?.totalBudget ?? 0}
+                            />
                         </section>
                         <section aria-labelledby="current-distribution-heading">
                             <h2
@@ -41,7 +74,7 @@ export default function Budget() {
                             >
                                 Current distribution
                             </h2>
-                            <CurrentDistribution />
+                            <CurrentDistribution distribution={distribution} />
                         </section>
                     </aside>
                 </div>
