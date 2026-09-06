@@ -1,39 +1,73 @@
-import { Building2, CircleDollarSign, Users } from 'lucide-react';
+import { CircleDollarSign, Coins, Users, Wallet } from 'lucide-react';
+
+import { formatCurrency } from '@/lib/format-currency';
+import type { KpisData } from '@/types/dashboard';
 
 import { KpiCard } from './kpi-card';
 
-const kpis = [
-    {
-        title: 'Properties',
-        value: '12',
-        description: 'Managed properties',
-        icon: Building2,
-    },
-    {
-        title: 'Units',
-        value: '148',
-        description: 'Total units',
-        icon: Building2,
-    },
-    {
-        title: 'Co-owners',
-        value: '86',
-        description: 'Registered co-owners',
-        icon: Users,
-    },
-    {
-        title: 'Annual Budget',
-        value: '€42,500',
-        description: 'Total planned budget',
-        icon: CircleDollarSign,
-    },
-];
+type KpisProps = {
+    kpis: KpisData | null;
+};
 
-export function Kpis() {
+export function Kpis({ kpis }: KpisProps) {
+    const cards = kpis
+        ? [
+              {
+                  title: 'Annual Budget',
+                  value: formatCurrency(kpis.targetBudget),
+                  description: kpis.fiscalYearLabel,
+                  icon: CircleDollarSign,
+              },
+              {
+                  title: 'Collected',
+                  value: formatCurrency(kpis.collectedYtd),
+                  description: `${kpis.percentOfTarget}% of target`,
+                  icon: Wallet,
+              },
+              {
+                  title: 'Co-owners',
+                  value: String(kpis.coOwnersCount),
+                  description: `${kpis.paidCount} fully paid`,
+                  icon: Users,
+              },
+              {
+                  title: 'Units',
+                  value: String(kpis.unitsCount),
+                  description: 'Units in this property',
+                  icon: Coins,
+              },
+          ]
+        : [
+              {
+                  title: 'Units',
+                  value: '—',
+                  description: 'No active budget',
+                  icon: Coins,
+              },
+              {
+                  title: 'Co-owners',
+                  value: '—',
+                  description: 'No active budget',
+                  icon: Users,
+              },
+              {
+                  title: 'Annual Budget',
+                  value: '—',
+                  description: 'No active budget',
+                  icon: CircleDollarSign,
+              },
+              {
+                  title: 'Collected',
+                  value: '—',
+                  description: 'No active budget',
+                  icon: Wallet,
+              },
+          ];
+
     return (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {kpis.map((kpi) => (
-                <KpiCard key={kpi.title} {...kpi} />
+            {cards.map((card) => (
+                <KpiCard key={card.title} {...card} />
             ))}
         </div>
     );

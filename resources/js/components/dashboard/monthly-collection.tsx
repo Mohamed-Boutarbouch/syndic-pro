@@ -10,32 +10,16 @@ import {
 import type { ChartConfig } from '@/components/ui/chart';
 import {
     ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
     ChartLegend,
     ChartLegendContent,
+    ChartTooltip,
+    ChartTooltipContent,
 } from '@/components/ui/chart';
+import type { MonthlyPoint } from '@/types/dashboard';
 
-type MonthlyPoint = {
-    month: string;
-    collected: number;
-    target: number;
+type MonthlyCollectionProps = {
+    data: MonthlyPoint[];
 };
-
-const data: MonthlyPoint[] = [
-    { month: 'Nov', collected: 4700, target: 4700 },
-    { month: 'Dec', collected: 4200, target: 4700 },
-    { month: 'Jan', collected: 4550, target: 4700 },
-    { month: 'Feb', collected: 3600, target: 4700 },
-    { month: 'Mar', collected: 4300, target: 4700 },
-    { month: 'Apr', collected: 3900, target: 4700 },
-    { month: 'May', collected: 3550, target: 4700 },
-    { month: 'Jun', collected: 0, target: 4700 },
-    { month: 'Jul', collected: 0, target: 4700 },
-    { month: 'Aug', collected: 0, target: 4700 },
-    { month: 'Sep', collected: 0, target: 4700 },
-    { month: 'Oct', collected: 0, target: 4700 },
-];
 
 const chartConfig = {
     collected: {
@@ -48,7 +32,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function MonthlyCollection() {
+export function MonthlyCollection({ data }: MonthlyCollectionProps) {
     return (
         <Card className="flex h-full flex-col">
             <CardHeader>
@@ -57,6 +41,7 @@ export function MonthlyCollection() {
                     Collected vs monthly target · Nov 2025 – Oct 2026
                 </CardDescription>
             </CardHeader>
+
             <CardContent className="flex-1">
                 <ChartContainer
                     config={chartConfig}
@@ -64,24 +49,30 @@ export function MonthlyCollection() {
                 >
                     <BarChart data={data}>
                         <CartesianGrid vertical={false} />
+
                         <XAxis
                             dataKey="month"
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
                         />
+
                         <YAxis
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
                         />
+
                         <ChartTooltip content={<ChartTooltipContent />} />
+
                         <ChartLegend content={<ChartLegendContent />} />
+
                         <Bar
                             dataKey="collected"
                             fill="var(--color-collected)"
                             radius={2}
                         />
+
                         <Bar
                             dataKey="target"
                             fill="var(--color-target)"

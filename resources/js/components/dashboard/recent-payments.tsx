@@ -6,40 +6,25 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { formatCurrency } from '@/lib/format-currency';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { formatCurrency } from '@/lib/format-currency';
+import type { Payment } from '@/types/dashboard';
 
-type Payment = {
-    name: string;
-    initials: string;
-    date: string;
-    amount: number;
+type RecentPaymentsProps = {
+    payments: Payment[];
 };
 
-const payments: Payment[] = [
-    {
-        name: 'SARL Atlas Commerce',
-        initials: 'AC',
-        date: '2026-08-04',
-        amount: 750,
-    },
-    {
-        name: 'SARL Atlas Commerce',
-        initials: 'AC',
-        date: '2026-07-04',
-        amount: 750,
-    },
-    {
-        name: 'SARL Atlas Commerce',
-        initials: 'AC',
-        date: '2026-06-04',
-        amount: 750,
-    },
-    { name: 'Sara El Fassi', initials: 'SE', date: '2026-05-13', amount: 1500 },
-    { name: 'Ahmed Benali', initials: 'AB', date: '2026-05-07', amount: 500 },
-];
+function getInitials(name: string) {
+    return name
+        .trim()
+        .split(/\s+/)
+        .map((part) => part[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+}
 
-export function RecentPayments() {
+export function RecentPayments({ payments }: RecentPaymentsProps) {
     return (
         <Card className="flex h-full flex-col">
             <CardHeader>
@@ -48,29 +33,33 @@ export function RecentPayments() {
                     Last {payments.length} transactions
                 </CardDescription>
             </CardHeader>
+
             <CardContent className="flex-1">
                 <Table>
                     <TableBody>
-                        {payments.map((payment, i) => (
+                        {payments.map((payment, index) => (
                             <TableRow
-                                key={`${payment.name}-${payment.date}-${i}`}
+                                key={`${payment.name}-${payment.date}-${payment.amount}-${index}`}
                                 className="border-none"
                             >
                                 <TableCell className="w-9 py-3 pl-0">
-                                    <Avatar className="h-9 w-9">
+                                    <Avatar className="size-9">
                                         <AvatarFallback>
-                                            {payment.initials}
+                                            {getInitials(payment.name)}
                                         </AvatarFallback>
                                     </Avatar>
                                 </TableCell>
+
                                 <TableCell className="py-3">
                                     <p className="truncate text-sm font-medium">
                                         {payment.name}
                                     </p>
+
                                     <p className="text-sm text-muted-foreground">
                                         {payment.date}
                                     </p>
                                 </TableCell>
+
                                 <TableCell className="py-3 pr-0 text-right text-sm font-semibold tabular-nums">
                                     {formatCurrency(payment.amount)}
                                 </TableCell>
