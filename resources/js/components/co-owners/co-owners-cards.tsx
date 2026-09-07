@@ -1,12 +1,9 @@
 import { Archive, Building, Store } from 'lucide-react';
-import { KpiCard } from '../kpi-card';
+import { KpiCard } from '@/components/kpi-card';
+import type { CoOwnersKpis } from '@/types/properties/co-owners';
 
 interface CoOwnersCardsProps {
-    kpis: {
-        apartment: number;
-        commercial: number;
-        storage: number;
-    };
+    kpis: CoOwnersKpis;
 }
 
 export function CoOwnersCards({ kpis }: CoOwnersCardsProps) {

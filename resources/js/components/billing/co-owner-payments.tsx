@@ -1,12 +1,11 @@
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
-import type { CoOwnerPayment, PaymentFrequency } from './billing-data';
-import { CoOwnerPaymentCard } from './co-owner-payment-card';
 
-type CoOwnerPaymentsProps = {
-    propertyId: number | string;
-    payments: CoOwnerPayment[];
-};
+import { CoOwnerPaymentCard } from '@/components/billing/co-owner-payment-card';
+import type {
+    CoOwnerPaymentsProps,
+    PaymentFrequency,
+} from '@/types/properties/billing';
 
 export function CoOwnerPayments({
     propertyId,
@@ -20,15 +19,9 @@ export function CoOwnerPayments({
     ) {
         const previous = payments;
 
-        // Optimistically update the UI, then reconcile with the server.
         setPayments((current) =>
             current.map((payment) =>
-                payment.id === paymentId
-                    ? {
-                          ...payment,
-                          frequency,
-                      }
-                    : payment,
+                payment.id === paymentId ? { ...payment, frequency } : payment,
             ),
         );
 
@@ -38,7 +31,6 @@ export function CoOwnerPayments({
             {
                 preserveScroll: true,
                 onError: () => {
-                    // Roll back on validation/server failure.
                     setPayments(previous);
                 },
             },

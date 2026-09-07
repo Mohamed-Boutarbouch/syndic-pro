@@ -2,21 +2,7 @@ import { CollectionProgress } from '@/components/dashboard/collection-progress';
 import { DashboardKpis } from '@/components/dashboard/dashboard-kpis';
 import { MonthlyCollection } from '@/components/dashboard/monthly-collection';
 import { RecentPayments } from '@/components/dashboard/recent-payments';
-import type {
-    CollectionProgressData,
-    KpisData,
-    MonthlyPoint,
-    Payment,
-    Property,
-} from '@/types/dashboard';
-
-type DashboardProps = {
-    property: Property;
-    kpis: KpisData | null;
-    collectionProgress: CollectionProgressData | null;
-    monthlyCollection: MonthlyPoint[];
-    recentPayments: Payment[];
-};
+import type { DashboardProps } from '@/types/properties/dashboard';
 
 export default function Dashboard({
     property,

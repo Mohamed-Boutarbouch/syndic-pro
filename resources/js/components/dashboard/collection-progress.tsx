@@ -12,10 +12,13 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { formatCurrency } from '@/lib/format-currency';
-import type { CollectionProgressData, Property } from '@/types/dashboard';
+import type {
+    CollectionProgressData,
+    DashboardProperty,
+} from '@/types/properties/dashboard';
 
 type CollectionProgressProps = {
-    property: Property;
+    property: DashboardProperty;
     data: CollectionProgressData | null;
 };
 
@@ -58,6 +61,7 @@ export function CollectionProgress({
             <CardHeader className="flex flex-row items-start justify-between space-y-0">
                 <div className="space-y-1.5">
                     <CardTitle>Collection Progress</CardTitle>
+
                     <CardDescription>
                         Collected vs annual fiscal target
                     </CardDescription>

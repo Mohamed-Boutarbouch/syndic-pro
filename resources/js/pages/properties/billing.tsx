@@ -1,19 +1,6 @@
-import type { CoOwnerPayment } from '@/components/billing/billing-data';
 import { CoOwnerPayments } from '@/components/billing/co-owner-payments';
 import { CoOwnersCards } from '@/components/co-owners/co-owners-cards';
-
-type BillingProps = {
-    property: {
-        id: number;
-        name: string;
-    };
-    payments: CoOwnerPayment[];
-    kpis: {
-        apartment: number;
-        commercial: number;
-        storage: number;
-    };
-};
+import type { BillingProps } from '@/types/properties/billing';
 
 export default function Billing({ property, payments, kpis }: BillingProps) {
     return (
@@ -23,12 +10,15 @@ export default function Billing({ property, payments, kpis }: BillingProps) {
                     <h1 className="text-2xl font-semibold tracking-tight">
                         Billing
                     </h1>
+
                     <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
                         Track co-owner payments and outstanding balances.
                     </p>
                 </header>
+
                 <div className="grid grid-cols-1 items-start gap-6">
                     <CoOwnersCards kpis={kpis} />
+
                     {payments.length > 0 ? (
                         <CoOwnerPayments
                             propertyId={property.id}

@@ -8,27 +8,19 @@ import {
 } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/format-currency';
-import type { Payment } from '@/types/dashboard';
+import { getInitials } from '@/lib/utils';
+import type { RecentPayment } from '@/types/properties/dashboard';
 
 type RecentPaymentsProps = {
-    payments: Payment[];
+    payments: RecentPayment[];
 };
-
-function getInitials(name: string) {
-    return name
-        .trim()
-        .split(/\s+/)
-        .map((part) => part[0])
-        .join('')
-        .slice(0, 2)
-        .toUpperCase();
-}
 
 export function RecentPayments({ payments }: RecentPaymentsProps) {
     return (
         <Card className="flex h-full flex-col">
             <CardHeader>
                 <CardTitle>Recent Payments</CardTitle>
+
                 <CardDescription>
                     Last {payments.length} transactions
                 </CardDescription>

@@ -1,9 +1,9 @@
-export type Property = {
+export type DashboardProperty = {
     id: number;
     name: string;
 };
 
-export type KpisData = {
+export type DashboardKpis = {
     unitsCount: number;
     coOwnersCount: number;
     targetBudget: number;
@@ -29,14 +29,22 @@ export type CollectionProgressData = {
     owners: OwnerProgress[];
 };
 
-export type MonthlyPoint = {
+export type MonthlyCollectionPoint = {
     month: string;
     collected: number;
     target: number;
 };
 
-export type Payment = {
+export type RecentPayment = {
     name: string;
     date: string;
     amount: number;
+};
+
+export type DashboardProps = {
+    property: DashboardProperty;
+    kpis: DashboardKpis | null;
+    collectionProgress: CollectionProgressData | null;
+    monthlyCollection: MonthlyCollectionPoint[];
+    recentPayments: RecentPayment[];
 };

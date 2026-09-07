@@ -4,7 +4,7 @@ import {
     CalendarRange,
     CalendarSync,
 } from 'lucide-react';
-import { KpiCard } from '../kpi-card';
+import { KpiCard } from '@/components/kpi-card';
 
 const billingCards = [
     {

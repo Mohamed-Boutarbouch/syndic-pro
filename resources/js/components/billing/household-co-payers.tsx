@@ -1,5 +1,6 @@
 import { Plus, UserRoundX, UsersRoundIcon } from 'lucide-react';
 
+import { getProgress } from '@/components/billing/billing-data';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,16 +14,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Field, FieldGroup } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
-import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
-
-import { formatCurrency } from '@/lib/format-currency';
-import type { CoOwnerPayment, HouseholdCoPayer } from './billing-data';
-import { getProgress } from './billing-data';
-
 import {
     Empty,
     EmptyDescription,
@@ -30,11 +21,16 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from '@/components/ui/empty';
-
-type HouseholdCoPayersProps = {
-    payment: CoOwnerPayment;
-    onAdd?: (coPayer: HouseholdCoPayer) => void;
-};
+import { Field, FieldGroup } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
+import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { formatCurrency } from '@/lib/format-currency';
+import type {
+    HouseholdCoPayer,
+    HouseholdCoPayersProps,
+} from '@/types/properties/billing';
 
 export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
     const coPayers = payment.coPayers ?? [];
@@ -62,41 +58,50 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                         <DialogTrigger
                             render={
                                 <Button variant="outline">
-                                    <Plus data-plus="inline-start" /> Add
+                                    <Plus data-plus="inline-start" />
+                                    Add
                                 </Button>
                             }
                         />
+
                         <DialogContent className="sm:max-w-sm">
                             <DialogHeader>
                                 <DialogTitle>Add Co-Payer</DialogTitle>
+
                                 <DialogDescription>
-                                    Household of Sara El Fassi · Quota:{' '}
-                                    {formatCurrency(6000)}/yr
+                                    Household of {payment.name} · Quota:{' '}
+                                    {formatCurrency(payment.quota)}/yr
                                 </DialogDescription>
                             </DialogHeader>
+
                             <FieldGroup>
                                 <Field>
                                     <Label htmlFor="full-name">Full Name</Label>
+
                                     <Input
                                         id="full-name"
                                         name="full-name"
                                         placeholder="e.g. John Smith"
                                     />
                                 </Field>
+
                                 <Field>
                                     <Label htmlFor="relationship">
                                         Relationship
                                     </Label>
+
                                     <Input
                                         id="relationship"
                                         name="relationship"
                                         placeholder="e.g. Spouse, Son..."
                                     />
                                 </Field>
+
                                 <Field>
                                     <Label htmlFor="quota-share">
                                         Quota Share (%)
                                     </Label>
+
                                     <Input
                                         type="number"
                                         step="1"
@@ -106,6 +111,7 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                                     />
                                 </Field>
                             </FieldGroup>
+
                             <DialogFooter>
                                 <DialogClose
                                     render={
@@ -114,6 +120,7 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                                         </Button>
                                     }
                                 />
+
                                 <Button type="submit">Add</Button>
                             </DialogFooter>
                         </DialogContent>
@@ -140,7 +147,9 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                     <span>{formatCurrency(totalCollected)} collected</span>
 
                     <span>
-                        {formatCurrency(payment.quota - totalCollected)}{' '}
+                        {formatCurrency(
+                            Math.max(0, payment.quota - totalCollected),
+                        )}{' '}
                         remaining
                     </span>
                 </div>

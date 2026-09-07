@@ -1,0 +1,66 @@
+export type BillingProperty = {
+    id: number;
+    name: string;
+};
+
+export type BillingKpis = {
+    apartment: number;
+    commercial: number;
+    storage: number;
+};
+
+export type PaymentFrequency =
+    'monthly' | 'bimonthly' | 'quarterly' | 'semi-annual';
+
+export type HouseholdCoPayer = {
+    id: string;
+    initials: string;
+    name: string;
+    relationship: string;
+    sharePercentage: number;
+    collected: number;
+};
+
+export type CoOwnerPayment = {
+    id: string;
+    initials: string;
+    name: string;
+    role?: string;
+    unit: string;
+    quota: number;
+    collected: number;
+    frequency: PaymentFrequency;
+    coPayers?: HouseholdCoPayer[];
+};
+
+export type BillingProps = {
+    property: BillingProperty;
+    payments: CoOwnerPayment[];
+    kpis: BillingKpis;
+};
+
+export type CoOwnerPaymentsProps = {
+    propertyId: number | string;
+    payments: CoOwnerPayment[];
+};
+
+export type CoOwnerPaymentCardProps = {
+    payment: CoOwnerPayment;
+    onFrequencyChange?: (
+        paymentId: string,
+        frequency: PaymentFrequency,
+    ) => void;
+};
+
+export type FrequencyDialogProps = {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    name: string;
+    quota: number;
+    frequency: PaymentFrequency;
+    onSave: (frequency: PaymentFrequency) => void;
+};
+
+export type HouseholdCoPayersProps = {
+    payment: CoOwnerPayment;
+};

@@ -15,10 +15,10 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart';
-import type { MonthlyPoint } from '@/types/dashboard';
+import type { MonthlyCollectionPoint } from '@/types/properties/dashboard';
 
 type MonthlyCollectionProps = {
-    data: MonthlyPoint[];
+    data: MonthlyCollectionPoint[];
 };
 
 const chartConfig = {
@@ -37,6 +37,7 @@ export function MonthlyCollection({ data }: MonthlyCollectionProps) {
         <Card className="flex h-full flex-col">
             <CardHeader>
                 <CardTitle>Monthly Collection</CardTitle>
+
                 <CardDescription>
                     Collected vs monthly target · Nov 2025 – Oct 2026
                 </CardDescription>

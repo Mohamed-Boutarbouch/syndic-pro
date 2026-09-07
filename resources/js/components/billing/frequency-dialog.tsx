@@ -2,6 +2,10 @@ import { AlertCircleIcon } from 'lucide-react';
 import type { SubmitEvent } from 'react';
 import { useState } from 'react';
 
+import {
+    getInstallmentAmount,
+    PAYMENT_FREQUENCIES,
+} from '@/components/billing/billing-data';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,19 +30,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-
 import { formatCurrency } from '@/lib/format-currency';
-import type { PaymentFrequency } from './billing-data';
-import { getInstallmentAmount, PAYMENT_FREQUENCIES } from './billing-data';
-
-type FrequencyDialogProps = {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    name: string;
-    quota: number;
-    frequency: PaymentFrequency;
-    onSave: (frequency: PaymentFrequency) => void;
-};
+import type {
+    FrequencyDialogProps,
+    PaymentFrequency,
+} from '@/types/properties/billing';
 
 export function FrequencyDialog({
     open,
@@ -99,9 +95,11 @@ export function FrequencyDialog({
 
                             <Select
                                 value={value}
-                                onValueChange={(next) =>
-                                    setValue(next as PaymentFrequency)
-                                }
+                                onValueChange={(next) => {
+                                    if (next) {
+                                        setValue(next as PaymentFrequency);
+                                    }
+                                }}
                             >
                                 <SelectTrigger className="w-full">
                                     <SelectValue />

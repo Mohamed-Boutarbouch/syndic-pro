@@ -2,6 +2,14 @@ import { cn } from 'cn';
 import { ChevronDownIcon, Link2Icon } from 'lucide-react';
 import { useState } from 'react';
 
+import {
+    getInstallmentAmount,
+    getPaymentFrequency,
+    getProgress,
+    getRemaining,
+} from '@/components/billing/billing-data';
+import { FrequencyDialog } from '@/components/billing/frequency-dialog';
+import { HouseholdCoPayers } from '@/components/billing/household-co-payers';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -10,7 +18,6 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-
 import {
     Item,
     ItemContent,
@@ -19,25 +26,8 @@ import {
     ItemTitle,
 } from '@/components/ui/item';
 import { Progress } from '@/components/ui/progress';
-
 import { formatCurrency } from '@/lib/format-currency';
-import type { CoOwnerPayment, PaymentFrequency } from './billing-data';
-import {
-    getInstallmentAmount,
-    getPaymentFrequency,
-    getProgress,
-    getRemaining,
-} from './billing-data';
-import { FrequencyDialog } from './frequency-dialog';
-import { HouseholdCoPayers } from './household-co-payers';
-
-type CoOwnerPaymentCardProps = {
-    payment: CoOwnerPayment;
-    onFrequencyChange?: (
-        paymentId: string,
-        frequency: PaymentFrequency,
-    ) => void;
-};
+import type { CoOwnerPaymentCardProps } from '@/types/properties/billing';
 
 export function CoOwnerPaymentCard({
     payment,
@@ -47,11 +37,8 @@ export function CoOwnerPaymentCard({
     const [frequencyDialogOpen, setFrequencyDialogOpen] = useState(false);
 
     const frequency = getPaymentFrequency(payment.frequency);
-
     const progress = getProgress(payment.collected, payment.quota);
-
     const remaining = getRemaining(payment.collected, payment.quota);
-
     const installment = getInstallmentAmount(payment.quota, payment.frequency);
 
     const hasCoPayers = payment.coPayers && payment.coPayers.length > 1;
