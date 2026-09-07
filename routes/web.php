@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\TransferSyndicController;
 use App\Http\Controllers\UpdateAnnualTargetBudgetController;
+use App\Http\Controllers\UpdateBillingFrequencyController;
 use App\Http\Controllers\UpdateUnitCoefficientController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/billing',
         BillingController::class,
     )->name('properties.billing');
+
+    Route::patch(
+        'properties/{property}/billing/co-owners/{unitCoOwner}/frequency',
+        UpdateBillingFrequencyController::class,
+    )->name('properties.billing.co-owners.frequency');
 
     Route::get(
         'properties/{property}/ledger',
