@@ -1,0 +1,37 @@
+{
+    "Dashboard": "Tableau de bord",
+    "Budget": "Budget",
+    "Co-Owners": "Copropriétaires",
+    "Billing": "Facturation",
+    "Ledger": "Registre",
+
+    "Total Budget Target": "Objectif budgétaire total",
+    "Collected Year-to-Date": "Collecté depuis le début de l'exercice",
+    "Remaining Balance": "Solde restant",
+    "Fiscal year :range": "Exercice fiscal :range",
+
+    "Budget is active and locked": "Le budget est actif et verrouillé",
+    "Add Mid-Year Unit": "Ajouter une unité en cours d'exercice",
+    "This will recalculate the total projected budget without changing existing co-owners' recurring obligations.": "Ceci recalculera le budget total projeté sans modifier les obligations récurrentes des copropriétaires existants.",
+
+    "Unit weight updated": "Coefficient de l'unité mis à jour",
+    "Transfer Syndic Role": "Transférer le rôle de syndic",
+    "Transfer administrative role to :name?": "Transférer le rôle administratif à :name ?",
+    "Currently serving as syndic": "Actuellement syndic en fonction",
+
+    "Billing frequency": "Fréquence de facturation",
+    "billing_frequency.monthly": "Mensuelle",
+    "billing_frequency.bimonthly": "Bimestrielle",
+    "billing_frequency.quarterly": "Trimestrielle",
+    "billing_frequency.semi_annual": "Semestrielle",
+
+    "{0} No payments recorded|{1} :count payment recorded|[2,*] :count payments recorded": "{0} Aucun paiement enregistré|{1} :count paiement enregistré|[2,*] :count paiements enregistrés",
+    "Record Payment": "Enregistrer un paiement",
+    "Payment recorded successfully": "Paiement enregistré avec succès",
+    "Payment amount must be greater than zero.": "Le montant du paiement doit être supérieur à zéro.",
+
+    "unit_status.active": "Actif",
+    "unit_status.departed": "Parti",
+    "unit_status.waived": "Exonéré",
+    "unit_status.completed": "Terminé"
+}

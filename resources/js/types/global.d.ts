@@ -14,6 +14,8 @@ declare module '@inertiajs/core' {
             auth: Auth;
             sidebarOpen: boolean;
             [key: string]: unknown;
+            auth: Auth;
+            i18n: I18nSharedProps;
         };
     }
 }

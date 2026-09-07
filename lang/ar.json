@@ -1,0 +1,37 @@
+{
+    "Dashboard": "لوحة التحكم",
+    "Budget": "الميزانية",
+    "Co-Owners": "الملاك المشتركون",
+    "Billing": "الفوترة",
+    "Ledger": "السجل",
+
+    "Total Budget Target": "إجمالي الميزانية المستهدفة",
+    "Collected Year-to-Date": "المحصل منذ بداية السنة",
+    "Remaining Balance": "الرصيد المتبقي",
+    "Fiscal year :range": "السنة المالية :range",
+
+    "Budget is active and locked": "الميزانية نشطة ومقفلة",
+    "Add Mid-Year Unit": "إضافة وحدة في منتصف السنة",
+    "This will recalculate the total projected budget without changing existing co-owners' recurring obligations.": "سيؤدي هذا إلى إعادة حساب الميزانية الإجمالية المتوقعة دون تغيير الالتزامات المتكررة للملاك الحاليين.",
+
+    "Unit weight updated": "تم تحديث معامل الوحدة",
+    "Transfer Syndic Role": "نقل دور الوكيل",
+    "Transfer administrative role to :name?": "نقل الدور الإداري إلى :name؟",
+    "Currently serving as syndic": "يشغل حاليًا منصب الوكيل",
+
+    "Billing frequency": "وتيرة الفوترة",
+    "billing_frequency.monthly": "شهرية",
+    "billing_frequency.bimonthly": "كل شهرين",
+    "billing_frequency.quarterly": "ربع سنوية",
+    "billing_frequency.semi_annual": "نصف سنوية",
+
+    "{0} No payments recorded|{1} :count payment recorded|[2,*] :count payments recorded": "{0} لا توجد مدفوعات مسجلة|{1} تم تسجيل دفعة واحدة|[2,*] تم تسجيل :count دفعات",
+    "Record Payment": "تسجيل دفعة",
+    "Payment recorded successfully": "تم تسجيل الدفعة بنجاح",
+    "Payment amount must be greater than zero.": "يجب أن يكون مبلغ الدفعة أكبر من صفر.",
+
+    "unit_status.active": "نشط",
+    "unit_status.departed": "غادر",
+    "unit_status.waived": "معفى",
+    "unit_status.completed": "مكتمل"
+}
