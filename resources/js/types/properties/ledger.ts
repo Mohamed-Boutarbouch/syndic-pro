@@ -1,10 +1,4 @@
-import type { CoOwnerOption } from '@/components/ledger/co-owner-select';
-import type { PaymentLog } from '@/components/ledger/columns';
-
-export type LedgerProperty = {
-    id: number;
-    name: string;
-};
+import type { Property } from '@/types/property';
 
 export type FiscalYearCollection = {
     targetBudget: number;
@@ -19,27 +13,44 @@ export type TransactionSummary = {
     ownersTotal: number;
 };
 
-export type CoOwnerPayment = {
+export type LedgerPayment = {
     id: string;
     date: string;
     amount: number;
 };
 
-export type CoOwnerStatus = {
+export type CoOwnerStatusData = {
     id: string;
     unitCoOwnerId: number;
     name: string;
     initials: string;
     unit: string;
     quota: number;
-    payments: CoOwnerPayment[];
+    payments: LedgerPayment[];
+};
+
+export type CoOwnerOption = {
+    id: string;
+    name: string;
+    initials: string;
+    remainingQuota: number;
+};
+
+export type PaymentLog = {
+    id: string;
+    date: string;
+    coOwner: string;
+    period: string;
+    type: 'full' | 'partial';
+    amount: number;
+    notes: string;
 };
 
 export type LedgerProps = {
-    property: LedgerProperty;
+    property: Property;
     fiscalYear: FiscalYearCollection | null;
     transactionSummary: TransactionSummary;
-    coOwnerStatuses: CoOwnerStatus[];
+    coOwnerStatuses: CoOwnerStatusData[];
     coOwnerOptions: CoOwnerOption[];
     payments: PaymentLog[];
 };

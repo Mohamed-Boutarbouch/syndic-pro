@@ -4,6 +4,10 @@ import { Notebook, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 import store from '@/actions/App/Http/Controllers/StorePaymentController';
+
+import { CoOwnerSelect } from '@/components/ledger/co-owner-select';
+import { columns } from '@/components/ledger/columns';
+import { DataTable } from '@/components/ledger/data-table';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -39,11 +43,7 @@ import {
 } from '@/components/ui/popover';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { CoOwnerSelect } from './co-owner-select';
-import type { CoOwnerOption } from './co-owner-select';
-import { columns } from './columns';
-import type { PaymentLog } from './columns';
-import { DataTable } from './data-table';
+import type { CoOwnerOption, PaymentLog } from '@/types/properties/ledger';
 
 type PaymentJournalProps = {
     propertyId: number;
@@ -89,9 +89,11 @@ export function PaymentJournal({
                     <Notebook />
                     Payment Journal
                 </CardTitle>
+
                 <CardDescription>
                     {transactionCount} transactions shown
                 </CardDescription>
+
                 <CardAction>
                     <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger
@@ -102,16 +104,19 @@ export function PaymentJournal({
                                 </Button>
                             }
                         />
+
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle className="flex items-center gap-2">
                                     <Plus />
                                     Log Payment
                                 </DialogTitle>
+
                                 <DialogDescription>
                                     Record a new contribution
                                 </DialogDescription>
                             </DialogHeader>
+
                             <FieldGroup>
                                 <CoOwnerSelect
                                     value={data.unit_co_owner_id || null}
@@ -120,16 +125,19 @@ export function PaymentJournal({
                                     }
                                     coOwners={coOwners}
                                 />
+
                                 {errors.unit_co_owner_id && (
                                     <FieldError>
                                         {errors.unit_co_owner_id}
                                     </FieldError>
                                 )}
+
                                 <div className="flex justify-between gap-4">
                                     <Field>
                                         <FieldLabel htmlFor="amount">
                                             Amount (MAD)
                                         </FieldLabel>
+
                                         <Input
                                             type="number"
                                             step="1"
@@ -137,23 +145,26 @@ export function PaymentJournal({
                                             name="amount"
                                             placeholder="ex: 500"
                                             value={data.amount}
-                                            onChange={(e) =>
+                                            onChange={(event) =>
                                                 setData(
                                                     'amount',
-                                                    e.target.value,
+                                                    event.target.value,
                                                 )
                                             }
                                         />
+
                                         {errors.amount && (
                                             <FieldError>
                                                 {errors.amount}
                                             </FieldError>
                                         )}
                                     </Field>
+
                                     <Field>
                                         <FieldLabel htmlFor="date-picker-simple">
                                             Date
                                         </FieldLabel>
+
                                         <Popover>
                                             <PopoverTrigger
                                                 render={
@@ -172,6 +183,7 @@ export function PaymentJournal({
                                                     </Button>
                                                 }
                                             />
+
                                             <PopoverContent
                                                 className="w-auto p-0"
                                                 align="start"
@@ -179,16 +191,18 @@ export function PaymentJournal({
                                                 <Calendar
                                                     mode="single"
                                                     selected={date}
-                                                    onSelect={(d) => {
-                                                        if (!d) {
+                                                    onSelect={(
+                                                        selectedDate,
+                                                    ) => {
+                                                        if (!selectedDate) {
                                                             return;
                                                         }
 
-                                                        setDate(d);
+                                                        setDate(selectedDate);
                                                         setData(
                                                             'paid_at',
                                                             format(
-                                                                d,
+                                                                selectedDate,
                                                                 'yyyy-MM-dd',
                                                             ),
                                                         );
@@ -197,6 +211,7 @@ export function PaymentJournal({
                                                 />
                                             </PopoverContent>
                                         </Popover>
+
                                         {errors.paid_at && (
                                             <FieldError>
                                                 {errors.paid_at}
@@ -204,16 +219,19 @@ export function PaymentJournal({
                                         )}
                                     </Field>
                                 </div>
+
                                 <FieldLabel htmlFor="partial-payment">
                                     <Field orientation="horizontal">
                                         <FieldContent>
                                             <FieldTitle>
                                                 Partial Payment
                                             </FieldTitle>
+
                                             <FieldDescription>
                                                 Balance will be completed later
                                             </FieldDescription>
                                         </FieldContent>
+
                                         <Switch
                                             id="partial-payment"
                                             checked={data.partial}
@@ -223,20 +241,23 @@ export function PaymentJournal({
                                         />
                                     </Field>
                                 </FieldLabel>
+
                                 <Field>
                                     <FieldLabel htmlFor="notes">
                                         Notes
                                     </FieldLabel>
+
                                     <Textarea
                                         id="notes"
                                         placeholder="Optional remarks..."
                                         value={data.notes}
-                                        onChange={(e) =>
-                                            setData('notes', e.target.value)
+                                        onChange={(event) =>
+                                            setData('notes', event.target.value)
                                         }
                                     />
                                 </Field>
                             </FieldGroup>
+
                             <div className="mt-4 flex justify-end gap-2">
                                 <Button
                                     variant="secondary"
@@ -245,6 +266,7 @@ export function PaymentJournal({
                                 >
                                     Cancel
                                 </Button>
+
                                 <Button onClick={submit} disabled={processing}>
                                     {processing ? 'Saving…' : 'Save Payment'}
                                 </Button>
@@ -253,6 +275,7 @@ export function PaymentJournal({
                     </Dialog>
                 </CardAction>
             </CardHeader>
+
             <CardContent>
                 <DataTable columns={columns} data={payments} />
             </CardContent>

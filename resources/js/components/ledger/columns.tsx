@@ -2,58 +2,49 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
 
+import type { DataTableFeatures } from '@/components/ledger/data-table-features';
+
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/format-currency';
-import type { DataTableFeatures } from './data-table-features';
 
-export type PaymentLog = {
-    id: string;
-    date: string; // ISO date string from the backend, not a Date instance
-    coOwner: string;
-    period: string;
-    type: 'full' | 'partial';
-    amount: number;
-    notes: string;
-};
+import type { PaymentLog } from '@/types/properties/ledger';
 
 const columnHelper = createColumnHelper<DataTableFeatures, PaymentLog>();
 
 export const columns = columnHelper.columns([
     columnHelper.accessor('date', {
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }
-                >
-                    Date
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() =>
+                    column.toggleSorting(column.getIsSorted() === 'asc')
+                }
+            >
+                Date
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({ row }) => {
-            return format(new Date(row.getValue<string>('date')), 'dd/MM/yyyy');
+            const date = row.getValue<string>('date');
+
+            return format(new Date(date), 'dd/MM/yyyy');
         },
     }),
 
     columnHelper.accessor('coOwner', {
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }
-                >
-                    Co-Owner
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() =>
+                    column.toggleSorting(column.getIsSorted() === 'asc')
+                }
+            >
+                Co-Owner
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({ row }) => {
             const coOwner = row.getValue<string>('coOwner');
 
@@ -80,13 +71,11 @@ export const columns = columnHelper.columns([
 
     columnHelper.accessor('period', {
         header: 'Period',
-        cell: ({ row }) => {
-            return (
-                <span className="text-muted-foreground">
-                    {row.getValue<string>('period')}
-                </span>
-            );
-        },
+        cell: ({ row }) => (
+            <span className="text-muted-foreground">
+                {row.getValue<string>('period')}
+            </span>
+        ),
     }),
 
     columnHelper.accessor('type', {
@@ -110,21 +99,19 @@ export const columns = columnHelper.columns([
     }),
 
     columnHelper.accessor('amount', {
-        header: ({ column }) => {
-            return (
-                <div className="text-right">
-                    <Button
-                        variant="ghost"
-                        onClick={() =>
-                            column.toggleSorting(column.getIsSorted() === 'asc')
-                        }
-                    >
-                        Amount
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                </div>
-            );
-        },
+        header: ({ column }) => (
+            <div className="text-right">
+                <Button
+                    variant="ghost"
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === 'asc')
+                    }
+                >
+                    Amount
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            </div>
+        ),
         cell: ({ row }) => {
             const amount = row.getValue<number>('amount');
 

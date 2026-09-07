@@ -8,6 +8,10 @@ import {
     Search,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
+
+import { buildColumns } from '@/components/co-owners/columns';
+import { features } from '@/components/co-owners/data-table-features';
+
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -34,12 +38,9 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/format-currency';
-import { buildColumns } from './columns';
-import type { UnitShare } from './columns';
-import { features } from './data-table-features';
+import type { UnitShare } from '@/types/properties/co-owners';
 
 interface DataTableProps {
-    columns?: never;
     data: UnitShare[];
     propertyId: number;
     ratePerPoint: number;
@@ -53,24 +54,30 @@ export function DataTable({
     totalWeight,
 }: DataTableProps) {
     const [search, setSearch] = useState('');
+
     const columns = useMemo(
         () => buildColumns(propertyId, ratePerPoint),
         [propertyId, ratePerPoint],
     );
+
     const table = useTable({
         features,
         data,
         columns,
     });
+
     const coOwnerColumn = table.getColumn('coOwner');
+
     function handleSearch(value: string) {
         setSearch(value);
         coOwnerColumn?.setFilterValue(value);
     }
+
     const { pageIndex, pageSize } = table.state.pagination;
     const totalRows = table.getFilteredRowModel().rows.length;
     const rows = table.getRowModel().rows;
     const pageCount = table.getPageCount();
+
     const startRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
     const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
 
@@ -78,17 +85,19 @@ export function DataTable({
         <Card>
             <CardHeader>
                 <CardTitle>Unit Shares & Co-Owners Matrix</CardTitle>
+
                 <CardDescription>
                     Total weight: {totalWeight.toFixed(1)} pts · Rate:{' '}
                     {formatCurrency(ratePerPoint)}/pt/yr
                 </CardDescription>
             </CardHeader>
+
             <CardContent>
                 <div className="space-y-4">
-                    {/* Toolbar */}
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="relative w-full sm:max-w-sm">
                             <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+
                             <Input
                                 value={search}
                                 onChange={(event) =>
@@ -98,6 +107,7 @@ export function DataTable({
                                 className="pl-9"
                             />
                         </div>
+
                         <DropdownMenu>
                             <DropdownMenuTrigger
                                 render={
@@ -107,11 +117,13 @@ export function DataTable({
                                     </Button>
                                 }
                             />
+
                             <DropdownMenuContent align="end">
                                 <DropdownMenuGroup>
                                     <DropdownMenuLabel>
                                         Toggle columns
                                     </DropdownMenuLabel>
+
                                     {table
                                         .getAllColumns()
                                         .filter((column) => column.getCanHide())
@@ -132,7 +144,7 @@ export function DataTable({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    {/* Table */}
+
                     <div className="overflow-hidden rounded-md border">
                         <Table>
                             <TableHeader>
@@ -150,6 +162,7 @@ export function DataTable({
                                     </TableRow>
                                 ))}
                             </TableHeader>
+
                             <TableBody>
                                 {rows.length > 0 ? (
                                     rows.map((row) => (
@@ -185,13 +198,14 @@ export function DataTable({
                             </TableBody>
                         </Table>
                     </div>
-                    {/* Footer */}
+
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <p className="text-sm text-muted-foreground">
                             {totalRows === 0
                                 ? 'No results'
                                 : `Showing ${startRow}–${endRow} of ${totalRows}`}
                         </p>
+
                         <div className="flex items-center gap-1">
                             <Button
                                 variant="outline"
@@ -202,6 +216,7 @@ export function DataTable({
                                 <ChevronsLeft />
                                 <span className="sr-only">First page</span>
                             </Button>
+
                             <Button
                                 variant="outline"
                                 size="icon-sm"
@@ -211,9 +226,11 @@ export function DataTable({
                                 <ChevronLeft />
                                 <span className="sr-only">Previous page</span>
                             </Button>
+
                             <span className="px-2 text-sm">
                                 Page {pageIndex + 1} of {pageCount}
                             </span>
+
                             <Button
                                 variant="outline"
                                 size="icon-sm"
@@ -223,6 +240,7 @@ export function DataTable({
                                 <ChevronRight />
                                 <span className="sr-only">Next page</span>
                             </Button>
+
                             <Button
                                 variant="outline"
                                 size="icon-sm"

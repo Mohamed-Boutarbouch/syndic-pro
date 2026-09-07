@@ -1,7 +1,7 @@
 import { ActiveSyndic } from '@/components/co-owners/active-syndic';
 import { CoOwnersCards } from '@/components/co-owners/co-owners-cards';
 import { DataTable } from '@/components/co-owners/data-table';
-import type { CoOwnersPageProps } from '@/types/properties/co-owners';
+import type { CoOwnersProps } from '@/types/properties/co-owners';
 
 export default function CoOwners({
     property,
@@ -10,7 +10,7 @@ export default function CoOwners({
     activeSyndic,
     transferCandidates,
     budget,
-}: CoOwnersPageProps) {
+}: CoOwnersProps) {
     return (
         <main className="p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-7xl space-y-6">

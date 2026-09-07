@@ -1,6 +1,9 @@
 import { router } from '@inertiajs/react';
 import { RefreshCw, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
+import type { SubmitEvent } from 'react';
+
+import addMidYearUnit from '@/actions/App/Http/Controllers/AddMidYearUnitController';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +28,6 @@ import {
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { formatCurrency } from '@/lib/format-currency';
-import addMidYearUnit from '@/actions/App/Http/Controllers/AddMidYearUnitController';
 
 type BudgetActionsProps = {
     propertyId: number;
@@ -47,7 +49,7 @@ export function BudgetActions({
     const budgetImpact = parsedWeight * sharePerPoint;
     const newTotal = currentTotalBudget + budgetImpact;
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
         setProcessing(true);
 

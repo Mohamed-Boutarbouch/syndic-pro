@@ -2,9 +2,9 @@ import { Archive, Building, Store } from 'lucide-react';
 import { KpiCard } from '@/components/kpi-card';
 import type { CoOwnersKpis } from '@/types/properties/co-owners';
 
-interface CoOwnersCardsProps {
+type CoOwnersCardsProps = {
     kpis: CoOwnersKpis;
-}
+};
 
 export function CoOwnersCards({ kpis }: CoOwnersCardsProps) {
     const cards = [

@@ -1,15 +1,12 @@
-export type BudgetProperty = {
-    id: number;
-    name: string;
-};
+import type { Property } from '@/types/property';
 
-export type PropertyBudget = {
+export type Budget = {
     id: number;
     startDate: string;
     endDate: string;
     totalBudget: number;
     isBudgetLocked: boolean;
-} | null;
+};
 
 export type BudgetDistributionUnit = {
     unit: string;
@@ -25,7 +22,7 @@ export type BudgetDistribution = {
 };
 
 export type BudgetProps = {
-    property: BudgetProperty;
-    budget: PropertyBudget;
+    property: Property;
+    budget: Budget | null;
     distribution: BudgetDistribution;
 };

@@ -6,13 +6,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { formatCurrency } from '@/lib/format-currency';
-
-export type CoOwnerOption = {
-    id: string;
-    name: string;
-    initials: string;
-    remainingQuota: number;
-};
+import type { CoOwnerOption } from '@/types/properties/ledger';
 
 type CoOwnerSelectProps = {
     value: string | null;

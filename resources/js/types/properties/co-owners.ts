@@ -1,17 +1,33 @@
-import type {
-    TransferCandidate,
-    UnitShare,
-} from '@/components/co-owners/columns';
-
-export type CoOwnersProperty = {
-    id: number;
-    name: string;
-};
+import type { Property } from '@/types/property';
 
 export type CoOwnersKpis = {
     apartment: number;
     commercial: number;
     storage: number;
+};
+
+export type UnitShare = {
+    id: string;
+    unitId: number;
+    unitCoOwnerId: number;
+    unit: string;
+    floor: string | null;
+    type: 'apartment' | 'commercial' | 'storage';
+    coOwner: string;
+    coOwnerId: number | null;
+    coefficient: number;
+    quotaYear: number;
+    quotaMonth: number;
+    billingFrequency:
+        'monthly' | 'bi_monthly' | 'quarterly' | 'semestral' | string;
+    status: 'syndic' | 'co-owner';
+};
+
+export type TransferCandidate = {
+    id: string;
+    userId: number;
+    name: string;
+    unit: string;
 };
 
 export type ActiveSyndic = {
@@ -21,7 +37,7 @@ export type ActiveSyndic = {
     phone: string | null;
     unit: string | null;
     assignedAt: string | null;
-} | null;
+};
 
 export type BudgetSummary = {
     id: number;
@@ -29,13 +45,13 @@ export type BudgetSummary = {
     ratePerPoint: number;
     totalWeight: number;
     isLocked: boolean;
-} | null;
+};
 
-export type CoOwnersPageProps = {
-    property: CoOwnersProperty;
+export type CoOwnersProps = {
+    property: Property;
     kpis: CoOwnersKpis;
     unitShares: UnitShare[];
-    activeSyndic: ActiveSyndic;
+    activeSyndic: ActiveSyndic | null;
     transferCandidates: TransferCandidate[];
-    budget: BudgetSummary;
+    budget: BudgetSummary | null;
 };

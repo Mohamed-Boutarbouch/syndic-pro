@@ -1,6 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import { ArrowRightLeft, Shield } from 'lucide-react';
 import { useState } from 'react';
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -39,22 +40,16 @@ import {
 } from '@/components/ui/item';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import type { TransferCandidate } from './columns';
+import type {
+    ActiveSyndic as ActiveSyndicData,
+    TransferCandidate,
+} from '@/types/properties/co-owners';
 
-type ActiveSyndicData = {
-    userId: number;
-    name: string;
-    email: string | null;
-    phone: string | null;
-    unit: string | null;
-    assignedAt: string | null;
-} | null;
-
-interface ActiveSyndicProps {
+type ActiveSyndicProps = {
     propertyId: number;
-    activeSyndic: ActiveSyndicData;
+    activeSyndic: ActiveSyndicData | null;
     candidates: TransferCandidate[];
-}
+};
 
 function initials(name: string) {
     return name
@@ -71,6 +66,7 @@ export function ActiveSyndic({
     candidates,
 }: ActiveSyndicProps) {
     const [open, setOpen] = useState(false);
+
     const { data, setData, post, processing, reset } = useForm({
         user_id: '' as number | '',
     });
@@ -104,7 +100,9 @@ export function ActiveSyndic({
                     <Shield />
                     Active Syndic
                 </CardTitle>
+
                 <CardDescription>Designated property manager</CardDescription>
+
                 <CardAction>
                     <Dialog open={open} onOpenChange={handleOpenChange}>
                         <DialogTrigger
@@ -118,25 +116,31 @@ export function ActiveSyndic({
                                 </Button>
                             }
                         />
+
                         <DialogContent className="sm:max-w-lg">
                             <DialogHeader>
                                 <DialogTitle className="flex items-center gap-2">
                                     <ArrowRightLeft />
                                     Syndic Management Transfer
                                 </DialogTitle>
+
                                 <DialogDescription>
                                     Select the new syndic from active co-owners.
                                 </DialogDescription>
                             </DialogHeader>
+
                             <Alert>
                                 <Shield />
+
                                 <AlertTitle>Irreversible Action</AlertTitle>
+
                                 <AlertDescription>
                                     {activeSyndic
                                         ? `Current syndic ${activeSyndic.name} will lose all administrative rights.`
                                         : 'This property currently has no active syndic.'}
                                 </AlertDescription>
                             </Alert>
+
                             <RadioGroup
                                 value={String(data.user_id)}
                                 onValueChange={(value) =>
@@ -163,14 +167,17 @@ export function ActiveSyndic({
                                                             )}
                                                         </AvatarFallback>
                                                     </Avatar>
+
                                                     <FieldContent>
                                                         <FieldTitle>
                                                             {owner.name}
                                                         </FieldTitle>
+
                                                         <FieldDescription>
                                                             Unit {owner.unit}
                                                         </FieldDescription>
                                                     </FieldContent>
+
                                                     <RadioGroupItem
                                                         value={String(
                                                             owner.userId,
@@ -183,6 +190,7 @@ export function ActiveSyndic({
                                     </div>
                                 </ScrollArea>
                             </RadioGroup>
+
                             <DialogFooter>
                                 <DialogClose
                                     render={
@@ -191,6 +199,7 @@ export function ActiveSyndic({
                                         </Button>
                                     }
                                 />
+
                                 <Button
                                     type="button"
                                     disabled={!data.user_id || processing}
@@ -205,6 +214,7 @@ export function ActiveSyndic({
                     </Dialog>
                 </CardAction>
             </CardHeader>
+
             <CardContent>
                 {activeSyndic ? (
                     <Item variant="outline">
@@ -215,20 +225,24 @@ export function ActiveSyndic({
                                 </AvatarFallback>
                             </Avatar>
                         </ItemMedia>
+
                         <ItemContent>
                             <ItemTitle className="flex items-center gap-2">
                                 {activeSyndic.name}
+
                                 <Badge>
                                     <Shield data-icon="inline-start" />
                                     Syndic
                                 </Badge>
                             </ItemTitle>
+
                             <ItemDescription className="space-y-0.5">
                                 <span className="block">
                                     {[activeSyndic.email, activeSyndic.phone]
                                         .filter(Boolean)
                                         .join(' · ')}
                                 </span>
+
                                 {activeSyndic.unit && (
                                     <span className="block">
                                         Unit: {activeSyndic.unit}

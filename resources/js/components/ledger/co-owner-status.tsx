@@ -1,8 +1,8 @@
 import {
+    AlertCircle,
+    CheckCircle2,
     ChevronRightIcon,
     Clock,
-    CheckCircle2,
-    AlertCircle,
 } from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -33,31 +33,19 @@ import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { formatCurrency } from '@/lib/format-currency';
-
-type Payment = {
-    id: string;
-    date: string;
-    amount: number;
-};
-
-type CoOwner = {
-    id: string;
-    name: string;
-    initials: string;
-    unit: string;
-    quota: number;
-    payments: Payment[];
-};
+import type { CoOwnerStatusData } from '@/types/properties/ledger';
 
 type CoOwnerStatusProps = {
-    coOwners: CoOwner[];
-    currency?: string;
+    coOwners: CoOwnerStatusData[];
     title?: string;
     description?: string;
 };
 
-function getTotalPaid(payments: Payment[]) {
-    return payments.reduce((total, payment) => total + payment.amount, 0);
+function getTotalPaid(coOwner: CoOwnerStatusData) {
+    return coOwner.payments.reduce(
+        (total, payment) => total + payment.amount,
+        0,
+    );
 }
 
 function getStatus(paid: number, quota: number) {
@@ -86,8 +74,8 @@ function getStatus(paid: number, quota: number) {
     };
 }
 
-function CoOwnerRow({ coOwner }: { coOwner: CoOwner }) {
-    const paid = getTotalPaid(coOwner.payments);
+function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
+    const paid = getTotalPaid(coOwner);
 
     const percentage =
         coOwner.quota > 0
@@ -192,6 +180,7 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwner }) {
                                 >
                                     <ItemContent>
                                         <ItemTitle>{payment.date}</ItemTitle>
+
                                         <ItemDescription>
                                             Payment received
                                         </ItemDescription>

@@ -8,6 +8,10 @@ import type {
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import type { DataTableFeatures } from '@/components/ledger/data-table-features';
+
+import { features } from '@/components/ledger/data-table-features';
+import { DataTablePagination } from '@/components/ledger/data-table-pagination';
 import { Input } from '@/components/ui/input';
 import {
     Select,
@@ -24,9 +28,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { features } from './data-table-features';
-import type { DataTableFeatures } from './data-table-features';
-import { DataTablePagination } from './data-table-pagination';
 
 interface DataTableProps<TData extends RowData> {
     columns: ColumnDef<DataTableFeatures, TData>[];
@@ -67,7 +68,11 @@ export function DataTable<TData extends RowData>({
         const names = new Set<string>();
 
         for (const row of data) {
-            const coOwner = (row as { coOwner?: string }).coOwner;
+            const coOwner = (
+                row as TData & {
+                    coOwner?: string;
+                }
+            ).coOwner;
 
             if (coOwner) {
                 names.add(coOwner);
@@ -83,10 +88,10 @@ export function DataTable<TData extends RowData>({
     return (
         <div>
             <div className="flex items-center gap-2 py-4">
-                {/* Search */}
                 <div className="flex w-full justify-between gap-4">
                     <div className="relative max-w-sm">
                         <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+
                         <Input
                             placeholder="Filter co-owners..."
                             value={
@@ -104,7 +109,6 @@ export function DataTable<TData extends RowData>({
                     </div>
 
                     <div className="itemsce flex items-center gap-4">
-                        {/* Co-owner selector */}
                         <Select
                             value={coOwnerValue}
                             onValueChange={(value) => {
@@ -122,10 +126,12 @@ export function DataTable<TData extends RowData>({
                                         : coOwnerValue}
                                 </SelectValue>
                             </SelectTrigger>
+
                             <SelectContent>
                                 <SelectItem value="all">
                                     All Co-owners
                                 </SelectItem>
+
                                 {coOwnerOptions.map((name) => (
                                     <SelectItem key={name} value={name}>
                                         {name}
@@ -134,7 +140,6 @@ export function DataTable<TData extends RowData>({
                             </SelectContent>
                         </Select>
 
-                        {/* Type filter */}
                         <Select
                             value={typeValue}
                             onValueChange={(value) => {
@@ -150,6 +155,7 @@ export function DataTable<TData extends RowData>({
                                     {typeLabels[typeValue]}
                                 </SelectValue>
                             </SelectTrigger>
+
                             <SelectContent>
                                 <SelectItem value="all">All Types</SelectItem>
                                 <SelectItem value="full">Full</SelectItem>
@@ -165,20 +171,17 @@ export function DataTable<TData extends RowData>({
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder ? null : (
-                                                <table.FlexRender
-                                                    header={header}
-                                                />
-                                            )}
-                                        </TableHead>
-                                    );
-                                })}
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder ? null : (
+                                            <table.FlexRender header={header} />
+                                        )}
+                                    </TableHead>
+                                ))}
                             </TableRow>
                         ))}
                     </TableHeader>
+
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
@@ -208,6 +211,7 @@ export function DataTable<TData extends RowData>({
                     </TableBody>
                 </Table>
             </div>
+
             <DataTablePagination table={table} />
         </div>
     );

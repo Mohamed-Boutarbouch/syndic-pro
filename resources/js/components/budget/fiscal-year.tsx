@@ -6,6 +6,8 @@ import {
     LockKeyhole,
 } from 'lucide-react';
 import { useState } from 'react';
+
+import update from '@/actions/App/Http/Controllers/UpdateAnnualTargetBudgetController';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -42,7 +44,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { formatCurrency } from '@/lib/format-currency';
-import update from '@/actions/App/Http/Controllers/UpdateAnnualTargetBudgetController';
+import type { Budget, BudgetDistribution } from '@/types/properties/budget';
 
 const months = [
     { label: 'January', value: '01' },
@@ -60,17 +62,8 @@ const months = [
 ];
 
 type FiscalYearProps = {
-    budget: {
-        id: number;
-        startDate: string;
-        endDate: string;
-        totalBudget: number;
-        isBudgetLocked: boolean;
-    } | null;
-    distribution: {
-        totalWeight: number;
-        sharePerPoint: number;
-    };
+    budget: Budget | null;
+    distribution: Pick<BudgetDistribution, 'totalWeight' | 'sharePerPoint'>;
 };
 
 function monthOf(dateString: string): string {
@@ -78,7 +71,7 @@ function monthOf(dateString: string): string {
 }
 
 export function FiscalYear({ budget, distribution }: FiscalYearProps) {
-    const [isActive, setIsActive] = useState<boolean>(false);
+    const [isActive, setIsActive] = useState(false);
     const [startMonth, setStartMonth] = useState(
         budget ? monthOf(budget.startDate) : '',
     );
@@ -95,14 +88,14 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
             return;
         }
 
-        // Reconstruct full dates from the selected months, keeping the
-        // originally stored year for each boundary — the UI only exposes
-        // month selection, matching the existing mock.
         const startYear = budget.startDate.slice(0, 4);
         const endYear = budget.endDate.slice(0, 4);
 
         router.patch(
-            update.url({ property: budget.id, budget: budget.id }),
+            update.url({
+                property: budget.id,
+                budget: budget.id,
+            }),
             {
                 start_date: `${startYear}-${startMonth}-01`,
                 end_date: `${endYear}-${endMonth}-01`,
@@ -117,7 +110,7 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
     };
 
     const totalBudget = budget?.totalBudget ?? 0;
-    const sharePerPoint = distribution.sharePerPoint;
+    const { totalWeight, sharePerPoint } = distribution;
 
     return (
         <Card>
@@ -125,7 +118,9 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                 <CardTitle className="mb-2 flex gap-2">
                     <CalendarDays /> Fiscal Year
                 </CardTitle>
+
                 <CardDescription>Fiscal year configuration</CardDescription>
+
                 <CardAction>
                     {isActive ? (
                         <div className="flex gap-2">
@@ -135,6 +130,7 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                             >
                                 Cancel
                             </Button>
+
                             <Button onClick={handleSave}>Save</Button>
                         </div>
                     ) : (
@@ -147,16 +143,19 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                     )}
                 </CardAction>
             </CardHeader>
+
             <CardContent className="space-y-6">
                 <div>
                     <h2 className="cn-font-heading text-base leading-snug font-medium">
                         Fiscal Period
                     </h2>
+
                     <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="space-y-1.5">
                             <p className="text-sm text-muted-foreground">
                                 Start Month
                             </p>
+
                             <Select
                                 disabled={!isActive}
                                 value={startMonth}
@@ -182,10 +181,12 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                                 </SelectContent>
                             </Select>
                         </div>
+
                         <div className="space-y-1.5">
                             <p className="text-sm text-muted-foreground">
                                 End Month
                             </p>
+
                             <Select
                                 disabled={!isActive}
                                 value={endMonth}
@@ -213,14 +214,17 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                         </div>
                     </div>
                 </div>
+
                 <Separator />
+
                 <div>
                     <h2 className="cn-font-heading mb-4 text-base leading-snug font-medium">
-                        <div className="mb-2 flex gap-2">
+                        <span className="mb-2 flex gap-2">
                             <Calculator />
                             Annual Target Budget
-                        </div>
+                        </span>
                     </h2>
+
                     {isActive ? (
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center gap-2">
@@ -234,17 +238,19 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                                         setAnnualTarget(event.target.value)
                                     }
                                 />
+
                                 <span className="text-sm text-muted-foreground">
                                     MAD
                                 </span>
                             </div>
+
                             <Item variant="muted">
                                 <ItemContent>
                                     <ItemTitle>Auto-calculation</ItemTitle>
+
                                     <ItemDescription>
-                                        Total weight:{' '}
-                                        {distribution.totalWeight.toFixed(1)}{' '}
-                                        pts &rarr; Share per point:{' '}
+                                        Total weight: {totalWeight.toFixed(1)}{' '}
+                                        pts → Share per point:{' '}
                                         {formatCurrency(sharePerPoint)}
                                     </ItemDescription>
                                 </ItemContent>
@@ -255,13 +261,16 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                             <h2 className="cn-font-heading text-2xl leading-snug font-bold">
                                 {formatCurrency(totalBudget)}
                             </h2>
+
                             <Badge variant="secondary">
                                 {formatCurrency(sharePerPoint)} / point
                             </Badge>
                         </div>
                     )}
                 </div>
+
                 <Separator />
+
                 <FieldLabel htmlFor="activate-budget">
                     <Field orientation="horizontal" className="gap-4">
                         <div className="flex shrink-0 items-center justify-center self-center rounded-md border p-2">
@@ -273,12 +282,15 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                                 }
                             />
                         </div>
+
                         <FieldContent className="flex-1">
                             <FieldTitle>Budget Active & Locked</FieldTitle>
+
                             <FieldDescription>
                                 Existing co-owner quotas are immutable
                             </FieldDescription>
                         </FieldContent>
+
                         <Switch
                             id="activate-budget"
                             className="shrink-0 self-center"
@@ -288,9 +300,12 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                         />
                     </Field>
                 </FieldLabel>
+
                 <Alert>
                     <BadgeCheck />
+
                     <AlertTitle>Immutable Quotas</AlertTitle>
+
                     <AlertDescription>
                         Existing co-owners monthly obligations cannot be
                         modified. Any new unit will only adjust the total

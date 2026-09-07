@@ -19,12 +19,15 @@ export function FiscalYearCollectionCard({
                 <CardTitle className="text-sm font-medium">
                     Total Fiscal Year Collection
                 </CardTitle>
+
                 <span className="rounded-full border px-2 py-0.5 text-xs font-medium">
                     {percentage}%
                 </span>
             </CardHeader>
+
             <CardContent>
                 <Progress value={percentage} className="h-2" />
+
                 <div className="mt-2 flex justify-between text-xs text-muted-foreground">
                     <span>{formatCurrency(collected)} collected</span>
                     <span>Target: {formatCurrency(target)}</span>

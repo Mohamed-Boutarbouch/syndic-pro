@@ -6,6 +6,8 @@ import {
     ChevronsRight,
 } from 'lucide-react';
 
+import type { DataTableFeatures } from '@/components/ledger/data-table-features';
+
 import { Button } from '@/components/ui/button';
 import {
     Select,
@@ -14,8 +16,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-
-import type { DataTableFeatures } from './data-table-features';
 
 interface DataTablePaginationProps<TData extends RowData> {
     table: ReactTable<DataTableFeatures, TData>;
