@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -22,7 +23,7 @@ export default function Login({ status, canResetPassword }: Props) {
             <Head title="Log in" />
 
             <Form
-                {...store.form()}
+                action={store()}
                 resetOnSuccess={['password']}
                 className="flex flex-col gap-6"
             >
@@ -31,6 +32,7 @@ export default function Login({ status, canResetPassword }: Props) {
                         <div className="grid gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email address</Label>
+
                                 <Input
                                     id="email"
                                     type="email"
@@ -41,12 +43,14 @@ export default function Login({ status, canResetPassword }: Props) {
                                     autoComplete="email"
                                     placeholder="email@example.com"
                                 />
+
                                 <InputError message={errors.email} />
                             </div>
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Password</Label>
+
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
@@ -57,6 +61,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                         </TextLink>
                                     )}
                                 </div>
+
                                 <PasswordInput
                                     id="password"
                                     name="password"
@@ -65,6 +70,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                     autoComplete="current-password"
                                     placeholder="Password"
                                 />
+
                                 <InputError message={errors.password} />
                             </div>
 
@@ -74,6 +80,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                     name="remember"
                                     tabIndex={3}
                                 />
+
                                 <Label htmlFor="remember">Remember me</Label>
                             </div>
 
