@@ -6,7 +6,9 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CoOwnerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LedgerController;
+use App\Http\Controllers\TransferSyndicController;
 use App\Http\Controllers\UpdateAnnualTargetBudgetController;
+use App\Http\Controllers\UpdateUnitCoefficientController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -39,6 +41,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/co-owners',
         CoOwnerController::class,
     )->name('properties.co-owners');
+
+    Route::patch(
+        'properties/{property}/co-owners/units/{unit}/coefficient',
+        UpdateUnitCoefficientController::class,
+    )->name('properties.co-owners.units.coefficient');
+
+    Route::post(
+        'properties/{property}/co-owners/syndic/transfer',
+        TransferSyndicController::class,
+    )->name('properties.co-owners.syndic.transfer');
 
     Route::get(
         'properties/{property}/billing',

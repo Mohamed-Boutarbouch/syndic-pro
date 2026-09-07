@@ -1,5 +1,5 @@
 import { CollectionProgress } from '@/components/dashboard/collection-progress';
-import { Kpis } from '@/components/dashboard/kpis';
+import { DashboardKpis } from '@/components/dashboard/dashboard-kpis';
 import { MonthlyCollection } from '@/components/dashboard/monthly-collection';
 import { RecentPayments } from '@/components/dashboard/recent-payments';
 import type {
@@ -47,7 +47,7 @@ export default function Dashboard({
                         Property overview
                     </h2>
 
-                    <Kpis kpis={kpis} />
+                    <DashboardKpis kpis={kpis} />
                 </section>
 
                 <section

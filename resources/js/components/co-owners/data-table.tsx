@@ -1,4 +1,3 @@
-import type { ColumnDef, RowData } from '@tanstack/react-table';
 import { useTable } from '@tanstack/react-table';
 import {
     ChevronLeft,
@@ -8,8 +7,7 @@ import {
     Columns3,
     Search,
 } from 'lucide-react';
-import { useState } from 'react';
-
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -36,43 +34,44 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/format-currency';
-import type { DataTableFeatures } from './data-table-features';
+import { buildColumns } from './columns';
+import type { UnitShare } from './columns';
 import { features } from './data-table-features';
 
-interface DataTableProps<TData extends RowData> {
-    columns: ColumnDef<DataTableFeatures, TData>[];
-    data: TData[];
+interface DataTableProps {
+    columns?: never;
+    data: UnitShare[];
+    propertyId: number;
+    ratePerPoint: number;
+    totalWeight: number;
 }
 
-export function DataTable<TData extends RowData>({
-    columns,
+export function DataTable({
     data,
-}: DataTableProps<TData>) {
+    propertyId,
+    ratePerPoint,
+    totalWeight,
+}: DataTableProps) {
     const [search, setSearch] = useState('');
-
+    const columns = useMemo(
+        () => buildColumns(propertyId, ratePerPoint),
+        [propertyId, ratePerPoint],
+    );
     const table = useTable({
         features,
         data,
         columns,
     });
-
     const coOwnerColumn = table.getColumn('coOwner');
-
     function handleSearch(value: string) {
         setSearch(value);
         coOwnerColumn?.setFilterValue(value);
     }
-
     const { pageIndex, pageSize } = table.state.pagination;
-
     const totalRows = table.getFilteredRowModel().rows.length;
-
     const rows = table.getRowModel().rows;
-
     const pageCount = table.getPageCount();
-
     const startRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
-
     const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
 
     return (
@@ -80,7 +79,8 @@ export function DataTable<TData extends RowData>({
             <CardHeader>
                 <CardTitle>Unit Shares & Co-Owners Matrix</CardTitle>
                 <CardDescription>
-                    Total weight: 10.0 pts · Rate: {formatCurrency(6000)}/pt/yr
+                    Total weight: {totalWeight.toFixed(1)} pts · Rate:{' '}
+                    {formatCurrency(ratePerPoint)}/pt/yr
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -89,7 +89,6 @@ export function DataTable<TData extends RowData>({
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="relative w-full sm:max-w-sm">
                             <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-
                             <Input
                                 value={search}
                                 onChange={(event) =>
@@ -99,7 +98,6 @@ export function DataTable<TData extends RowData>({
                                 className="pl-9"
                             />
                         </div>
-
                         <DropdownMenu>
                             <DropdownMenuTrigger
                                 render={
@@ -109,13 +107,11 @@ export function DataTable<TData extends RowData>({
                                     </Button>
                                 }
                             />
-
                             <DropdownMenuContent align="end">
                                 <DropdownMenuGroup>
                                     <DropdownMenuLabel>
                                         Toggle columns
                                     </DropdownMenuLabel>
-
                                     {table
                                         .getAllColumns()
                                         .filter((column) => column.getCanHide())
@@ -136,7 +132,6 @@ export function DataTable<TData extends RowData>({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-
                     {/* Table */}
                     <div className="overflow-hidden rounded-md border">
                         <Table>
@@ -155,7 +150,6 @@ export function DataTable<TData extends RowData>({
                                     </TableRow>
                                 ))}
                             </TableHeader>
-
                             <TableBody>
                                 {rows.length > 0 ? (
                                     rows.map((row) => (
@@ -191,7 +185,6 @@ export function DataTable<TData extends RowData>({
                             </TableBody>
                         </Table>
                     </div>
-
                     {/* Footer */}
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <p className="text-sm text-muted-foreground">
@@ -199,7 +192,6 @@ export function DataTable<TData extends RowData>({
                                 ? 'No results'
                                 : `Showing ${startRow}–${endRow} of ${totalRows}`}
                         </p>
-
                         <div className="flex items-center gap-1">
                             <Button
                                 variant="outline"
@@ -210,7 +202,6 @@ export function DataTable<TData extends RowData>({
                                 <ChevronsLeft />
                                 <span className="sr-only">First page</span>
                             </Button>
-
                             <Button
                                 variant="outline"
                                 size="icon-sm"
@@ -220,11 +211,9 @@ export function DataTable<TData extends RowData>({
                                 <ChevronLeft />
                                 <span className="sr-only">Previous page</span>
                             </Button>
-
                             <span className="px-2 text-sm">
                                 Page {pageIndex + 1} of {pageCount}
                             </span>
-
                             <Button
                                 variant="outline"
                                 size="icon-sm"
@@ -234,7 +223,6 @@ export function DataTable<TData extends RowData>({
                                 <ChevronRight />
                                 <span className="sr-only">Next page</span>
                             </Button>
-
                             <Button
                                 variant="outline"
                                 size="icon-sm"

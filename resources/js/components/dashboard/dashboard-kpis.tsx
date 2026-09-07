@@ -1,15 +1,14 @@
 import { CircleDollarSign, Coins, Users, Wallet } from 'lucide-react';
 
+import { KpiCard } from '@/components/kpi-card';
 import { formatCurrency } from '@/lib/format-currency';
 import type { KpisData } from '@/types/dashboard';
-
-import { KpiCard } from './kpi-card';
 
 type KpisProps = {
     kpis: KpisData | null;
 };
 
-export function Kpis({ kpis }: KpisProps) {
+export function DashboardKpis({ kpis }: KpisProps) {
     const cards = kpis
         ? [
               {
