@@ -10,7 +10,7 @@ import type { DataTableFeatures } from './data-table-features';
 
 export type PaymentLog = {
     id: string;
-    date: Date;
+    date: string; // ISO date string from the backend, not a Date instance
     coOwner: string;
     period: string;
     type: 'full' | 'partial';
@@ -36,7 +36,7 @@ export const columns = columnHelper.columns([
             );
         },
         cell: ({ row }) => {
-            return format(row.getValue('date'), 'dd/MM/yyyy');
+            return format(new Date(row.getValue<string>('date')), 'dd/MM/yyyy');
         },
     }),
 

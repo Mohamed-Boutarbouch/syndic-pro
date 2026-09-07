@@ -1,8 +1,11 @@
+import { useForm } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { Notebook, Plus } from 'lucide-react';
 import { useState } from 'react';
 
+import store from '@/actions/App/Http/Controllers/StorePaymentController';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
     Card,
     CardAction,
@@ -23,6 +26,7 @@ import {
     Field,
     FieldContent,
     FieldDescription,
+    FieldError,
     FieldGroup,
     FieldLabel,
     FieldTitle,
@@ -36,16 +40,47 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { CoOwnerSelect } from './co-owner-select';
-import { coOwners } from './co-owners-select-data';
+import type { CoOwnerOption } from './co-owner-select';
 import { columns } from './columns';
+import type { PaymentLog } from './columns';
 import { DataTable } from './data-table';
-import { getData } from './get-data';
-import { Calendar } from '@/components/ui/calendar';
 
-export function PaymentJournal() {
-    const [coOwnerId, setCoOwnerId] = useState<string | null>(null);
-    const [date, setDate] = useState<Date>();
-    const data = getData();
+type PaymentJournalProps = {
+    propertyId: number;
+    coOwners: CoOwnerOption[];
+    payments: PaymentLog[];
+    transactionCount: number;
+};
+
+export function PaymentJournal({
+    propertyId,
+    coOwners,
+    payments,
+    transactionCount,
+}: PaymentJournalProps) {
+    const [open, setOpen] = useState(false);
+    const [date, setDate] = useState<Date>(new Date());
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        unit_co_owner_id: '',
+        amount: '',
+        paid_at: format(new Date(), 'yyyy-MM-dd'),
+        method: 'cash',
+        reference: '',
+        notes: '',
+        partial: false,
+    });
+
+    function submit() {
+        post(store.url({ property: propertyId }), {
+            preserveScroll: true,
+            onSuccess: () => {
+                reset();
+                setDate(new Date());
+                setOpen(false);
+            },
+        });
+    }
 
     return (
         <Card>
@@ -54,127 +89,172 @@ export function PaymentJournal() {
                     <Notebook />
                     Payment Journal
                 </CardTitle>
-                <CardDescription>37 transaction shown</CardDescription>
+                <CardDescription>
+                    {transactionCount} transactions shown
+                </CardDescription>
                 <CardAction>
-                    <Dialog>
-                        <form>
-                            <DialogTrigger
-                                render={
-                                    <Button>
-                                        <Plus data-icon="inline-start" />
-                                        Log Payment
-                                    </Button>
-                                }
-                            />
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle className="flex items-center gap-2">
-                                        <Plus />
-                                        Log Payment
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                        Record a new contribution
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <FieldGroup>
-                                    <CoOwnerSelect
-                                        value={coOwnerId}
-                                        onValueChange={setCoOwnerId}
-                                        coOwners={coOwners}
-                                    />
-                                    <div className="flex justify-between gap-4">
-                                        <Field>
-                                            <FieldLabel htmlFor="amount">
-                                                Amount (MAD)
-                                            </FieldLabel>
-                                            <Input
-                                                type="number"
-                                                step="1"
-                                                id="amount"
-                                                name="amount"
-                                                placeholder="ex: 500"
-                                            />
-                                        </Field>
-                                        <Field>
-                                            <FieldLabel htmlFor="date-picker-simple">
-                                                Date
-                                            </FieldLabel>
-                                            <Popover>
-                                                <PopoverTrigger
-                                                    render={
-                                                        <Button
-                                                            variant="secondary"
-                                                            id="date-picker-simple"
-                                                            className="justify-start font-normal"
-                                                        >
-                                                            {date ? (
-                                                                format(
-                                                                    date,
-                                                                    'PPP',
-                                                                )
-                                                            ) : (
-                                                                <span>
-                                                                    Pick a date
-                                                                </span>
-                                                            )}
-                                                        </Button>
-                                                    }
-                                                />
-                                                <PopoverContent
-                                                    className="w-auto p-0"
-                                                    align="start"
-                                                >
-                                                    <Calendar
-                                                        mode="single"
-                                                        selected={date}
-                                                        onSelect={setDate}
-                                                        defaultMonth={date}
-                                                    />
-                                                </PopoverContent>
-                                            </Popover>
-                                        </Field>
-                                    </div>
+                    <Dialog open={open} onOpenChange={setOpen}>
+                        <DialogTrigger
+                            render={
+                                <Button>
+                                    <Plus data-icon="inline-start" />
+                                    Log Payment
+                                </Button>
+                            }
+                        />
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle className="flex items-center gap-2">
+                                    <Plus />
+                                    Log Payment
+                                </DialogTitle>
+                                <DialogDescription>
+                                    Record a new contribution
+                                </DialogDescription>
+                            </DialogHeader>
+                            <FieldGroup>
+                                <CoOwnerSelect
+                                    value={data.unit_co_owner_id || null}
+                                    onValueChange={(value) =>
+                                        setData('unit_co_owner_id', value ?? '')
+                                    }
+                                    coOwners={coOwners}
+                                />
+                                {errors.unit_co_owner_id && (
+                                    <FieldError>
+                                        {errors.unit_co_owner_id}
+                                    </FieldError>
+                                )}
+                                <div className="flex justify-between gap-4">
                                     <Field>
-                                        <FieldLabel htmlFor="period-label">
-                                            Period Label
+                                        <FieldLabel htmlFor="amount">
+                                            Amount (MAD)
                                         </FieldLabel>
                                         <Input
-                                            id="period-label"
-                                            name="period-label"
-                                            placeholder="e.g. May, 2026, Q2 2026"
+                                            type="number"
+                                            step="1"
+                                            id="amount"
+                                            name="amount"
+                                            placeholder="ex: 500"
+                                            value={data.amount}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'amount',
+                                                    e.target.value,
+                                                )
+                                            }
                                         />
+                                        {errors.amount && (
+                                            <FieldError>
+                                                {errors.amount}
+                                            </FieldError>
+                                        )}
                                     </Field>
-                                    <FieldLabel htmlFor="partial-payment">
-                                        <Field orientation="horizontal">
-                                            <FieldContent>
-                                                <FieldTitle>
-                                                    Partial Payment
-                                                </FieldTitle>
-                                                <FieldDescription>
-                                                    Balance will be completed
-                                                    later
-                                                </FieldDescription>
-                                            </FieldContent>
-                                            <Switch id="partial-payment" />
-                                        </Field>
-                                    </FieldLabel>
                                     <Field>
-                                        <FieldLabel htmlFor="notes">
-                                            Notes
+                                        <FieldLabel htmlFor="date-picker-simple">
+                                            Date
                                         </FieldLabel>
-                                        <Textarea
-                                            id="notes"
-                                            placeholder="Optional remarks..."
+                                        <Popover>
+                                            <PopoverTrigger
+                                                render={
+                                                    <Button
+                                                        variant="secondary"
+                                                        id="date-picker-simple"
+                                                        className="justify-start font-normal"
+                                                    >
+                                                        {date ? (
+                                                            format(date, 'PPP')
+                                                        ) : (
+                                                            <span>
+                                                                Pick a date
+                                                            </span>
+                                                        )}
+                                                    </Button>
+                                                }
+                                            />
+                                            <PopoverContent
+                                                className="w-auto p-0"
+                                                align="start"
+                                            >
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={date}
+                                                    onSelect={(d) => {
+                                                        if (!d) {
+                                                            return;
+                                                        }
+
+                                                        setDate(d);
+                                                        setData(
+                                                            'paid_at',
+                                                            format(
+                                                                d,
+                                                                'yyyy-MM-dd',
+                                                            ),
+                                                        );
+                                                    }}
+                                                    defaultMonth={date}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        {errors.paid_at && (
+                                            <FieldError>
+                                                {errors.paid_at}
+                                            </FieldError>
+                                        )}
+                                    </Field>
+                                </div>
+                                <FieldLabel htmlFor="partial-payment">
+                                    <Field orientation="horizontal">
+                                        <FieldContent>
+                                            <FieldTitle>
+                                                Partial Payment
+                                            </FieldTitle>
+                                            <FieldDescription>
+                                                Balance will be completed later
+                                            </FieldDescription>
+                                        </FieldContent>
+                                        <Switch
+                                            id="partial-payment"
+                                            checked={data.partial}
+                                            onCheckedChange={(checked) =>
+                                                setData('partial', checked)
+                                            }
                                         />
                                     </Field>
-                                </FieldGroup>
-                            </DialogContent>
-                        </form>
+                                </FieldLabel>
+                                <Field>
+                                    <FieldLabel htmlFor="notes">
+                                        Notes
+                                    </FieldLabel>
+                                    <Textarea
+                                        id="notes"
+                                        placeholder="Optional remarks..."
+                                        value={data.notes}
+                                        onChange={(e) =>
+                                            setData('notes', e.target.value)
+                                        }
+                                    />
+                                </Field>
+                            </FieldGroup>
+                            <div className="mt-4 flex justify-end gap-2">
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => setOpen(false)}
+                                    disabled={processing}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button onClick={submit} disabled={processing}>
+                                    {processing ? 'Saving…' : 'Save Payment'}
+                                </Button>
+                            </div>
+                        </DialogContent>
                     </Dialog>
                 </CardAction>
             </CardHeader>
             <CardContent>
-                <DataTable columns={columns} data={data} />
+                <DataTable columns={columns} data={payments} />
             </CardContent>
         </Card>
     );

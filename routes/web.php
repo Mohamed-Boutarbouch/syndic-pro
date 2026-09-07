@@ -6,6 +6,7 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CoOwnerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LedgerController;
+use App\Http\Controllers\StorePaymentController;
 use App\Http\Controllers\TransferSyndicController;
 use App\Http\Controllers\UpdateAnnualTargetBudgetController;
 use App\Http\Controllers\UpdateBillingFrequencyController;
@@ -67,6 +68,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/ledger',
         LedgerController::class,
     )->name('properties.ledger');
+
+    Route::post(
+        'properties/{property}/ledger/payments',
+        StorePaymentController::class,
+    )->name('properties.ledger.payments.store');
 });
 
 require __DIR__.'/onboarding.php';
