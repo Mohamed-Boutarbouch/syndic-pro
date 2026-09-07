@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,13 +14,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'email_verified_at' => now(),
-            'locale' => 'en',
-            'is_active' => true,
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        //     'password' => 'password',
+        //     'email_verified_at' => now(),
+        //     'locale' => 'en',
+        //     'is_active' => true,
+        // ]);
+
+        $this->call([
+            SyndicProDemoSeeder::class,
         ]);
     }
 }
