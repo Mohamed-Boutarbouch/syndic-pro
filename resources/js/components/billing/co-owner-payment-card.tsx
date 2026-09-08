@@ -26,6 +26,7 @@ import {
     ItemTitle,
 } from '@/components/ui/item';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { CoOwnerPaymentCardProps } from '@/types/properties/billing';
 
@@ -33,15 +34,21 @@ export function CoOwnerPaymentCard({
     payment,
     onFrequencyChange,
 }: CoOwnerPaymentCardProps) {
+    const { t, tChoice } = useTranslation();
+
     const [open, setOpen] = useState(false);
     const [frequencyDialogOpen, setFrequencyDialogOpen] = useState(false);
 
     const frequency = getPaymentFrequency(payment.frequency);
+    const translatedFrequency = t(frequency.labelKey);
+
     const progress = getProgress(payment.collected, payment.quota);
     const remaining = getRemaining(payment.collected, payment.quota);
     const installment = getInstallmentAmount(payment.quota, payment.frequency);
 
-    const hasCoPayers = payment.coPayers && payment.coPayers.length > 1;
+    const coPayerCount = Math.max(0, (payment.coPayers?.length ?? 0) - 1);
+
+    const hasCoPayers = coPayerCount > 0;
 
     return (
         <>
@@ -94,27 +101,36 @@ export function CoOwnerPaymentCard({
                                                     frequency.badgeClass,
                                                 )}
                                             >
-                                                {frequency.label}
+                                                {translatedFrequency}
                                             </Badge>
 
                                             {hasCoPayers && (
                                                 <Badge variant="outline">
                                                     <Link2Icon className="size-3" />
-                                                    {payment.coPayers!.length -
-                                                        1}{' '}
-                                                    co-payers
+                                                    {tChoice(
+                                                        'properties.billing.payment_card.co_payers',
+                                                        coPayerCount,
+                                                    )}
                                                 </Badge>
                                             )}
                                         </div>
 
                                         <ItemDescription>
-                                            {payment.unit}
-                                            {' · '}
-                                            {formatCurrency(installment)}/
-                                            {frequency.label.toLowerCase()}
-                                            {' · '}
-                                            Quota:{' '}
-                                            {formatCurrency(payment.quota)}/yr
+                                            {t(
+                                                'properties.billing.payment_card.description',
+                                                {
+                                                    unit: payment.unit,
+                                                    installment:
+                                                        formatCurrency(
+                                                            installment,
+                                                        ),
+                                                    frequency:
+                                                        translatedFrequency,
+                                                    quota: formatCurrency(
+                                                        payment.quota,
+                                                    ),
+                                                },
+                                            )}
                                         </ItemDescription>
                                     </ItemContent>
 
@@ -139,11 +155,13 @@ export function CoOwnerPaymentCard({
                                                 }}
                                             >
                                                 <span className="hidden sm:inline">
-                                                    Frequency
+                                                    {t(
+                                                        'properties.billing.payment_card.frequency_button',
+                                                    )}
                                                 </span>
 
                                                 <span className="sm:hidden">
-                                                    {frequency.label}
+                                                    {translatedFrequency}
                                                 </span>
                                             </Button>
                                         </div>
@@ -169,8 +187,14 @@ export function CoOwnerPaymentCard({
 
                                     {remaining > 0 && (
                                         <span className="shrink-0 text-xs text-muted-foreground">
-                                            · {formatCurrency(remaining)}{' '}
-                                            remaining
+                                            {t(
+                                                'properties.billing.payment_card.remaining',
+                                                {
+                                                    amount: formatCurrency(
+                                                        remaining,
+                                                    ),
+                                                },
+                                            )}
                                         </span>
                                     )}
 
@@ -179,7 +203,9 @@ export function CoOwnerPaymentCard({
                                             variant="outline"
                                             className="shrink-0 border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                                         >
-                                            Paid off
+                                            {t(
+                                                'properties.billing.payment_card.paid_off',
+                                            )}
                                         </Badge>
                                     )}
                                 </div>

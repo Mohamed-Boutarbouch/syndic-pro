@@ -148,5 +148,60 @@
     "properties.co_owners.data_table.edit_dialog.recalculated_impact.monthly_label": "Monthly",
     "properties.co_owners.data_table.edit_dialog.cancel_button": "Cancel",
     "properties.co_owners.data_table.edit_dialog.apply_button": "Apply",
-    "properties.co_owners.data_table.edit_dialog.applying_button": "Applying…"
+    "properties.co_owners.data_table.edit_dialog.applying_button": "Applying…",
+
+    "properties.billing.title": "Billing",
+    "properties.billing.subtitle": "Track co-owner payments and outstanding balances.",
+    "properties.billing.empty_state": "No active fiscal budget with billed co-owners yet for this property.",
+
+    "properties.billing.cards.monthly.title": "Monthly",
+    "properties.billing.cards.monthly.description": "12 payments/yr",
+    "properties.billing.cards.bimonthly.title": "Bimonthly",
+    "properties.billing.cards.bimonthly.description": "6 payments/yr",
+    "properties.billing.cards.quarterly.title": "Quarterly",
+    "properties.billing.cards.quarterly.description": "4 payments/yr",
+    "properties.billing.cards.semi_annual.title": "Semi-annual",
+    "properties.billing.cards.semi_annual.description": "2 payments/yr",
+
+    "properties.billing.payment_card.frequency_button": "Frequency",
+    "properties.billing.payment_card.co_payers": "{0} No co-payers|{1} :count co-payer|[2,*] :count co-payers",
+    "properties.billing.payment_card.description": ":unit · :installment/:frequency · Quota: :quota/yr",
+    "properties.billing.payment_card.remaining": ":amount remaining",
+    "properties.billing.payment_card.paid_off": "Paid off",
+
+    "properties.billing.household.title": "Household Co-Payers",
+    "properties.billing.household.add_button": "Add",
+    "properties.billing.household.shared_goal": "Shared Household Goal",
+    "properties.billing.household.collected": ":amount collected",
+    "properties.billing.household.remaining": ":amount remaining",
+    "properties.billing.household.empty.title": "No co-payers",
+    "properties.billing.household.empty.description": "No household members are linked to this payment yet. Click \"Add\" to link a co-payer.",
+
+    "properties.billing.household.add_dialog.title": "Add Co-Payer",
+    "properties.billing.household.add_dialog.description": "Household of :name · Quota: :quota/yr",
+    "properties.billing.household.add_dialog.full_name_label": "Full Name",
+    "properties.billing.household.add_dialog.full_name_placeholder": "e.g. John Smith",
+    "properties.billing.household.add_dialog.relationship_label": "Relationship",
+    "properties.billing.household.add_dialog.relationship_placeholder": "e.g. Spouse, Son...",
+    "properties.billing.household.add_dialog.quota_share_label": "Quota Share (%)",
+    "properties.billing.household.add_dialog.quota_share_placeholder": "10",
+    "properties.billing.household.add_dialog.cancel_button": "Cancel",
+    "properties.billing.household.add_dialog.add_button": "Add",
+
+    "properties.billing.household.co_payer_progress": ":percentage% · :collected/:quota",
+
+    "properties.billing.frequency_dialog.title": "Change Billing Frequency",
+    "properties.billing.frequency_dialog.household_alert.title": "Household co-payers will be affected",
+    "properties.billing.frequency_dialog.household_alert.description": "Changing the billing frequency will also update the payment schedule for all household co-payers linked to this account.",
+    "properties.billing.frequency_dialog.payment_frequency_label": "Payment Frequency",
+    "properties.billing.frequency_dialog.payments_per_year": ":count payments/yr",
+    "properties.billing.frequency_dialog.installment.title": "Amount per installment",
+    "properties.billing.frequency_dialog.installment.description": ":amount / :frequency",
+    "properties.billing.frequency_dialog.cancel_button": "Cancel",
+    "properties.billing.frequency_dialog.apply_button": "Apply",
+
+    "properties.billing.frequencies.monthly": "Monthly",
+    "properties.billing.frequencies.bimonthly": "Bimonthly",
+    "properties.billing.frequencies.quarterly": "Quarterly",
+    "properties.billing.frequencies.semi_annual": "Semi-annual"
 }

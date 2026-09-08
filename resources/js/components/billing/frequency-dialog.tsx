@@ -30,6 +30,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type {
     FrequencyDialogProps,
@@ -44,6 +45,7 @@ export function FrequencyDialog({
     frequency,
     onSave,
 }: FrequencyDialogProps) {
+    const { t } = useTranslation('properties.billing.frequency_dialog');
     const [value, setValue] = useState<PaymentFrequency>(frequency);
 
     function handleOpenChange(nextOpen: boolean) {
@@ -68,7 +70,7 @@ export function FrequencyDialog({
             <DialogContent className="sm:max-w-sm">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
-                        <DialogTitle>Change Billing Frequency</DialogTitle>
+                        <DialogTitle>{t('title')}</DialogTitle>
 
                         <DialogDescription>{name}</DialogDescription>
                     </DialogHeader>
@@ -76,21 +78,17 @@ export function FrequencyDialog({
                     <Alert className="mt-4">
                         <AlertCircleIcon />
 
-                        <AlertTitle>
-                            Household co-payers will be affected
-                        </AlertTitle>
+                        <AlertTitle>{t('household_alert.title')}</AlertTitle>
 
                         <AlertDescription>
-                            Changing the billing frequency will also update the
-                            payment schedule for all household co-payers linked
-                            to this account.
+                            {t('household_alert.description')}
                         </AlertDescription>
                     </Alert>
 
                     <div className="space-y-4 py-4">
                         <div className="space-y-2">
                             <p className="text-sm font-medium">
-                                Payment Frequency
+                                {t('payment_frequency_label')}
                             </p>
 
                             <Select
@@ -115,12 +113,16 @@ export function FrequencyDialog({
                                             >
                                                 <div className="flex flex-col items-start gap-0.5">
                                                     <span className="text-sm">
-                                                        {item.label}
+                                                        {t(item.labelKey)}
                                                     </span>
 
                                                     <span className="text-xs text-muted-foreground">
-                                                        {item.paymentsPerYear}{' '}
-                                                        payments/yr
+                                                        {t(
+                                                            'payments_per_year',
+                                                            {
+                                                                count: item.paymentsPerYear,
+                                                            },
+                                                        )}
                                                     </span>
                                                 </div>
                                             </SelectItem>
@@ -132,13 +134,12 @@ export function FrequencyDialog({
 
                         <Item variant="muted">
                             <ItemContent>
-                                <ItemTitle>Amount per installment</ItemTitle>
+                                <ItemTitle>{t('installment.title')}</ItemTitle>
 
                                 <ItemDescription>
-                                    {formatCurrency(installment)} /{' '}
-                                    {PAYMENT_FREQUENCIES[
-                                        value
-                                    ].label.toLowerCase()}
+                                    {t('installment.description', {
+                                        amount: formatCurrency(installment),
+                                    })}
                                 </ItemDescription>
                             </ItemContent>
                         </Item>
@@ -148,12 +149,12 @@ export function FrequencyDialog({
                         <DialogClose
                             render={
                                 <Button type="button" variant="outline">
-                                    Cancel
+                                    {t('cancel_button')}
                                 </Button>
                             }
                         />
 
-                        <Button type="submit">Apply</Button>
+                        <Button type="submit">{t('apply_button')}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

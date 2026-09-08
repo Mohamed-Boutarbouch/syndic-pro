@@ -1,23 +1,26 @@
+import { BillingCards } from '@/components/billing/billing-cards';
 import { CoOwnerPayments } from '@/components/billing/co-owner-payments';
-import { CoOwnersCards } from '@/components/co-owners/co-owners-cards';
+import { useTranslation } from '@/hooks/use-translation';
 import type { BillingProps } from '@/types/properties/billing';
 
 export default function Billing({ property, payments, kpis }: BillingProps) {
+    const { t } = useTranslation('properties.billing');
+
     return (
         <main className="p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-7xl space-y-6">
                 <header>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Billing
+                        {t('title')}
                     </h1>
 
                     <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                        Track co-owner payments and outstanding balances.
+                        {t('subtitle')}
                     </p>
                 </header>
 
                 <div className="grid grid-cols-1 items-start gap-6">
-                    <CoOwnersCards kpis={kpis} />
+                    <BillingCards kpis={kpis} />
 
                     {payments.length > 0 ? (
                         <CoOwnerPayments
@@ -26,8 +29,7 @@ export default function Billing({ property, payments, kpis }: BillingProps) {
                         />
                     ) : (
                         <div className="rounded-lg border bg-card p-8 text-center text-sm text-muted-foreground">
-                            No active fiscal budget with billed co-owners yet
-                            for this property.
+                            {t('empty_state')}
                         </div>
                     )}
                 </div>

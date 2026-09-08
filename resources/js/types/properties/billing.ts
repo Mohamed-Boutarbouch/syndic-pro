@@ -4,9 +4,10 @@ export type BillingProperty = {
 };
 
 export type BillingKpis = {
-    apartment: number;
-    commercial: number;
-    storage: number;
+    monthly: string;
+    bimonthly: string;
+    quarterly: string;
+    semi_annual: string;
 };
 
 export type PaymentFrequency =

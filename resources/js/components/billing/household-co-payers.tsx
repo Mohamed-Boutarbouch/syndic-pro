@@ -26,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type {
     HouseholdCoPayer,
@@ -33,6 +34,7 @@ import type {
 } from '@/types/properties/billing';
 
 export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
+    const { t } = useTranslation('properties.billing.household');
     const coPayers = payment.coPayers ?? [];
 
     const totalCollected = coPayers.reduce(
@@ -48,9 +50,7 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                 <div className="flex items-center gap-2">
                     <UsersRoundIcon className="size-4" />
 
-                    <span className="text-sm font-medium">
-                        Household Co-Payers
-                    </span>
+                    <span className="text-sm font-medium">{t('title')}</span>
                 </div>
 
                 <Dialog>
@@ -59,47 +59,57 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                             render={
                                 <Button variant="outline">
                                     <Plus data-plus="inline-start" />
-                                    Add
+                                    {t('add_button')}
                                 </Button>
                             }
                         />
 
                         <DialogContent className="sm:max-w-sm">
                             <DialogHeader>
-                                <DialogTitle>Add Co-Payer</DialogTitle>
+                                <DialogTitle>
+                                    {t('add_dialog.title')}
+                                </DialogTitle>
 
                                 <DialogDescription>
-                                    Household of {payment.name} · Quota:{' '}
-                                    {formatCurrency(payment.quota)}/yr
+                                    {t('add_dialog.description', {
+                                        name: payment.name,
+                                        quota: formatCurrency(payment.quota),
+                                    })}
                                 </DialogDescription>
                             </DialogHeader>
 
                             <FieldGroup>
                                 <Field>
-                                    <Label htmlFor="full-name">Full Name</Label>
+                                    <Label htmlFor="full-name">
+                                        {t('add_dialog.full_name_label')}
+                                    </Label>
 
                                     <Input
                                         id="full-name"
                                         name="full-name"
-                                        placeholder="e.g. John Smith"
+                                        placeholder={t(
+                                            'add_dialog.full_name_placeholder',
+                                        )}
                                     />
                                 </Field>
 
                                 <Field>
                                     <Label htmlFor="relationship">
-                                        Relationship
+                                        {t('add_dialog.relationship_label')}
                                     </Label>
 
                                     <Input
                                         id="relationship"
                                         name="relationship"
-                                        placeholder="e.g. Spouse, Son..."
+                                        placeholder={t(
+                                            'add_dialog.relationship_placeholder',
+                                        )}
                                     />
                                 </Field>
 
                                 <Field>
                                     <Label htmlFor="quota-share">
-                                        Quota Share (%)
+                                        {t('add_dialog.quota_share_label')}
                                     </Label>
 
                                     <Input
@@ -107,7 +117,9 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                                         step="1"
                                         id="quota-share"
                                         name="quota-share"
-                                        placeholder="10"
+                                        placeholder={t(
+                                            'add_dialog.quota_share_placeholder',
+                                        )}
                                     />
                                 </Field>
                             </FieldGroup>
@@ -116,12 +128,14 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                                 <DialogClose
                                     render={
                                         <Button variant="outline">
-                                            Cancel
+                                            {t('add_dialog.cancel_button')}
                                         </Button>
                                     }
                                 />
 
-                                <Button type="submit">Add</Button>
+                                <Button type="submit">
+                                    {t('add_dialog.add_button')}
+                                </Button>
                             </DialogFooter>
                         </DialogContent>
                     </form>
@@ -132,7 +146,7 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                 <Item className="p-0">
                     <ItemContent>
                         <ItemTitle className="text-xs">
-                            Shared Household Goal
+                            {t('shared_goal')}
                         </ItemTitle>
                     </ItemContent>
 
@@ -144,13 +158,18 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                 <Progress value={progress} className="mt-2 h-2" />
 
                 <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
-                    <span>{formatCurrency(totalCollected)} collected</span>
+                    <span>
+                        {t('collected', {
+                            amount: formatCurrency(totalCollected),
+                        })}
+                    </span>
 
                     <span>
-                        {formatCurrency(
-                            Math.max(0, payment.quota - totalCollected),
-                        )}{' '}
-                        remaining
+                        {t('remaining', {
+                            amount: formatCurrency(
+                                Math.max(0, payment.quota - totalCollected),
+                            ),
+                        })}
                     </span>
                 </div>
             </div>
@@ -162,11 +181,10 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                             <UserRoundX />
                         </EmptyMedia>
 
-                        <EmptyTitle>No co-payers</EmptyTitle>
+                        <EmptyTitle>{t('empty.title')}</EmptyTitle>
 
                         <EmptyDescription className="max-w-xs text-pretty">
-                            No household members are linked to this payment yet.
-                            Click &quot;Add&quot; to link a co-payer.
+                            {t('empty.description')}
                         </EmptyDescription>
                     </EmptyHeader>
                 </Empty>
@@ -192,6 +210,7 @@ function CoPayer({
     coPayer: HouseholdCoPayer;
     householdQuota: number;
 }) {
+    const { t } = useTranslation('properties.billing.household');
     const quota = householdQuota * (coPayer.sharePercentage / 100);
 
     const progress = getProgress(coPayer.collected, quota);
@@ -222,9 +241,11 @@ function CoPayer({
                     </div>
 
                     <span className="shrink-0 text-xs text-muted-foreground">
-                        {coPayer.sharePercentage}% ·{' '}
-                        {formatCurrency(coPayer.collected)}/
-                        {formatCurrency(quota)}
+                        {t('co_payer_progress', {
+                            percentage: coPayer.sharePercentage,
+                            collected: formatCurrency(coPayer.collected),
+                            quota: formatCurrency(quota),
+                        })}
                     </span>
                 </div>
 

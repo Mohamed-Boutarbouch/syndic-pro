@@ -2,25 +2,25 @@ import type { PaymentFrequency } from '@/types/properties/billing';
 
 export const PAYMENT_FREQUENCIES = {
     monthly: {
-        label: 'Monthly',
+        labelKey: 'properties.billing.frequencies.monthly',
         paymentsPerYear: 12,
         badgeClass:
             'border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400',
     },
     bimonthly: {
-        label: 'Bimonthly',
+        labelKey: 'properties.billing.frequencies.bimonthly',
         paymentsPerYear: 6,
         badgeClass:
             'border-cyan-500/40 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
     },
     quarterly: {
-        label: 'Quarterly',
+        labelKey: 'properties.billing.frequencies.quarterly',
         paymentsPerYear: 4,
         badgeClass:
             'border-yellow-500/40 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
     },
     'semi-annual': {
-        label: 'Semi-annual',
+        labelKey: 'properties.billing.frequencies.semi_annual',
         paymentsPerYear: 2,
         badgeClass:
             'border-purple-500/40 bg-purple-500/10 text-purple-600 dark:text-purple-400',
@@ -28,7 +28,7 @@ export const PAYMENT_FREQUENCIES = {
 } as const satisfies Record<
     PaymentFrequency,
     {
-        label: string;
+        labelKey: string;
         paymentsPerYear: number;
         badgeClass: string;
     }

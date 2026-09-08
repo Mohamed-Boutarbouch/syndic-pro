@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BillingFrequency;
 use App\Enums\ObligationStatus;
-use App\Enums\UnitTypes;
 use App\Models\Property;
 use App\Models\UnitCoOwner;
 use Inertia\Inertia;
@@ -48,30 +48,33 @@ class BillingController
                 'name' => $property->name,
             ],
             'payments' => $payments,
-            'kpis' => $this->unitTypeCounts($property),
+            'kpis' => $this->billingFrequencyCounts($property),
         ]);
     }
 
     /**
-     * @return array{apartment: int, commercial: int, storage: int}
+     * @return array{
+     *     monthly: int,
+     *     bimonthly: int,
+     *     quarterly: int,
+     *     semi_annual: int
+     * }
      */
-    private function unitTypeCounts(Property $property): array
+    private function billingFrequencyCounts(Property $property): array
     {
-        $counts = $property->units()
-            ->selectRaw('type, count(*) as aggregate')
-            ->groupBy('type')
-            ->pluck('aggregate', 'type');
+        $counts = UnitCoOwner::query()
+            ->whereHas('unit', function ($query) use ($property) {
+                $query->where('property_id', $property->id);
+            })
+            ->selectRaw('billing_frequency, COUNT(*) as aggregate')
+            ->groupBy('billing_frequency')
+            ->pluck('aggregate', 'billing_frequency');
 
-        // NOTE: I haven't seen the actual App\Enums\UnitTypes source, only
-        // its usage (UnitTypes::Commercial->value as a column default), so
-        // I can't confirm the case names/values for "apartment" and
-        // "storage" the user story implies (Apartments, Commercial Spaces,
-        // Storage Vaults). Adjust the three keys below to match your real
-        // enum's backed values if they differ.
         return [
-            'apartment' => (int) ($counts['apartment'] ?? 0),
-            'commercial' => (int) ($counts[UnitTypes::Commercial->value] ?? 0),
-            'storage' => (int) ($counts['storage'] ?? 0),
+            'monthly' => (int) ($counts[BillingFrequency::Monthly->value] ?? 0),
+            'bimonthly' => (int) ($counts[BillingFrequency::Bimonthly->value] ?? 0),
+            'quarterly' => (int) ($counts[BillingFrequency::Quarterly->value] ?? 0),
+            'semi_annual' => (int) ($counts[BillingFrequency::SemiAnnual->value] ?? 0),
         ];
     }
 
