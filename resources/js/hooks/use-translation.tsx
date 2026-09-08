@@ -28,22 +28,34 @@ const RTL_LOCALES: ReadonlySet<Locale> = new Set(['ar']);
  *   t('Transfer administrative role to :name?', { name: coOwner.name })
  *   tChoice('{0} No payments recorded|{1} :count payment recorded|[2,*] :count payments recorded', payments.length)
  */
-export function useTranslation(): UseTranslationResult {
+export function useTranslation(namespace?: string): UseTranslationResult {
     const { i18n } = usePage<{ i18n: I18nSharedProps }>().props;
+
+    const prefix = namespace ? `${namespace}.` : '';
 
     const t = useCallback(
         (key: string, params?: TranslationParams) =>
-            translate(i18n.translations, key, params),
-        [i18n.translations],
+            translate(i18n.translations, `${prefix}${key}`, params),
+        [i18n.translations, prefix],
     );
 
     const tChoice = useCallback(
         (key: string, count: number, params?: TranslationParams) =>
-            translateChoice(i18n.translations, key, count, params),
-        [i18n.translations],
+            translateChoice(
+                i18n.translations,
+                `${prefix}${key}`,
+                count,
+                params,
+            ),
+        [i18n.translations, prefix],
     );
 
     const isRtl = useMemo(() => RTL_LOCALES.has(i18n.locale), [i18n.locale]);
 
-    return { t, tChoice, locale: i18n.locale, isRtl };
+    return {
+        t,
+        tChoice,
+        locale: i18n.locale,
+        isRtl,
+    };
 }

@@ -7,6 +7,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import { getInitials } from '@/lib/utils';
 import type { RecentPayment } from '@/types/properties/dashboard';
@@ -16,13 +17,15 @@ type RecentPaymentsProps = {
 };
 
 export function RecentPayments({ payments }: RecentPaymentsProps) {
+    const { t, tChoice } = useTranslation('properties.dashboard');
+
     return (
         <Card className="flex h-full flex-col">
             <CardHeader>
-                <CardTitle>Recent Payments</CardTitle>
+                <CardTitle>{t('recent_payments.title')}</CardTitle>
 
                 <CardDescription>
-                    Last {payments.length} transactions
+                    {tChoice('recent_payments.subtitle', payments.length)}
                 </CardDescription>
             </CardHeader>
 

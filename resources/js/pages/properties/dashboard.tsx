@@ -2,6 +2,7 @@ import { CollectionProgress } from '@/components/dashboard/collection-progress';
 import { DashboardKpis } from '@/components/dashboard/dashboard-kpis';
 import { MonthlyCollection } from '@/components/dashboard/monthly-collection';
 import { RecentPayments } from '@/components/dashboard/recent-payments';
+import { useTranslation } from '@/hooks/use-translation';
 import type { DashboardProps } from '@/types/properties/dashboard';
 
 export default function Dashboard({
@@ -11,17 +12,18 @@ export default function Dashboard({
     monthlyCollection,
     recentPayments,
 }: DashboardProps) {
+    const { t } = useTranslation('properties.dashboard');
+
     return (
         <main className="p-4 sm:p-6">
             <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-12">
                 <header className="lg:col-span-12">
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Property Dashboard
+                        {t('title')}
                     </h1>
 
                     <p className="mt-1 text-sm text-muted-foreground">
-                        Overview of your property finances, collections, and
-                        payments.
+                        {t('subtitle')}
                     </p>
                 </header>
 

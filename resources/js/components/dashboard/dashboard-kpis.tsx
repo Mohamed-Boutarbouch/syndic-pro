@@ -1,6 +1,7 @@
 import { CircleDollarSign, Coins, Users, Wallet } from 'lucide-react';
 
 import { KpiCard } from '@/components/kpi-card';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { DashboardKpis as DashboardKpisData } from '@/types/properties/dashboard';
 
@@ -9,56 +10,70 @@ type DashboardKpisProps = {
 };
 
 export function DashboardKpis({ kpis }: DashboardKpisProps) {
+    const { t } = useTranslation('properties.dashboard');
+
     const cards = kpis
         ? [
               {
-                  title: 'Annual Budget',
+                  id: 'annual-budget',
+                  title: t('kpis.annual_budget.title'),
                   value: formatCurrency(kpis.targetBudget),
                   description: kpis.fiscalYearLabel,
                   icon: CircleDollarSign,
               },
               {
-                  title: 'Collected',
+                  id: 'collected',
+                  title: t('kpis.collected.title'),
                   value: formatCurrency(kpis.collectedYtd),
-                  description: `${kpis.percentOfTarget}% of target`,
+                  description: t('kpis.collected.description', {
+                      percent: kpis.percentOfTarget,
+                  }),
                   icon: Wallet,
               },
               {
-                  title: 'Co-owners',
+                  id: 'co-owners',
+                  title: t('kpis.co_owners.title'),
                   value: String(kpis.coOwnersCount),
-                  description: `${kpis.paidCount} fully paid`,
+                  description: t('kpis.co_owners.description', {
+                      count: kpis.paidCount,
+                  }),
                   icon: Users,
               },
               {
-                  title: 'Units',
+                  id: 'units',
+                  title: t('kpis.units.title'),
                   value: String(kpis.unitsCount),
-                  description: 'Units in this property',
+                  description: t('kpis.units.description'),
                   icon: Coins,
               },
           ]
         : [
               {
-                  title: 'Units',
+                  id: 'units',
+                  title: t('kpis.units.title'),
                   value: '—',
-                  description: 'No active budget',
+                  description: t('kpis.empty_state'),
                   icon: Coins,
               },
               {
-                  title: 'Co-owners',
+                  id: 'co-owners',
+                  title: t('kpis.co_owners.title'),
                   value: '—',
-                  description: 'No active budget',
+                  description: t('kpis.empty_state'),
                   icon: Users,
               },
               {
-                  title: 'Annual Budget',
+                  id: 'annual-budget',
+                  title: t('kpis.annual_budget.title'),
                   value: '—',
-                  description: 'No active budget',
+                  description: t('kpis.empty_state'),
                   icon: CircleDollarSign,
               },
               {
-                  title: 'Collected',
+                  id: 'collected',
+                  title: t('kpis.collected.title'),
                   value: '—',
-                  description: 'No active budget',
+                  description: t('kpis.empty_state'),
                   icon: Wallet,
               },
           ];
@@ -66,7 +81,7 @@ export function DashboardKpis({ kpis }: DashboardKpisProps) {
     return (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {cards.map((card) => (
-                <KpiCard key={card.title} {...card} />
+                <KpiCard key={card.id} {...card} />
             ))}
         </div>
     );

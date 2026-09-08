@@ -15,31 +15,36 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from '@/components/ui/chart';
+import { useTranslation } from '@/hooks/use-translation';
 import type { MonthlyCollectionPoint } from '@/types/properties/dashboard';
 
 type MonthlyCollectionProps = {
     data: MonthlyCollectionPoint[];
 };
 
-const chartConfig = {
-    collected: {
-        label: 'Collected',
-        color: 'var(--color-chart-1)',
-    },
-    target: {
-        label: 'Target',
-        color: 'var(--color-chart-2)',
-    },
-} satisfies ChartConfig;
-
 export function MonthlyCollection({ data }: MonthlyCollectionProps) {
+    const { t } = useTranslation('properties.dashboard');
+
+    const chartConfig = {
+        collected: {
+            label: t('monthly_collection.collected_series'),
+            color: 'var(--color-chart-1)',
+        },
+        target: {
+            label: t('monthly_collection.target_series'),
+            color: 'var(--color-chart-2)',
+        },
+    } satisfies ChartConfig;
+
     return (
         <Card className="flex h-full flex-col">
             <CardHeader>
-                <CardTitle>Monthly Collection</CardTitle>
+                <CardTitle>{t('monthly_collection.title')}</CardTitle>
 
                 <CardDescription>
-                    Collected vs monthly target · Nov 2025 – Oct 2026
+                    {t('monthly_collection.description', {
+                        range: 'Nov 2025 – Oct 2026',
+                    })}
                 </CardDescription>
             </CardHeader>
 

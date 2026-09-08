@@ -11,6 +11,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type {
     CollectionProgressData,
@@ -36,13 +37,16 @@ export function CollectionProgress({
     property,
     data,
 }: CollectionProgressProps) {
+    const { t, tChoice } = useTranslation('properties.dashboard');
+
     if (!data) {
         return (
             <Card>
                 <CardHeader>
-                    <CardTitle>Collection Progress</CardTitle>
+                    <CardTitle>{t('collection_progress.title')}</CardTitle>
+
                     <CardDescription>
-                        No active budget for this property.
+                        {t('collection_progress.empty_state')}
                     </CardDescription>
                 </CardHeader>
             </Card>
@@ -60,10 +64,10 @@ export function CollectionProgress({
         <Card>
             <CardHeader className="flex flex-row items-start justify-between space-y-0">
                 <div className="space-y-1.5">
-                    <CardTitle>Collection Progress</CardTitle>
+                    <CardTitle>{t('collection_progress.title')}</CardTitle>
 
                     <CardDescription>
-                        Collected vs annual fiscal target
+                        {t('collection_progress.description')}
                     </CardDescription>
                 </div>
 
@@ -81,11 +85,15 @@ export function CollectionProgress({
 
                     <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">
-                            {formatCurrency(collected)} collected
+                            {t('collection_progress.amount_collected', {
+                                amount: formatCurrency(collected),
+                            })}
                         </span>
 
                         <span className="text-muted-foreground">
-                            Target: {formatCurrency(target)}
+                            {t('collection_progress.target_label', {
+                                amount: formatCurrency(target),
+                            })}
                         </span>
                     </div>
                 </div>
@@ -127,7 +135,10 @@ export function CollectionProgress({
                             size: 'sm',
                         })}
                     >
-                        +{remainingOwners} more co-owners — see Ledger
+                        {tChoice(
+                            'collection_progress.more_owners_link',
+                            remainingOwners,
+                        )}
                     </Link>
                 )}
             </CardContent>
