@@ -3,13 +3,13 @@ import { Languages, LogOut, Settings } from 'lucide-react';
 
 import updateLocale from '@/actions/App/Http/Controllers/Settings/UpdateLocaleController';
 import {
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
@@ -20,131 +20,119 @@ import type { User } from '@/types';
 import type { Locale } from '@/types/i18n';
 
 type Props = {
-    user: User;
+  user: User;
 };
 
 const LOCALES: ReadonlyArray<{
-    code: Locale;
-    nativeLabel: string;
+  code: Locale;
+  nativeLabel: string;
 }> = [
-    {
-        code: 'en',
-        nativeLabel: 'English',
-    },
-    {
-        code: 'fr',
-        nativeLabel: 'Français',
-    },
-    {
-        code: 'ar',
-        nativeLabel: 'العربية',
-    },
+  {
+    code: 'en',
+    nativeLabel: 'English',
+  },
+  {
+    code: 'fr',
+    nativeLabel: 'Français',
+  },
+  {
+    code: 'ar',
+    nativeLabel: 'العربية',
+  },
 ];
 
 export function UserMenuContent({ user }: Props) {
-    const cleanup = useMobileNavigation();
-    const { locale } = useTranslation();
+  const cleanup = useMobileNavigation();
+  const { locale } = useTranslation();
 
-    const { put, processing, transform } = useForm<{
-        locale: Locale;
-    }>({
-        locale,
+  const { put, processing, transform } = useForm<{
+    locale: Locale;
+  }>({
+    locale,
+  });
+
+  const handleLocaleChange = (nextLocale: Locale) => {
+    if (nextLocale === locale || processing) {
+      return;
+    }
+
+    transform(() => ({
+      locale: nextLocale,
+    }));
+
+    put(updateLocale.url(), {
+      preserveScroll: true,
+      preserveState: false,
     });
+  };
 
-    const handleLocaleChange = (nextLocale: Locale) => {
-        if (nextLocale === locale || processing) {
-            return;
+  const handleLogout = () => {
+    cleanup();
+    router.flushAll();
+  };
+
+  const currentLocale = LOCALES.find((item) => item.code === locale);
+
+  return (
+    <>
+      <DropdownMenuGroup>
+        <DropdownMenuLabel className="p-0 font-normal">
+          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <UserInfo user={user} showEmail={true} />
+          </div>
+        </DropdownMenuLabel>
+      </DropdownMenuGroup>
+
+      <DropdownMenuSeparator />
+
+      <DropdownMenuGroup>
+        <DropdownMenuItem
+          render={<Link href={edit()} prefetch onClick={cleanup} />}
+          className="cursor-pointer"
+        >
+          <Settings className="mr-2" />
+          Settings
+        </DropdownMenuItem>
+
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger disabled={processing} className="cursor-pointer">
+            <Languages className="mr-2" />
+            <span>Language</span>
+
+            <span className="ml-auto text-muted-foreground">{currentLocale?.nativeLabel}</span>
+          </DropdownMenuSubTrigger>
+
+          <DropdownMenuSubContent>
+            {LOCALES.map((item) => (
+              <DropdownMenuItem
+                key={item.code}
+                disabled={processing || item.code === locale}
+                onClick={() => handleLocaleChange(item.code)}
+                className="cursor-pointer"
+              >
+                <span>{item.nativeLabel}</span>
+
+                {item.code === locale && (
+                  <span className="ml-auto text-xs text-muted-foreground">✓</span>
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+      </DropdownMenuGroup>
+
+      <DropdownMenuSeparator />
+
+      <DropdownMenuItem
+        render={
+          <Link href={logout()} as="button" onClick={handleLogout} data-test="logout-button" />
         }
-
-        transform(() => ({
-            locale: nextLocale,
-        }));
-
-        put(updateLocale.url(), {
-            preserveScroll: true,
-            preserveState: false,
-        });
-    };
-
-    const handleLogout = () => {
-        cleanup();
-        router.flushAll();
-    };
-
-    const currentLocale = LOCALES.find((item) => item.code === locale);
-
-    return (
-        <>
-            <DropdownMenuGroup>
-                <DropdownMenuLabel className="p-0 font-normal">
-                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                        <UserInfo user={user} showEmail={true} />
-                    </div>
-                </DropdownMenuLabel>
-            </DropdownMenuGroup>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuGroup>
-                <DropdownMenuItem
-                    render={<Link href={edit()} prefetch onClick={cleanup} />}
-                    className="cursor-pointer"
-                >
-                    <Settings className="mr-2" />
-                    Settings
-                </DropdownMenuItem>
-
-                <DropdownMenuSub>
-                    <DropdownMenuSubTrigger
-                        disabled={processing}
-                        className="cursor-pointer"
-                    >
-                        <Languages className="mr-2" />
-                        <span>Language</span>
-
-                        <span className="ml-auto text-muted-foreground">
-                            {currentLocale?.nativeLabel}
-                        </span>
-                    </DropdownMenuSubTrigger>
-
-                    <DropdownMenuSubContent>
-                        {LOCALES.map((item) => (
-                            <DropdownMenuItem
-                                key={item.code}
-                                disabled={processing || item.code === locale}
-                                onClick={() => handleLocaleChange(item.code)}
-                                className="cursor-pointer"
-                            >
-                                <span>{item.nativeLabel}</span>
-
-                                {item.code === locale && (
-                                    <span className="ml-auto text-xs text-muted-foreground">
-                                        ✓
-                                    </span>
-                                )}
-                            </DropdownMenuItem>
-                        ))}
-                    </DropdownMenuSubContent>
-                </DropdownMenuSub>
-            </DropdownMenuGroup>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem
-                render={
-                    <Link
-                        href={logout()}
-                        as="button"
-                        onClick={handleLogout}
-                        data-test="logout-button"
-                    />
-                }
-                nativeButton
-                className="w-full cursor-pointer"
-            >
-                <LogOut className="mr-2" />
-                Log out
-            </DropdownMenuItem>
-        </>
-    );
+        nativeButton
+        className="w-full cursor-pointer"
+      >
+        <LogOut className="mr-2" />
+        Log out
+      </DropdownMenuItem>
+    </>
+  );
 }

@@ -8,18 +8,14 @@ import type { I18nSharedProps, Locale } from '@/types/i18n';
 
 export type TFunction = (key: string, params?: TranslationParams) => string;
 
-export type TChoiceFunction = (
-    key: string,
-    count: number,
-    params?: TranslationParams,
-) => string;
+export type TChoiceFunction = (key: string, count: number, params?: TranslationParams) => string;
 
 interface UseTranslationResult {
-    t: (key: string, params?: TranslationParams) => string;
-    tChoice: (key: string, count: number, params?: TranslationParams) => string;
-    locale: Locale;
-    /** True for locales rendered right-to-left; feed into `dir` attributes. */
-    isRtl: boolean;
+  t: (key: string, params?: TranslationParams) => string;
+  tChoice: (key: string, count: number, params?: TranslationParams) => string;
+  locale: Locale;
+  /** True for locales rendered right-to-left; feed into `dir` attributes. */
+  isRtl: boolean;
 }
 
 const RTL_LOCALES: ReadonlySet<Locale> = new Set(['ar']);
@@ -37,33 +33,28 @@ const RTL_LOCALES: ReadonlySet<Locale> = new Set(['ar']);
  *   tChoice('{0} No payments recorded|{1} :count payment recorded|[2,*] :count payments recorded', payments.length)
  */
 export function useTranslation(namespace?: string): UseTranslationResult {
-    const { i18n } = usePage<{ i18n: I18nSharedProps }>().props;
+  const { i18n } = usePage<{ i18n: I18nSharedProps }>().props;
 
-    const prefix = namespace ? `${namespace}.` : '';
+  const prefix = namespace ? `${namespace}.` : '';
 
-    const t = useCallback(
-        (key: string, params?: TranslationParams) =>
-            translate(i18n.translations, `${prefix}${key}`, params),
-        [i18n.translations, prefix],
-    );
+  const t = useCallback(
+    (key: string, params?: TranslationParams) =>
+      translate(i18n.translations, `${prefix}${key}`, params),
+    [i18n.translations, prefix],
+  );
 
-    const tChoice = useCallback(
-        (key: string, count: number, params?: TranslationParams) =>
-            translateChoice(
-                i18n.translations,
-                `${prefix}${key}`,
-                count,
-                params,
-            ),
-        [i18n.translations, prefix],
-    );
+  const tChoice = useCallback(
+    (key: string, count: number, params?: TranslationParams) =>
+      translateChoice(i18n.translations, `${prefix}${key}`, count, params),
+    [i18n.translations, prefix],
+  );
 
-    const isRtl = useMemo(() => RTL_LOCALES.has(i18n.locale), [i18n.locale]);
+  const isRtl = useMemo(() => RTL_LOCALES.has(i18n.locale), [i18n.locale]);
 
-    return {
-        t,
-        tChoice,
-        locale: i18n.locale,
-        isRtl,
-    };
+  return {
+    t,
+    tChoice,
+    locale: i18n.locale,
+    isRtl,
+  };
 }

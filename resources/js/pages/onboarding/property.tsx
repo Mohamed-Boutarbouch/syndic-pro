@@ -5,15 +5,13 @@ import OnboardingLayout from '@/layouts/onboarding/layout';
 import { PropertyForm } from '@/components/onboarding/property-form';
 
 export default function PropertyPage() {
-    return (
-        <>
-            <Head title="Onboarding — Property" />
+  return (
+    <>
+      <Head title="Onboarding — Property" />
 
-            <PropertyForm />
-        </>
-    );
+      <PropertyForm />
+    </>
+  );
 }
 
-PropertyPage.layout = (page: ReactNode) => (
-    <OnboardingLayout>{page}</OnboardingLayout>
-);
+PropertyPage.layout = (page: ReactNode) => <OnboardingLayout>{page}</OnboardingLayout>;

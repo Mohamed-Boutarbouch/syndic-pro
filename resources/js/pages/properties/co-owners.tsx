@@ -5,45 +5,43 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnersProps } from '@/types/properties/co-owners';
 
 export default function CoOwners({
-    property,
-    kpis,
-    unitShares,
-    activeSyndic,
-    transferCandidates,
-    budget,
+  property,
+  kpis,
+  unitShares,
+  activeSyndic,
+  transferCandidates,
+  budget,
 }: CoOwnersProps) {
-    const { t } = useTranslation('properties.co_owners');
+  const { t } = useTranslation('properties.co_owners');
 
-    return (
-        <main className="p-4 sm:p-6 lg:p-8">
-            <div className="mx-auto max-w-7xl space-y-6">
-                <header>
-                    <h1 className="text-2xl font-semibold tracking-tight">
-                        {t('title')}
-                    </h1>
+  return (
+    <main className="p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <header>
+          <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
 
-                    <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                        {t('subtitle', { property: property.name })}
-                    </p>
-                </header>
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+            {t('subtitle', { property: property.name })}
+          </p>
+        </header>
 
-                <div className="grid grid-cols-1 items-start gap-6">
-                    <CoOwnersCards kpis={kpis} />
+        <div className="grid grid-cols-1 items-start gap-6">
+          <CoOwnersCards kpis={kpis} />
 
-                    <ActiveSyndic
-                        propertyId={property.id}
-                        activeSyndic={activeSyndic}
-                        candidates={transferCandidates}
-                    />
+          <ActiveSyndic
+            propertyId={property.id}
+            activeSyndic={activeSyndic}
+            candidates={transferCandidates}
+          />
 
-                    <DataTable
-                        data={unitShares}
-                        propertyId={property.id}
-                        ratePerPoint={budget?.ratePerPoint ?? 0}
-                        totalWeight={budget?.totalWeight ?? 0}
-                    />
-                </div>
-            </div>
-        </main>
-    );
+          <DataTable
+            data={unitShares}
+            propertyId={property.id}
+            ratePerPoint={budget?.ratePerPoint ?? 0}
+            totalWeight={budget?.totalWeight ?? 0}
+          />
+        </div>
+      </div>
+    </main>
+  );
 }

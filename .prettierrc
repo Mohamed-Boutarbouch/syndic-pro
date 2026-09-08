@@ -3,20 +3,14 @@
     "singleQuote": true,
     "singleAttributePerLine": false,
     "htmlWhitespaceSensitivity": "css",
-    "printWidth": 80,
-    "plugins": [
-        "prettier-plugin-tailwindcss"
-    ],
-    "tailwindFunctions": [
-        "clsx",
-        "cn",
-        "cva"
-    ],
+    "printWidth": 100,
+    "plugins": ["prettier-plugin-tailwindcss"],
+    "tailwindFunctions": ["clsx", "cn", "cva"],
     "tailwindStylesheet": "resources/css/app.css",
-    "tabWidth": 4,
+    "tabWidth": 2,
     "overrides": [
         {
-            "files": "**/*.yml",
+            "files": "**/*.{yml,yaml}",
             "options": {
                 "tabWidth": 2
             }

@@ -1,8 +1,8 @@
 export const BILLING_FREQUENCY_DIVISOR: Record<string, number> = {
-    monthly: 12,
-    bimonthly: 6,
-    quarterly: 4,
-    semi_annual: 2,
+  monthly: 12,
+  bimonthly: 6,
+  quarterly: 4,
+  semi_annual: 2,
 };
 
 /**
@@ -10,18 +10,18 @@ export const BILLING_FREQUENCY_DIVISOR: Record<string, number> = {
  * and billing frequency.
  */
 export function calculateInstallmentAmount(
-    annualBudget: number,
-    frequency: string | undefined,
+  annualBudget: number,
+  frequency: string | undefined,
 ): number | null {
-    if (!frequency || !annualBudget) {
-        return null;
-    }
+  if (!frequency || !annualBudget) {
+    return null;
+  }
 
-    const divisor = BILLING_FREQUENCY_DIVISOR[frequency];
+  const divisor = BILLING_FREQUENCY_DIVISOR[frequency];
 
-    if (!divisor) {
-        return null;
-    }
+  if (!divisor) {
+    return null;
+  }
 
-    return annualBudget / divisor;
+  return annualBudget / divisor;
 }

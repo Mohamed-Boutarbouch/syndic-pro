@@ -1,92 +1,66 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { ChartConfig } from '@/components/ui/chart';
 import {
-    ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
-    ChartTooltip,
-    ChartTooltipContent,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
 } from '@/components/ui/chart';
 import { useTranslation } from '@/hooks/use-translation';
 import type { MonthlyCollectionPoint } from '@/types/properties/dashboard';
 
 type MonthlyCollectionProps = {
-    data: MonthlyCollectionPoint[];
+  data: MonthlyCollectionPoint[];
 };
 
 export function MonthlyCollection({ data }: MonthlyCollectionProps) {
-    const { t } = useTranslation('properties.dashboard');
+  const { t } = useTranslation('properties.dashboard');
 
-    const chartConfig = {
-        collected: {
-            label: t('monthly_collection.collected_series'),
-            color: 'var(--color-chart-1)',
-        },
-        target: {
-            label: t('monthly_collection.target_series'),
-            color: 'var(--color-chart-2)',
-        },
-    } satisfies ChartConfig;
+  const chartConfig = {
+    collected: {
+      label: t('monthly_collection.collected_series'),
+      color: 'var(--color-chart-1)',
+    },
+    target: {
+      label: t('monthly_collection.target_series'),
+      color: 'var(--color-chart-2)',
+    },
+  } satisfies ChartConfig;
 
-    return (
-        <Card className="flex h-full flex-col">
-            <CardHeader>
-                <CardTitle>{t('monthly_collection.title')}</CardTitle>
+  return (
+    <Card className="flex h-full flex-col">
+      <CardHeader>
+        <CardTitle>{t('monthly_collection.title')}</CardTitle>
 
-                <CardDescription>
-                    {t('monthly_collection.description', {
-                        range: 'Nov 2025 – Oct 2026',
-                    })}
-                </CardDescription>
-            </CardHeader>
+        <CardDescription>
+          {t('monthly_collection.description', {
+            range: 'Nov 2025 – Oct 2026',
+          })}
+        </CardDescription>
+      </CardHeader>
 
-            <CardContent className="flex-1">
-                <ChartContainer
-                    config={chartConfig}
-                    className="h-full min-h-70 w-full"
-                >
-                    <BarChart data={data}>
-                        <CartesianGrid vertical={false} />
+      <CardContent className="flex-1">
+        <ChartContainer config={chartConfig} className="h-full min-h-70 w-full">
+          <BarChart data={data}>
+            <CartesianGrid vertical={false} />
 
-                        <XAxis
-                            dataKey="month"
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
+            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
 
-                        <YAxis
-                            tickLine={false}
-                            axisLine={false}
-                            tickMargin={8}
-                        />
+            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
 
-                        <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartTooltip content={<ChartTooltipContent />} />
 
-                        <ChartLegend content={<ChartLegendContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
 
-                        <Bar
-                            dataKey="collected"
-                            fill="var(--color-collected)"
-                            radius={2}
-                        />
+            <Bar dataKey="collected" fill="var(--color-collected)" radius={2} />
 
-                        <Bar
-                            dataKey="target"
-                            fill="var(--color-target)"
-                            radius={2}
-                        />
-                    </BarChart>
-                </ChartContainer>
-            </CardContent>
-        </Card>
-    );
+            <Bar dataKey="target" fill="var(--color-target)" radius={2} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  );
 }

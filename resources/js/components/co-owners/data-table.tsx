@@ -1,11 +1,11 @@
 import { useTable } from '@tanstack/react-table';
 import {
-    ChevronLeft,
-    ChevronRight,
-    ChevronsLeft,
-    ChevronsRight,
-    Columns3,
-    Search,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  Columns3,
+  Search,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -13,281 +13,247 @@ import { buildColumns } from '@/components/co-owners/columns';
 import { features } from '@/components/co-owners/data-table-features';
 
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
 import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { UnitShare } from '@/types/properties/co-owners';
 
 interface DataTableProps {
-    data: UnitShare[];
-    propertyId: number;
-    ratePerPoint: number;
-    totalWeight: number;
+  data: UnitShare[];
+  propertyId: number;
+  ratePerPoint: number;
+  totalWeight: number;
 }
 
-export function DataTable({
+export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataTableProps) {
+  const { t } = useTranslation('properties.co_owners.data_table');
+  const [search, setSearch] = useState('');
+
+  const columns = useMemo(
+    () => buildColumns(propertyId, ratePerPoint, t),
+    [propertyId, ratePerPoint, t],
+  );
+
+  const table = useTable({
+    features,
     data,
-    propertyId,
-    ratePerPoint,
-    totalWeight,
-}: DataTableProps) {
-    const { t } = useTranslation('properties.co_owners.data_table');
-    const [search, setSearch] = useState('');
+    columns,
+  });
 
-    const columns = useMemo(
-        () => buildColumns(propertyId, ratePerPoint, t),
-        [propertyId, ratePerPoint, t],
-    );
+  const coOwnerColumn = table.getColumn('coOwner');
 
-    const table = useTable({
-        features,
-        data,
-        columns,
-    });
+  function handleSearch(value: string) {
+    setSearch(value);
+    coOwnerColumn?.setFilterValue(value);
+  }
 
-    const coOwnerColumn = table.getColumn('coOwner');
+  const { pageIndex, pageSize } = table.state.pagination;
+  const totalRows = table.getFilteredRowModel().rows.length;
+  const rows = table.getRowModel().rows;
+  const pageCount = table.getPageCount();
 
-    function handleSearch(value: string) {
-        setSearch(value);
-        coOwnerColumn?.setFilterValue(value);
-    }
+  const startRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
+  const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
 
-    const { pageIndex, pageSize } = table.state.pagination;
-    const totalRows = table.getFilteredRowModel().rows.length;
-    const rows = table.getRowModel().rows;
-    const pageCount = table.getPageCount();
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {t('title')}
+          {/*Unit Shares & Co-Owners Matrix*/}
+        </CardTitle>
 
-    const startRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
-    const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
-
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>
-                    {t('title')}
-                    {/*Unit Shares & Co-Owners Matrix*/}
-                </CardTitle>
-
-                <CardDescription>
-                    {t('description', {
-                        weight: totalWeight.toFixed(1),
-                        rate: formatCurrency(ratePerPoint),
-                    })}
-                    {/*Total weight: {totalWeight.toFixed(1)} pts · Rate:{' '}
+        <CardDescription>
+          {t('description', {
+            weight: totalWeight.toFixed(1),
+            rate: formatCurrency(ratePerPoint),
+          })}
+          {/*Total weight: {totalWeight.toFixed(1)} pts · Rate:{' '}
                     {formatCurrency(ratePerPoint)}/pt/yr*/}
-                </CardDescription>
-            </CardHeader>
+        </CardDescription>
+      </CardHeader>
 
-            <CardContent>
-                <div className="space-y-4">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="relative w-full sm:max-w-sm">
-                            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
 
-                            <Input
-                                value={search}
-                                onChange={(event) =>
-                                    handleSearch(event.target.value)
-                                }
-                                placeholder={t('search_placeholder')}
-                                className="pl-9"
-                            />
-                        </div>
+              <Input
+                value={search}
+                onChange={(event) => handleSearch(event.target.value)}
+                placeholder={t('search_placeholder')}
+                className="pl-9"
+              />
+            </div>
 
-                        <DropdownMenu>
-                            <DropdownMenuTrigger
-                                render={
-                                    <Button variant="outline">
-                                        <Columns3 />
-                                        {t('columns_button')}
-                                        {/*Columns*/}
-                                    </Button>
-                                }
-                            />
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant="outline">
+                    <Columns3 />
+                    {t('columns_button')}
+                    {/*Columns*/}
+                  </Button>
+                }
+              />
 
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuGroup>
-                                    <DropdownMenuLabel>
-                                        {t('toggle_columns_label')}
-                                        {/*Toggle columns*/}
-                                    </DropdownMenuLabel>
+              <DropdownMenuContent align="end">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>
+                    {t('toggle_columns_label')}
+                    {/*Toggle columns*/}
+                  </DropdownMenuLabel>
 
-                                    {table
-                                        .getAllColumns()
-                                        .filter((column) => column.getCanHide())
-                                        .map((column) => (
-                                            <DropdownMenuCheckboxItem
-                                                key={column.id}
-                                                checked={column.getIsVisible()}
-                                                onCheckedChange={(value) =>
-                                                    column.toggleVisibility(
-                                                        !!value,
-                                                    )
-                                                }
-                                            >
-                                                {column.id}
-                                            </DropdownMenuCheckboxItem>
-                                        ))}
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
-                    <div className="overflow-hidden rounded-md border">
-                        <Table>
-                            <TableHeader>
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <TableRow key={headerGroup.id}>
-                                        {headerGroup.headers.map((header) => (
-                                            <TableHead key={header.id}>
-                                                {header.isPlaceholder ? null : (
-                                                    <table.FlexRender
-                                                        header={header}
-                                                    />
-                                                )}
-                                            </TableHead>
-                                        ))}
-                                    </TableRow>
-                                ))}
-                            </TableHeader>
+          <div className="overflow-hidden rounded-md border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder ? null : <table.FlexRender header={header} />}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
 
-                            <TableBody>
-                                {rows.length > 0 ? (
-                                    rows.map((row) => (
-                                        <TableRow
-                                            key={row.id}
-                                            data-state={
-                                                row.getIsSelected()
-                                                    ? 'selected'
-                                                    : undefined
-                                            }
-                                        >
-                                            {row
-                                                .getVisibleCells()
-                                                .map((cell) => (
-                                                    <TableCell key={cell.id}>
-                                                        <table.FlexRender
-                                                            cell={cell}
-                                                        />
-                                                    </TableCell>
-                                                ))}
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell
-                                            colSpan={columns.length}
-                                            className="h-24 text-center"
-                                        >
-                                            {t('empty_state')}
-                                            {/*No co-owners found.*/}
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
+              <TableBody>
+                {rows.length > 0 ? (
+                  rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() ? 'selected' : undefined}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          <table.FlexRender cell={cell} />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                      {t('empty_state')}
+                      {/*No co-owners found.*/}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
 
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <p className="text-sm text-muted-foreground">
-                            {totalRows === 0
-                                ? t('pagination.no_results')
-                                : t('pagination.showing_range', {
-                                      start: startRow,
-                                      end: endRow,
-                                      total: totalRows,
-                                  })}
-                        </p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              {totalRows === 0
+                ? t('pagination.no_results')
+                : t('pagination.showing_range', {
+                    start: startRow,
+                    end: endRow,
+                    total: totalRows,
+                  })}
+            </p>
 
-                        <div className="flex items-center gap-1">
-                            <Button
-                                variant="outline"
-                                size="icon-sm"
-                                onClick={() => table.setPageIndex(0)}
-                                disabled={!table.getCanPreviousPage()}
-                            >
-                                <ChevronsLeft />
-                                <span className="sr-only">
-                                    {t('pagination.first_page')}
-                                    {/*First page*/}
-                                </span>
-                            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <ChevronsLeft />
+                <span className="sr-only">
+                  {t('pagination.first_page')}
+                  {/*First page*/}
+                </span>
+              </Button>
 
-                            <Button
-                                variant="outline"
-                                size="icon-sm"
-                                onClick={() => table.previousPage()}
-                                disabled={!table.getCanPreviousPage()}
-                            >
-                                <ChevronLeft />
-                                <span className="sr-only">
-                                    {t('pagination.previous_page')}
-                                    {/*Previous page*/}
-                                </span>
-                            </Button>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <ChevronLeft />
+                <span className="sr-only">
+                  {t('pagination.previous_page')}
+                  {/*Previous page*/}
+                </span>
+              </Button>
 
-                            <span className="px-2 text-sm">
-                                {t('pagination.page_of', {
-                                    page: pageIndex,
-                                    count: pageCount,
-                                })}
-                                {/*Page {pageIndex + 1} of {pageCount}*/}
-                            </span>
+              <span className="px-2 text-sm">
+                {t('pagination.page_of', {
+                  page: pageIndex,
+                  count: pageCount,
+                })}
+                {/*Page {pageIndex + 1} of {pageCount}*/}
+              </span>
 
-                            <Button
-                                variant="outline"
-                                size="icon-sm"
-                                onClick={() => table.nextPage()}
-                                disabled={!table.getCanNextPage()}
-                            >
-                                <ChevronRight />
-                                <span className="sr-only">
-                                    {t('pagination.next_page')}
-                                    {/*Next page*/}
-                                </span>
-                            </Button>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                <ChevronRight />
+                <span className="sr-only">
+                  {t('pagination.next_page')}
+                  {/*Next page*/}
+                </span>
+              </Button>
 
-                            <Button
-                                variant="outline"
-                                size="icon-sm"
-                                onClick={() =>
-                                    table.setPageIndex(pageCount - 1)
-                                }
-                                disabled={!table.getCanNextPage()}
-                            >
-                                <ChevronsRight />
-                                <span className="sr-only">
-                                    {t('pagination.last_page')}
-                                    {/*Last page*/}
-                                </span>
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-    );
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => table.setPageIndex(pageCount - 1)}
+                disabled={!table.getCanNextPage()}
+              >
+                <ChevronsRight />
+                <span className="sr-only">
+                  {t('pagination.last_page')}
+                  {/*Last page*/}
+                </span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

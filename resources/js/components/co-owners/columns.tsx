@@ -1,12 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { createColumnHelper } from '@tanstack/react-table';
-import {
-    Building,
-    CircleEllipsis,
-    Pencil,
-    Store,
-    Warehouse,
-} from 'lucide-react';
+import { Building, CircleEllipsis, Pencil, Store, Warehouse } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { SubmitEvent } from 'react';
 
@@ -14,14 +8,14 @@ import type { DataTableFeatures } from '@/components/co-owners/data-table-featur
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -34,313 +28,251 @@ import type { UnitShare } from '@/types/properties/co-owners';
 const columnHelper = createColumnHelper<DataTableFeatures, UnitShare>();
 
 type CoefficientEditCellProps = {
-    unit: UnitShare;
-    propertyId: number;
-    ratePerPoint: number;
-    t: TFunction;
+  unit: UnitShare;
+  propertyId: number;
+  ratePerPoint: number;
+  t: TFunction;
 };
 
-function CoefficientEditCell({
-    unit,
-    propertyId,
-    ratePerPoint,
-    t,
-}: CoefficientEditCellProps) {
-    const [open, setOpen] = useState(false);
+function CoefficientEditCell({ unit, propertyId, ratePerPoint, t }: CoefficientEditCellProps) {
+  const [open, setOpen] = useState(false);
 
-    const { data, setData, patch, processing, errors, reset } = useForm({
-        weight_coefficient: unit.coefficient,
-    });
+  const { data, setData, patch, processing, errors, reset } = useForm({
+    weight_coefficient: unit.coefficient,
+  });
 
-    useEffect(() => {
-        if (!open) {
-            setData('weight_coefficient', unit.coefficient);
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [unit.coefficient, open]);
-
-    function handleSubmit(event: SubmitEvent) {
-        event.preventDefault();
-
-        patch(
-            `/properties/${propertyId}/co-owners/units/${unit.unitId}/coefficient`,
-            {
-                preserveScroll: true,
-                onSuccess: () => setOpen(false),
-            },
-        );
+  useEffect(() => {
+    if (!open) {
+      setData('weight_coefficient', unit.coefficient);
     }
 
-    const previewAnnual = ratePerPoint * data.weight_coefficient;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unit.coefficient, open]);
 
-    const previewMonthly = previewAnnual / 12;
+  function handleSubmit(event: SubmitEvent) {
+    event.preventDefault();
 
-    return (
-        <Dialog
-            open={open}
-            onOpenChange={(next) => {
-                setOpen(next);
+    patch(`/properties/${propertyId}/co-owners/units/${unit.unitId}/coefficient`, {
+      preserveScroll: true,
+      onSuccess: () => setOpen(false),
+    });
+  }
 
-                if (!next) {
-                    reset();
-                }
-            }}
-        >
-            <form onSubmit={handleSubmit}>
-                <DialogTrigger
-                    render={
-                        <Button variant="ghost" size="icon-sm">
-                            <Pencil />
+  const previewAnnual = ratePerPoint * data.weight_coefficient;
 
-                            <span className="sr-only">
-                                {t('edit_dialog.trigger_sr_label', {
-                                    unit: unit.unit,
-                                })}
-                            </span>
-                        </Button>
-                    }
-                />
+  const previewMonthly = previewAnnual / 12;
 
-                <DialogContent className="sm:max-w-sm">
-                    <DialogHeader>
-                        <DialogTitle>{t('edit_dialog.title')}</DialogTitle>
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
 
-                        <DialogDescription>
-                            {t('edit_dialog.description', {
-                                unit: unit.unit,
-                            })}
-                        </DialogDescription>
-                    </DialogHeader>
+        if (!next) {
+          reset();
+        }
+      }}
+    >
+      <form onSubmit={handleSubmit}>
+        <DialogTrigger
+          render={
+            <Button variant="ghost" size="icon-sm">
+              <Pencil />
 
-                    <FieldGroup>
-                        <Field>
-                            <Label htmlFor={`coefficient-${unit.id}`}>
-                                {t('edit_dialog.weight_coefficient_label')}
-                            </Label>
+              <span className="sr-only">
+                {t('edit_dialog.trigger_sr_label', {
+                  unit: unit.unit,
+                })}
+              </span>
+            </Button>
+          }
+        />
 
-                            <Input
-                                id={`coefficient-${unit.id}`}
-                                name="weight_coefficient"
-                                type="number"
-                                step="0.1"
-                                min="0.01"
-                                value={data.weight_coefficient}
-                                onChange={(event) =>
-                                    setData(
-                                        'weight_coefficient',
-                                        Number(event.target.value),
-                                    )
-                                }
-                            />
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t('edit_dialog.title')}</DialogTitle>
 
-                            {errors.weight_coefficient && (
-                                <p className="text-sm text-destructive">
-                                    {errors.weight_coefficient}
-                                </p>
-                            )}
-                        </Field>
-                    </FieldGroup>
+            <DialogDescription>
+              {t('edit_dialog.description', {
+                unit: unit.unit,
+              })}
+            </DialogDescription>
+          </DialogHeader>
 
-                    <p className="text-sm text-muted-foreground">
-                        {t('edit_dialog.coefficient_hint')}
-                    </p>
+          <FieldGroup>
+            <Field>
+              <Label htmlFor={`coefficient-${unit.id}`}>
+                {t('edit_dialog.weight_coefficient_label')}
+              </Label>
 
-                    <Item variant="muted">
-                        <ItemContent>
-                            <ItemTitle>
-                                {t('edit_dialog.recalculated_impact.title')}
-                            </ItemTitle>
+              <Input
+                id={`coefficient-${unit.id}`}
+                name="weight_coefficient"
+                type="number"
+                step="0.1"
+                min="0.01"
+                value={data.weight_coefficient}
+                onChange={(event) => setData('weight_coefficient', Number(event.target.value))}
+              />
 
-                            <div className="text-sm leading-normal text-muted-foreground">
-                                <div className="flex justify-between">
-                                    <span>
-                                        {t(
-                                            'edit_dialog.recalculated_impact.annual_share_label',
-                                        )}
-                                    </span>
+              {errors.weight_coefficient && (
+                <p className="text-sm text-destructive">{errors.weight_coefficient}</p>
+              )}
+            </Field>
+          </FieldGroup>
 
-                                    <span className="font-medium text-foreground">
-                                        {formatCurrency(previewAnnual)}
-                                    </span>
-                                </div>
+          <p className="text-sm text-muted-foreground">{t('edit_dialog.coefficient_hint')}</p>
 
-                                <div className="flex justify-between">
-                                    <span>
-                                        {t(
-                                            'edit_dialog.recalculated_impact.monthly_label',
-                                        )}
-                                    </span>
+          <Item variant="muted">
+            <ItemContent>
+              <ItemTitle>{t('edit_dialog.recalculated_impact.title')}</ItemTitle>
 
-                                    <span className="font-medium text-foreground">
-                                        {formatCurrency(previewMonthly)}
-                                    </span>
-                                </div>
-                            </div>
-                        </ItemContent>
-                    </Item>
+              <div className="text-sm leading-normal text-muted-foreground">
+                <div className="flex justify-between">
+                  <span>{t('edit_dialog.recalculated_impact.annual_share_label')}</span>
 
-                    <DialogFooter>
-                        <DialogClose
-                            render={
-                                <Button variant="outline">
-                                    {t('edit_dialog.cancel_button')}
-                                </Button>
-                            }
-                        />
+                  <span className="font-medium text-foreground">
+                    {formatCurrency(previewAnnual)}
+                  </span>
+                </div>
 
-                        <Button type="submit" disabled={processing}>
-                            {processing
-                                ? t('edit_dialog.applying_button')
-                                : t('edit_dialog.apply_button')}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </form>
-        </Dialog>
-    );
+                <div className="flex justify-between">
+                  <span>{t('edit_dialog.recalculated_impact.monthly_label')}</span>
+
+                  <span className="font-medium text-foreground">
+                    {formatCurrency(previewMonthly)}
+                  </span>
+                </div>
+              </div>
+            </ItemContent>
+          </Item>
+
+          <DialogFooter>
+            <DialogClose
+              render={<Button variant="outline">{t('edit_dialog.cancel_button')}</Button>}
+            />
+
+            <Button type="submit" disabled={processing}>
+              {processing ? t('edit_dialog.applying_button') : t('edit_dialog.apply_button')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </form>
+    </Dialog>
+  );
 }
 
-export function buildColumns(
-    propertyId: number,
-    ratePerPoint: number,
-    t: TFunction,
-) {
-    return columnHelper.columns([
-        columnHelper.accessor('unit', {
-            header: t('columns.unit'),
+export function buildColumns(propertyId: number, ratePerPoint: number, t: TFunction) {
+  return columnHelper.columns([
+    columnHelper.accessor('unit', {
+      header: t('columns.unit'),
 
-            cell: ({ row }) => (
-                <span className="font-medium">{row.original.unit}</span>
-            ),
-        }),
+      cell: ({ row }) => <span className="font-medium">{row.original.unit}</span>,
+    }),
 
-        columnHelper.accessor('type', {
-            header: t('columns.type'),
+    columnHelper.accessor('type', {
+      header: t('columns.type'),
 
-            cell: ({ row }) => {
-                const type = row.original.type;
+      cell: ({ row }) => {
+        const type = row.original.type;
 
-                if (type === 'residential') {
-                    return (
-                        <Badge
-                            variant="outline"
-                            className="border-blue-600 text-blue-500"
-                        >
-                            <Building />
+        if (type === 'residential') {
+          return (
+            <Badge variant="outline" className="border-blue-600 text-blue-500">
+              <Building />
 
-                            {t('unit_types.residential')}
-                        </Badge>
-                    );
-                }
+              {t('unit_types.residential')}
+            </Badge>
+          );
+        }
 
-                if (type === 'commercial') {
-                    return (
-                        <Badge
-                            variant="outline"
-                            className="border-purple-600 text-purple-500"
-                        >
-                            <Store />
+        if (type === 'commercial') {
+          return (
+            <Badge variant="outline" className="border-purple-600 text-purple-500">
+              <Store />
 
-                            {t('unit_types.commercial')}
-                        </Badge>
-                    );
-                }
+              {t('unit_types.commercial')}
+            </Badge>
+          );
+        }
 
-                if (type === 'storage') {
-                    return (
-                        <Badge
-                            variant="outline"
-                            className="border-yellow-600 text-yellow-500"
-                        >
-                            <Warehouse />
+        if (type === 'storage') {
+          return (
+            <Badge variant="outline" className="border-yellow-600 text-yellow-500">
+              <Warehouse />
 
-                            {t('unit_types.storage')}
-                        </Badge>
-                    );
-                }
+              {t('unit_types.storage')}
+            </Badge>
+          );
+        }
 
-                return (
-                    <Badge variant="secondary">
-                        <CircleEllipsis />
+        return (
+          <Badge variant="secondary">
+            <CircleEllipsis />
 
-                        {t('unit_types.other')}
-                    </Badge>
-                );
-            },
-        }),
+            {t('unit_types.other')}
+          </Badge>
+        );
+      },
+    }),
 
-        columnHelper.accessor('coOwner', {
-            header: t('columns.co_owner'),
+    columnHelper.accessor('coOwner', {
+      header: t('columns.co_owner'),
 
-            cell: ({ row }) => <span>{row.original.coOwner}</span>,
-        }),
+      cell: ({ row }) => <span>{row.original.coOwner}</span>,
+    }),
 
-        columnHelper.accessor('coefficient', {
-            header: t('columns.coefficient'),
+    columnHelper.accessor('coefficient', {
+      header: t('columns.coefficient'),
 
-            cell: ({ row }) => (
-                <Badge variant="outline">
-                    ×{row.original.coefficient.toFixed(1)}
-                </Badge>
-            ),
-        }),
+      cell: ({ row }) => <Badge variant="outline">×{row.original.coefficient.toFixed(1)}</Badge>,
+    }),
 
-        columnHelper.accessor('quotaYear', {
-            header: t('columns.quota_year'),
+    columnHelper.accessor('quotaYear', {
+      header: t('columns.quota_year'),
 
-            cell: ({ row }) => (
-                <span className="font-medium">
-                    {formatCurrency(row.original.quotaYear)}
-                </span>
-            ),
-        }),
+      cell: ({ row }) => (
+        <span className="font-medium">{formatCurrency(row.original.quotaYear)}</span>
+      ),
+    }),
 
-        columnHelper.accessor('quotaMonth', {
-            header: t('columns.quota_month'),
+    columnHelper.accessor('quotaMonth', {
+      header: t('columns.quota_month'),
 
-            cell: ({ row }) => (
-                <span className="text-muted-foreground">
-                    {formatCurrency(row.original.quotaMonth)}
-                </span>
-            ),
-        }),
+      cell: ({ row }) => (
+        <span className="text-muted-foreground">{formatCurrency(row.original.quotaMonth)}</span>
+      ),
+    }),
 
-        columnHelper.accessor('status', {
-            header: t('columns.status'),
+    columnHelper.accessor('status', {
+      header: t('columns.status'),
 
-            cell: ({ row }) => {
-                const status = row.original.status;
+      cell: ({ row }) => {
+        const status = row.original.status;
 
-                if (status === 'syndic') {
-                    return <Badge>{t('status_values.syndic')}</Badge>;
-                }
+        if (status === 'syndic') {
+          return <Badge>{t('status_values.syndic')}</Badge>;
+        }
 
-                return (
-                    <Badge variant="outline">
-                        {t('status_values.co_owner')}
-                    </Badge>
-                );
-            },
-        }),
+        return <Badge variant="outline">{t('status_values.co_owner')}</Badge>;
+      },
+    }),
 
-        columnHelper.display({
-            id: 'actions',
+    columnHelper.display({
+      id: 'actions',
 
-            header: () => (
-                <div className="text-right">{t('columns.actions')}</div>
-            ),
+      header: () => <div className="text-right">{t('columns.actions')}</div>,
 
-            cell: ({ row }) => (
-                <div className="flex justify-end">
-                    <CoefficientEditCell
-                        unit={row.original}
-                        propertyId={propertyId}
-                        ratePerPoint={ratePerPoint}
-                        t={t}
-                    />
-                </div>
-            ),
-        }),
-    ]);
+      cell: ({ row }) => (
+        <div className="flex justify-end">
+          <CoefficientEditCell
+            unit={row.original}
+            propertyId={propertyId}
+            ratePerPoint={ratePerPoint}
+            t={t}
+          />
+        </div>
+      ),
+    }),
+  ]);
 }

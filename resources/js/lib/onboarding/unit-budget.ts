@@ -4,20 +4,18 @@
  * or <= 0) are treated as contributing 0 to both the sum and their own share.
  */
 export function calculateUnitBudgets(
-    weightCoefficients: Array<number | undefined>,
-    totalBudget: number,
+  weightCoefficients: Array<number | undefined>,
+  totalBudget: number,
 ): number[] {
-    const normalized = weightCoefficients.map((coefficient) =>
-        typeof coefficient === 'number' && coefficient > 0 ? coefficient : 0,
-    );
+  const normalized = weightCoefficients.map((coefficient) =>
+    typeof coefficient === 'number' && coefficient > 0 ? coefficient : 0,
+  );
 
-    const sumOfCoefficients = normalized.reduce((sum, value) => sum + value, 0);
+  const sumOfCoefficients = normalized.reduce((sum, value) => sum + value, 0);
 
-    if (sumOfCoefficients === 0 || totalBudget <= 0) {
-        return normalized.map(() => 0);
-    }
+  if (sumOfCoefficients === 0 || totalBudget <= 0) {
+    return normalized.map(() => 0);
+  }
 
-    return normalized.map(
-        (coefficient) => (coefficient / sumOfCoefficients) * totalBudget,
-    );
+  return normalized.map((coefficient) => (coefficient / sumOfCoefficients) * totalBudget);
 }

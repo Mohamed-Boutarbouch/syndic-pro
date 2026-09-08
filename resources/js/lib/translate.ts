@@ -19,26 +19,23 @@ export type TranslationParams = Record<string, string | number>;
  * Laravel applies automatically so translators don't need to hand-author
  * every case variant.
  */
-export function applyReplacements(
-    line: string,
-    params: TranslationParams = {},
-): string {
-    let result = line;
+export function applyReplacements(line: string, params: TranslationParams = {}): string {
+  let result = line;
 
-    for (const [key, value] of Object.entries(params)) {
-        const stringValue = String(value);
+  for (const [key, value] of Object.entries(params)) {
+    const stringValue = String(value);
 
-        result = result
-            .replaceAll(`:${key.toUpperCase()}`, stringValue.toUpperCase())
-            .replaceAll(`:${capitalize(key)}`, capitalize(stringValue))
-            .replaceAll(`:${key}`, stringValue);
-    }
+    result = result
+      .replaceAll(`:${key.toUpperCase()}`, stringValue.toUpperCase())
+      .replaceAll(`:${capitalize(key)}`, capitalize(stringValue))
+      .replaceAll(`:${key}`, stringValue);
+  }
 
-    return result;
+  return result;
 }
 
 function capitalize(value: string): string {
-    return value.length > 0 ? value[0].toUpperCase() + value.slice(1) : value;
+  return value.length > 0 ? value[0].toUpperCase() + value.slice(1) : value;
 }
 
 /**
@@ -52,48 +49,44 @@ function capitalize(value: string): string {
  * `[2,*]` means "2 or more" — `*` as a range bound means unbounded.
  */
 export function choice(line: string, count: number): string {
-    const segments = line.split('|');
+  const segments = line.split('|');
 
-    if (segments.length === 1) {
-        return segments[0];
+  if (segments.length === 1) {
+    return segments[0];
+  }
+
+  for (const segment of segments) {
+    const trimmed = segment.trim();
+    const match = trimmed.match(/^(?:\{(\d+)\}|\[(\d+),(\*|\d+)\])\s*(.*)$/s);
+
+    if (!match) {
+      continue;
     }
 
-    for (const segment of segments) {
-        const trimmed = segment.trim();
-        const match = trimmed.match(
-            /^(?:\{(\d+)\}|\[(\d+),(\*|\d+)\])\s*(.*)$/s,
-        );
+    const [, exact, rangeStart, rangeEnd, text] = match;
 
-        if (!match) {
-            continue;
-        }
-
-        const [, exact, rangeStart, rangeEnd, text] = match;
-
-        if (exact !== undefined && count === Number(exact)) {
-            return text;
-        }
-
-        if (rangeStart !== undefined) {
-            const start = Number(rangeStart);
-            const end = rangeEnd === '*' ? Infinity : Number(rangeEnd);
-
-            if (count >= start && count <= end) {
-                return text;
-            }
-        }
+    if (exact !== undefined && count === Number(exact)) {
+      return text;
     }
 
-    // Fallback: standard English singular/plural (segment 0 = singular).
-    // Flagged assumption — Laravel's own fallback when no range matches
-    // uses zero-indexed segments modulo locale plural rules; for the
-    // three locales this project ships (en/fr/ar) the simple
-    // singular-at-1-else-plural heuristic covers the untagged case.
-    const fallbackIndex = count === 1 ? 0 : Math.min(1, segments.length - 1);
+    if (rangeStart !== undefined) {
+      const start = Number(rangeStart);
+      const end = rangeEnd === '*' ? Infinity : Number(rangeEnd);
 
-    return segments[fallbackIndex]
-        .replace(/^(?:\{\d+\}|\[[^\]]+\])\s*/, '')
-        .trim();
+      if (count >= start && count <= end) {
+        return text;
+      }
+    }
+  }
+
+  // Fallback: standard English singular/plural (segment 0 = singular).
+  // Flagged assumption — Laravel's own fallback when no range matches
+  // uses zero-indexed segments modulo locale plural rules; for the
+  // three locales this project ships (en/fr/ar) the simple
+  // singular-at-1-else-plural heuristic covers the untagged case.
+  const fallbackIndex = count === 1 ? 0 : Math.min(1, segments.length - 1);
+
+  return segments[fallbackIndex].replace(/^(?:\{\d+\}|\[[^\]]+\])\s*/, '').trim();
 }
 
 /**
@@ -102,13 +95,13 @@ export function choice(line: string, count: number): string {
  * strings are visible (not blank) during development.
  */
 export function translate(
-    translations: TranslationMap,
-    key: string,
-    params: TranslationParams = {},
+  translations: TranslationMap,
+  key: string,
+  params: TranslationParams = {},
 ): string {
-    const line = translations[key] ?? key;
+  const line = translations[key] ?? key;
 
-    return applyReplacements(line, params);
+  return applyReplacements(line, params);
 }
 
 /**
@@ -117,13 +110,13 @@ export function translate(
  * count argument, matching trans_choice's behavior).
  */
 export function translateChoice(
-    translations: TranslationMap,
-    key: string,
-    count: number,
-    params: TranslationParams = {},
+  translations: TranslationMap,
+  key: string,
+  count: number,
+  params: TranslationParams = {},
 ): string {
-    const line = translations[key] ?? key;
-    const selected = choice(line, count);
+  const line = translations[key] ?? key;
+  const selected = choice(line, count);
 
-    return applyReplacements(selected, { count, ...params });
+  return applyReplacements(selected, { count, ...params });
 }

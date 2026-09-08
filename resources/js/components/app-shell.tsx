@@ -4,24 +4,20 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import type { AppVariant } from '@/types';
 
 type Props = {
-    children: ReactNode;
-    variant?: AppVariant;
+  children: ReactNode;
+  variant?: AppVariant;
 };
 
 type SharedProps = {
-    sidebarOpen: boolean;
+  sidebarOpen: boolean;
 };
 
 export function AppShell({ children, variant = 'sidebar' }: Props) {
-    const { sidebarOpen } = usePage<SharedProps>().props;
+  const { sidebarOpen } = usePage<SharedProps>().props;
 
-    if (variant === 'header') {
-        return (
-            <div className="flex min-h-screen w-full flex-col">{children}</div>
-        );
-    }
+  if (variant === 'header') {
+    return <div className="flex min-h-screen w-full flex-col">{children}</div>;
+  }
 
-    return (
-        <SidebarProvider defaultOpen={sidebarOpen}>{children}</SidebarProvider>
-    );
+  return <SidebarProvider defaultOpen={sidebarOpen}>{children}</SidebarProvider>;
 }
