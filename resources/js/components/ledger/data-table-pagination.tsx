@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useTranslation } from '@/hooks/use-translation';
 
 interface DataTablePaginationProps<TData extends RowData> {
   table: ReactTable<DataTableFeatures, TData>;
@@ -19,14 +20,20 @@ interface DataTablePaginationProps<TData extends RowData> {
 export function DataTablePagination<TData extends RowData>({
   table,
 }: DataTablePaginationProps<TData>) {
+  const { t, tChoice } = useTranslation('properties.ledger.pagination');
+
+  const totalRows = table.getFilteredRowModel().rows.length;
+  const currentPage = table.state.pagination.pageIndex + 1;
+  const totalPages = table.getPageCount();
+
   return (
     <div className="mt-4 flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredRowModel().rows.length} row(s) total.
-      </div>
+      <div className="flex-1 text-sm text-muted-foreground">{tChoice('rows_total', totalRows)}</div>
+
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+          <p className="text-sm font-medium">{t('rows_per_page')}</p>
+
           <Select
             value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => {
@@ -36,6 +43,7 @@ export function DataTablePagination<TData extends RowData>({
             <SelectTrigger className="h-8 w-17.5">
               <SelectValue placeholder={table.state.pagination.pageSize} />
             </SelectTrigger>
+
             <SelectContent side="top">
               {[10, 20, 25, 30, 40, 50].map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
@@ -45,9 +53,14 @@ export function DataTablePagination<TData extends RowData>({
             </SelectContent>
           </Select>
         </div>
+
         <div className="flex w-25 items-center justify-center text-sm font-medium">
-          Page {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
+          {t('page_of', {
+            page: currentPage,
+            count: totalPages,
+          })}
         </div>
+
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
@@ -56,9 +69,10 @@ export function DataTablePagination<TData extends RowData>({
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Go to first page</span>
+            <span className="sr-only">{t('first_page')}</span>
             <ChevronsLeft />
           </Button>
+
           <Button
             variant="outline"
             size="icon"
@@ -66,9 +80,10 @@ export function DataTablePagination<TData extends RowData>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">{t('previous_page')}</span>
             <ChevronLeft />
           </Button>
+
           <Button
             variant="outline"
             size="icon"
@@ -76,9 +91,10 @@ export function DataTablePagination<TData extends RowData>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">{t('next_page')}</span>
             <ChevronRight />
           </Button>
+
           <Button
             variant="outline"
             size="icon"
@@ -86,7 +102,7 @@ export function DataTablePagination<TData extends RowData>({
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
-            <span className="sr-only">Go to last page</span>
+            <span className="sr-only">{t('last_page')}</span>
             <ChevronsRight />
           </Button>
         </div>

@@ -1,114 +1,137 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowUpDown } from 'lucide-react';
+import { useMemo } from 'react';
 
 import type { DataTableFeatures } from '@/components/ledger/data-table-features';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 
 import type { PaymentLog } from '@/types/properties/ledger';
 
 const columnHelper = createColumnHelper<DataTableFeatures, PaymentLog>();
 
-export const columns = columnHelper.columns([
-  columnHelper.accessor('date', {
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Date
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const date = row.getValue<string>('date');
+export function useColumns() {
+  const { t: columnsT } = useTranslation('properties.ledger.columns');
+  const { t: paymentTypeT } = useTranslation('properties.ledger.payment_type');
 
-      return format(new Date(date), 'dd/MM/yyyy');
-    },
-  }),
+  return useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('date', {
+          header: ({ column }) => (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
+              {columnsT('date')}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          ),
 
-  columnHelper.accessor('coOwner', {
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Co-Owner
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const coOwner = row.getValue<string>('coOwner');
+          cell: ({ row }) => {
+            const date = row.getValue<string>('date');
 
-      const initials = coOwner
-        .split(' ')
-        .map((word) => word[0])
-        .join('')
-        .slice(0, 2)
-        .toUpperCase();
+            return format(new Date(date), 'dd/MM/yyyy');
+          },
+        }),
 
-      return (
-        <div className="flex items-center gap-2">
-          <Avatar className="size-7">
-            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-          </Avatar>
+        columnHelper.accessor('coOwner', {
+          header: ({ column }) => (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            >
+              {columnsT('co_owner')}
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          ),
 
-          <span>{coOwner}</span>
-        </div>
-      );
-    },
-  }),
+          cell: ({ row }) => {
+            const coOwner = row.getValue<string>('coOwner');
 
-  columnHelper.accessor('period', {
-    header: 'Period',
-    cell: ({ row }) => (
-      <span className="text-muted-foreground">{row.getValue<string>('period')}</span>
-    ),
-  }),
+            const initials = coOwner
+              .split(' ')
+              .map((word) => word[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase();
 
-  columnHelper.accessor('type', {
-    header: 'Type',
-    cell: ({ row }) => {
-      const type = row.getValue<PaymentLog['type']>('type');
+            return (
+              <div className="flex items-center gap-2">
+                <Avatar className="size-7">
+                  <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+                </Avatar>
 
-      return (
-        <Badge
-          variant="outline"
-          className={
-            type === 'full'
-              ? 'border-green-600 text-green-600'
-              : 'border-orange-600 text-orange-600'
-          }
-        >
-          {type === 'full' ? 'Full' : 'Partial'}
-        </Badge>
-      );
-    },
-  }),
+                <span>{coOwner}</span>
+              </div>
+            );
+          },
+        }),
 
-  columnHelper.accessor('amount', {
-    header: ({ column }) => (
-      <div className="text-right">
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Amount
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-    ),
-    cell: ({ row }) => {
-      const amount = row.getValue<number>('amount');
+        columnHelper.accessor('period', {
+          header: () => columnsT('period'),
 
-      return <div className="text-right font-medium">{formatCurrency(amount)}</div>;
-    },
-  }),
+          cell: ({ row }) => (
+            <span className="text-muted-foreground">{row.getValue<string>('period')}</span>
+          ),
+        }),
 
-  columnHelper.accessor('notes', {
-    header: 'Notes',
-    cell: ({ row }) => {
-      const notes = row.getValue<string>('notes');
+        columnHelper.accessor('type', {
+          header: () => columnsT('type'),
 
-      return <span className="text-muted-foreground">{notes || '—'}</span>;
-    },
-  }),
-]);
+          cell: ({ row }) => {
+            const type = row.getValue<PaymentLog['type']>('type');
+
+            return (
+              <Badge
+                variant="outline"
+                className={
+                  type === 'full'
+                    ? 'border-green-600 text-green-600'
+                    : 'border-orange-600 text-orange-600'
+                }
+              >
+                {paymentTypeT(type)}
+              </Badge>
+            );
+          },
+        }),
+
+        columnHelper.accessor('amount', {
+          header: ({ column }) => (
+            <div className="text-right">
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+              >
+                {columnsT('amount')}
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          ),
+
+          cell: ({ row }) => {
+            const amount = row.getValue<number>('amount');
+
+            return <div className="text-right font-medium">{formatCurrency(amount)}</div>;
+          },
+        }),
+
+        columnHelper.accessor('notes', {
+          header: () => columnsT('notes'),
+
+          cell: ({ row }) => {
+            const notes = row.getValue<string>('notes');
+
+            return <span className="text-muted-foreground">{notes || '—'}</span>;
+          },
+        }),
+      ]),
+    [columnsT, paymentTypeT],
+  );
+}

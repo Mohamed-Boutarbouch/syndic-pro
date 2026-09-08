@@ -6,7 +6,7 @@ import { useState } from 'react';
 import store from '@/actions/App/Http/Controllers/StorePaymentController';
 
 import { CoOwnerSelect } from '@/components/ledger/co-owner-select';
-import { columns } from '@/components/ledger/columns';
+import { useColumns } from '@/components/ledger/columns';
 import { DataTable } from '@/components/ledger/data-table';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -39,6 +39,7 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnerOption, PaymentLog } from '@/types/properties/ledger';
 
 type PaymentJournalProps = {
@@ -54,6 +55,8 @@ export function PaymentJournal({
   payments,
   transactionCount,
 }: PaymentJournalProps) {
+  const { t, tChoice } = useTranslation('properties.ledger.payment_journal');
+  const columns = useColumns();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
 
@@ -83,10 +86,10 @@ export function PaymentJournal({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Notebook />
-          Payment Journal
+          {t('title')}
         </CardTitle>
 
-        <CardDescription>{transactionCount} transactions shown</CardDescription>
+        <CardDescription>{tChoice('subtitle', transactionCount)}</CardDescription>
 
         <CardAction>
           <Dialog open={open} onOpenChange={setOpen}>
@@ -94,7 +97,7 @@ export function PaymentJournal({
               render={
                 <Button>
                   <Plus data-icon="inline-start" />
-                  Log Payment
+                  {t('log_payment_button')}
                 </Button>
               }
             />
@@ -103,10 +106,10 @@ export function PaymentJournal({
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <Plus />
-                  Log Payment
+                  {t('dialog.title')}
                 </DialogTitle>
 
-                <DialogDescription>Record a new contribution</DialogDescription>
+                <DialogDescription>{t('dialog.description')}</DialogDescription>
               </DialogHeader>
 
               <FieldGroup>
@@ -120,14 +123,14 @@ export function PaymentJournal({
 
                 <div className="flex justify-between gap-4">
                   <Field>
-                    <FieldLabel htmlFor="amount">Amount (MAD)</FieldLabel>
+                    <FieldLabel htmlFor="amount">{t('dialog.amount_label')}</FieldLabel>
 
                     <Input
                       type="number"
                       step="1"
                       id="amount"
                       name="amount"
-                      placeholder="ex: 500"
+                      placeholder={t('dialog.amount_placeholder')}
                       value={data.amount}
                       onChange={(event) => setData('amount', event.target.value)}
                     />
@@ -136,7 +139,7 @@ export function PaymentJournal({
                   </Field>
 
                   <Field>
-                    <FieldLabel htmlFor="date-picker-simple">Date</FieldLabel>
+                    <FieldLabel htmlFor="date-picker-simple">{t('dialog.date_label')}</FieldLabel>
 
                     <Popover>
                       <PopoverTrigger
@@ -146,7 +149,11 @@ export function PaymentJournal({
                             id="date-picker-simple"
                             className="justify-start font-normal"
                           >
-                            {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                            {date ? (
+                              format(date, 'PPP')
+                            ) : (
+                              <span>{t('dialog.date_placeholder')}</span>
+                            )}
                           </Button>
                         }
                       />
@@ -175,9 +182,9 @@ export function PaymentJournal({
                 <FieldLabel htmlFor="partial-payment">
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <FieldTitle>Partial Payment</FieldTitle>
+                      <FieldTitle>{t('dialog.partial_payment.title')}</FieldTitle>
 
-                      <FieldDescription>Balance will be completed later</FieldDescription>
+                      <FieldDescription>{t('dialog.partial_payment.description')}</FieldDescription>
                     </FieldContent>
 
                     <Switch
@@ -189,11 +196,11 @@ export function PaymentJournal({
                 </FieldLabel>
 
                 <Field>
-                  <FieldLabel htmlFor="notes">Notes</FieldLabel>
+                  <FieldLabel htmlFor="notes">{t('dialog.notes_label')}</FieldLabel>
 
                   <Textarea
                     id="notes"
-                    placeholder="Optional remarks..."
+                    placeholder={t('dialog.notes_placeholder')}
                     value={data.notes}
                     onChange={(event) => setData('notes', event.target.value)}
                   />
@@ -202,11 +209,11 @@ export function PaymentJournal({
 
               <div className="mt-4 flex justify-end gap-2">
                 <Button variant="secondary" onClick={() => setOpen(false)} disabled={processing}>
-                  Cancel
+                  {t('dialog.cancel_button')}
                 </Button>
 
                 <Button onClick={submit} disabled={processing}>
-                  {processing ? 'Saving…' : 'Save Payment'}
+                  {processing ? t('dialog.saving_button') : t('dialog.save_button')}
                 </Button>
               </div>
             </DialogContent>

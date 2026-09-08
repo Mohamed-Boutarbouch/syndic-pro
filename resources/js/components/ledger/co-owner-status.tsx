@@ -15,6 +15,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '@/co
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { CoOwnerStatusData } from '@/types/properties/ledger';
 
@@ -31,7 +32,7 @@ function getTotalPaid(coOwner: CoOwnerStatusData) {
 function getStatus(paid: number, quota: number) {
   if (paid >= quota) {
     return {
-      label: 'Paid',
+      key: 'paid',
       icon: CheckCircle2,
       className: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300',
     };
@@ -39,20 +40,22 @@ function getStatus(paid: number, quota: number) {
 
   if (paid > 0) {
     return {
-      label: 'Partial',
+      key: 'partial',
       icon: Clock,
       className: 'bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300',
     };
   }
 
   return {
-    label: 'Unpaid',
+    key: 'unpaid',
     icon: AlertCircle,
     className: 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
   };
 }
 
 function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
+  const { t } = useTranslation('properties.ledger.co_owner_status');
+
   const paid = getTotalPaid(coOwner);
 
   const percentage =
@@ -84,13 +87,20 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
 
               <Badge variant="outline" className={status.className}>
                 <StatusIcon data-icon="inline-start" />
-                {status.label}
+                {t(`status.${status.key}`)}
               </Badge>
             </div>
 
             <span className="shrink-0 text-xs text-muted-foreground">
-              {formatCurrency(paid)}/{formatCurrency(coOwner.quota)}
-              {remaining > 0 && ` -${formatCurrency(remaining)}`}
+              {t('balance_summary', {
+                paid: formatCurrency(paid),
+                quota: formatCurrency(coOwner.quota),
+              })}
+
+              {remaining > 0 &&
+                ` ${t('balance_remaining_suffix', {
+                  amount: formatCurrency(remaining),
+                })}`}
             </span>
           </div>
 
@@ -115,17 +125,25 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
           </DialogTitle>
 
           <DialogDescription>
-            {coOwner.unit} · Quota: {formatCurrency(coOwner.quota)}
-            /yr
+            {t('detail_dialog.quota_label', {
+              unit: coOwner.unit,
+              amount: formatCurrency(coOwner.quota),
+            })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="mt-6">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Progress</span>
+            <span className="text-sm text-muted-foreground">
+              {t('detail_dialog.progress_label')}
+            </span>
 
             <span className="text-sm font-medium">
-              {formatCurrency(paid)} / {formatCurrency(coOwner.quota)} ({percentage}%)
+              {t('detail_dialog.progress_summary', {
+                paid: formatCurrency(paid),
+                quota: formatCurrency(coOwner.quota),
+                percent: percentage,
+              })}
             </span>
           </div>
 
@@ -142,7 +160,7 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
                   <ItemContent>
                     <ItemTitle>{payment.date}</ItemTitle>
 
-                    <ItemDescription>Payment received</ItemDescription>
+                    <ItemDescription>{t('detail_dialog.payment_received')}</ItemDescription>
                   </ItemContent>
 
                   <ItemActions>
@@ -152,7 +170,7 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
               ))
             ) : (
               <div className="py-8 text-center text-sm text-muted-foreground">
-                No payments recorded.
+                {t('detail_dialog.empty_state')}
               </div>
             )}
           </div>
@@ -162,16 +180,15 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
   );
 }
 
-export function CoOwnerStatus({
-  coOwners,
-  title = 'Status by Co-Owner',
-  description = 'Click to view payment details',
-}: CoOwnerStatusProps) {
+export function CoOwnerStatus({ coOwners, title, description }: CoOwnerStatusProps) {
+  const { t } = useTranslation('properties.ledger.co_owner_status');
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle>{title ?? t('title')}</CardTitle>
+
+        <CardDescription>{description ?? t('description')}</CardDescription>
       </CardHeader>
 
       <CardContent>

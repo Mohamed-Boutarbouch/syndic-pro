@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useTranslation } from '@/hooks/use-translation';
 
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<DataTableFeatures, TData>[];
@@ -30,6 +31,9 @@ interface DataTableProps<TData extends RowData> {
 }
 
 export function DataTable<TData extends RowData>({ columns, data }: DataTableProps<TData>) {
+  const { t } = useTranslation('properties.ledger.data_table');
+  const { t: paymentTypeT } = useTranslation('properties.ledger.payment_type');
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -45,13 +49,8 @@ export function DataTable<TData extends RowData>({ columns, data }: DataTablePro
     },
   });
 
-  const typeLabels = {
-    all: 'All Types',
-    full: 'Full',
-    partial: 'Partial',
-  } as const;
-
-  const typeValue = (table.getColumn('type')?.getFilterValue() as keyof typeof typeLabels) ?? 'all';
+  const typeValue =
+    (table.getColumn('type')?.getFilterValue() as 'all' | 'full' | 'partial') ?? 'all';
 
   const coOwnerOptions = useMemo(() => {
     const names = new Set<string>();
@@ -81,14 +80,14 @@ export function DataTable<TData extends RowData>({ columns, data }: DataTablePro
             <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
 
             <Input
-              placeholder="Filter co-owners..."
+              placeholder={t('filter_placeholder')}
               value={(table.getColumn('coOwner')?.getFilterValue() as string) ?? ''}
               onChange={(event) => table.getColumn('coOwner')?.setFilterValue(event.target.value)}
               className="pl-9"
             />
           </div>
 
-          <div className="itemsce flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <Select
               value={coOwnerValue}
               onValueChange={(value) => {
@@ -96,11 +95,13 @@ export function DataTable<TData extends RowData>({ columns, data }: DataTablePro
               }}
             >
               <SelectTrigger className="w-48">
-                <SelectValue>{coOwnerValue === 'all' ? 'All Co-owners' : coOwnerValue}</SelectValue>
+                <SelectValue>
+                  {coOwnerValue === 'all' ? t('all_co_owners') : coOwnerValue}
+                </SelectValue>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All Co-owners</SelectItem>
+                <SelectItem value="all">{t('all_co_owners')}</SelectItem>
 
                 {coOwnerOptions.map((name) => (
                   <SelectItem key={name} value={name}>
@@ -117,13 +118,13 @@ export function DataTable<TData extends RowData>({ columns, data }: DataTablePro
               }}
             >
               <SelectTrigger className="w-35">
-                <SelectValue>{typeLabels[typeValue]}</SelectValue>
+                <SelectValue>{paymentTypeT(typeValue)}</SelectValue>
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="full">Full</SelectItem>
-                <SelectItem value="partial">Partial</SelectItem>
+                <SelectItem value="all">{paymentTypeT('all')}</SelectItem>
+                <SelectItem value="full">{paymentTypeT('full')}</SelectItem>
+                <SelectItem value="partial">{paymentTypeT('partial')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -158,7 +159,7 @@ export function DataTable<TData extends RowData>({ columns, data }: DataTablePro
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  -
+                  {t('empty_state')}
                 </TableCell>
               </TableRow>
             )}
