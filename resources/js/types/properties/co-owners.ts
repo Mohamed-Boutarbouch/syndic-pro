@@ -1,9 +1,10 @@
 import type { Property } from '@/types/property';
 
 export type CoOwnersKpis = {
-    apartment: number;
+    residential: number;
     commercial: number;
     storage: number;
+    other: number;
 };
 
 export type UnitShare = {
@@ -12,7 +13,7 @@ export type UnitShare = {
     unitCoOwnerId: number;
     unit: string;
     floor: string | null;
-    type: 'apartment' | 'commercial' | 'storage';
+    type: 'residential' | 'commercial' | 'storage' | 'other';
     coOwner: string;
     coOwnerId: number | null;
     coefficient: number;

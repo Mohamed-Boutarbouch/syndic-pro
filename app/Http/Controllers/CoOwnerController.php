@@ -57,9 +57,10 @@ class CoOwnerController
         })->values();
 
         $kpis = [
-            'apartment' => $units->filter(fn ($unit) => $unit->type->value === 'apartment')->count(),
+            'residential' => $units->filter(fn ($unit) => $unit->type->value === 'residential')->count(),
             'commercial' => $units->filter(fn ($unit) => $unit->type->value === 'commercial')->count(),
             'storage' => $units->filter(fn ($unit) => $unit->type->value === 'storage')->count(),
+            'other' => $units->filter(fn ($unit) => $unit->type->value === 'other')->count(),
         ];
 
         $activeSyndicDesignation = $property->syndicDesignations()

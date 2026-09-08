@@ -40,6 +40,7 @@ import {
 } from '@/components/ui/item';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTranslation } from '@/hooks/use-translation';
 import type {
     ActiveSyndic as ActiveSyndicData,
     TransferCandidate,
@@ -65,6 +66,7 @@ export function ActiveSyndic({
     activeSyndic,
     candidates,
 }: ActiveSyndicProps) {
+    const { t } = useTranslation('properties.co_owners.active_syndic');
     const [open, setOpen] = useState(false);
 
     const { data, setData, post, processing, reset } = useForm({
@@ -98,10 +100,14 @@ export function ActiveSyndic({
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Shield />
-                    Active Syndic
+                    {t('title')}
+                    {/*Active Syndic*/}
                 </CardTitle>
 
-                <CardDescription>Designated property manager</CardDescription>
+                <CardDescription>
+                    {t('description')}
+                    {/*Designated property manager*/}
+                </CardDescription>
 
                 <CardAction>
                     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -112,7 +118,8 @@ export function ActiveSyndic({
                                     disabled={candidates.length === 0}
                                 >
                                     <ArrowRightLeft data-icon="inline-start" />
-                                    Management Transfer
+                                    {t('transfer_button')}
+                                    {/*Management Transfer*/}
                                 </Button>
                             }
                         />
@@ -121,23 +128,37 @@ export function ActiveSyndic({
                             <DialogHeader>
                                 <DialogTitle className="flex items-center gap-2">
                                     <ArrowRightLeft />
-                                    Syndic Management Transfer
+                                    {t('transfer_dialog.title')}
+                                    {/*Syndic Management Transfer*/}
                                 </DialogTitle>
 
                                 <DialogDescription>
-                                    Select the new syndic from active co-owners.
+                                    {t('transfer_dialog.description')}
+                                    {/*Select the new syndic from active co-owners.*/}
                                 </DialogDescription>
                             </DialogHeader>
 
                             <Alert>
                                 <Shield />
 
-                                <AlertTitle>Irreversible Action</AlertTitle>
+                                <AlertTitle>
+                                    {t(
+                                        'transfer_dialog.irreversible_alert.title',
+                                    )}
+                                    {/*Irreversible Action*/}
+                                </AlertTitle>
 
                                 <AlertDescription>
                                     {activeSyndic
-                                        ? `Current syndic ${activeSyndic.name} will lose all administrative rights.`
-                                        : 'This property currently has no active syndic.'}
+                                        ? t(
+                                              'transfer_dialog.irreversible_alert.current_syndic_description',
+                                              {
+                                                  name: activeSyndic.name,
+                                              },
+                                          )
+                                        : t(
+                                              'transfer_dialog.irreversible_alert.no_syndic_description',
+                                          )}
                                 </AlertDescription>
                             </Alert>
 
@@ -174,7 +195,13 @@ export function ActiveSyndic({
                                                         </FieldTitle>
 
                                                         <FieldDescription>
-                                                            Unit {owner.unit}
+                                                            {t(
+                                                                'transfer_dialog.candidate_unit_label',
+                                                                {
+                                                                    unit: owner.unit,
+                                                                },
+                                                            )}
+                                                            {/*Unit {owner.unit}*/}
                                                         </FieldDescription>
                                                     </FieldContent>
 
@@ -195,7 +222,8 @@ export function ActiveSyndic({
                                 <DialogClose
                                     render={
                                         <Button variant="outline">
-                                            Cancel
+                                            {t('transfer_dialog.cancel_button')}
+                                            {/*Cancel*/}
                                         </Button>
                                     }
                                 />
@@ -206,8 +234,10 @@ export function ActiveSyndic({
                                     onClick={handleTransfer}
                                 >
                                     {processing
-                                        ? 'Transferring…'
-                                        : 'Transfer Management'}
+                                        ? t(
+                                              'transfer_dialog.transferring_button',
+                                          )
+                                        : t('transfer_dialog.transfer_button')}
                                 </Button>
                             </DialogFooter>
                         </DialogContent>
@@ -232,7 +262,8 @@ export function ActiveSyndic({
 
                                 <Badge>
                                     <Shield data-icon="inline-start" />
-                                    Syndic
+                                    {t('syndic_badge')}
+                                    {/*Syndic*/}
                                 </Badge>
                             </ItemTitle>
 
@@ -245,7 +276,10 @@ export function ActiveSyndic({
 
                                 {activeSyndic.unit && (
                                     <span className="block">
-                                        Unit: {activeSyndic.unit}
+                                        {t('unit_label', {
+                                            unit: activeSyndic.unit,
+                                        })}
+                                        {/*Unit: {activeSyndic.unit}*/}
                                     </span>
                                 )}
                             </ItemDescription>
@@ -253,7 +287,8 @@ export function ActiveSyndic({
                     </Item>
                 ) : (
                     <p className="text-sm text-muted-foreground">
-                        No active syndic is currently assigned to this property.
+                        {t('empty_state')}
+                        {/*No active syndic is currently assigned to this property.*/}
                     </p>
                 )}
             </CardContent>

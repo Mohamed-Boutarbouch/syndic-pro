@@ -6,6 +6,14 @@ import { translate, translateChoice } from '@/lib/translate';
 import type { TranslationParams } from '@/lib/translate';
 import type { I18nSharedProps, Locale } from '@/types/i18n';
 
+export type TFunction = (key: string, params?: TranslationParams) => string;
+
+export type TChoiceFunction = (
+    key: string,
+    count: number,
+    params?: TranslationParams,
+) => string;
+
 interface UseTranslationResult {
     t: (key: string, params?: TranslationParams) => string;
     tChoice: (key: string, count: number, params?: TranslationParams) => string;

@@ -37,6 +37,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { UnitShare } from '@/types/properties/co-owners';
 
@@ -53,11 +54,12 @@ export function DataTable({
     ratePerPoint,
     totalWeight,
 }: DataTableProps) {
+    const { t } = useTranslation('properties.co_owners.data_table');
     const [search, setSearch] = useState('');
 
     const columns = useMemo(
-        () => buildColumns(propertyId, ratePerPoint),
-        [propertyId, ratePerPoint],
+        () => buildColumns(propertyId, ratePerPoint, t),
+        [propertyId, ratePerPoint, t],
     );
 
     const table = useTable({
@@ -84,11 +86,18 @@ export function DataTable({
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Unit Shares & Co-Owners Matrix</CardTitle>
+                <CardTitle>
+                    {t('title')}
+                    {/*Unit Shares & Co-Owners Matrix*/}
+                </CardTitle>
 
                 <CardDescription>
-                    Total weight: {totalWeight.toFixed(1)} pts · Rate:{' '}
-                    {formatCurrency(ratePerPoint)}/pt/yr
+                    {t('description', {
+                        weight: totalWeight.toFixed(1),
+                        rate: formatCurrency(ratePerPoint),
+                    })}
+                    {/*Total weight: {totalWeight.toFixed(1)} pts · Rate:{' '}
+                    {formatCurrency(ratePerPoint)}/pt/yr*/}
                 </CardDescription>
             </CardHeader>
 
@@ -103,7 +112,7 @@ export function DataTable({
                                 onChange={(event) =>
                                     handleSearch(event.target.value)
                                 }
-                                placeholder="Search co-owners..."
+                                placeholder={t('search_placeholder')}
                                 className="pl-9"
                             />
                         </div>
@@ -113,7 +122,8 @@ export function DataTable({
                                 render={
                                     <Button variant="outline">
                                         <Columns3 />
-                                        Columns
+                                        {t('columns_button')}
+                                        {/*Columns*/}
                                     </Button>
                                 }
                             />
@@ -121,7 +131,8 @@ export function DataTable({
                             <DropdownMenuContent align="end">
                                 <DropdownMenuGroup>
                                     <DropdownMenuLabel>
-                                        Toggle columns
+                                        {t('toggle_columns_label')}
+                                        {/*Toggle columns*/}
                                     </DropdownMenuLabel>
 
                                     {table
@@ -191,7 +202,8 @@ export function DataTable({
                                             colSpan={columns.length}
                                             className="h-24 text-center"
                                         >
-                                            No co-owners found.
+                                            {t('empty_state')}
+                                            {/*No co-owners found.*/}
                                         </TableCell>
                                     </TableRow>
                                 )}
@@ -202,8 +214,12 @@ export function DataTable({
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <p className="text-sm text-muted-foreground">
                             {totalRows === 0
-                                ? 'No results'
-                                : `Showing ${startRow}–${endRow} of ${totalRows}`}
+                                ? t('pagination.no_results')
+                                : t('pagination.showing_range', {
+                                      start: startRow,
+                                      end: endRow,
+                                      total: totalRows,
+                                  })}
                         </p>
 
                         <div className="flex items-center gap-1">
@@ -214,7 +230,10 @@ export function DataTable({
                                 disabled={!table.getCanPreviousPage()}
                             >
                                 <ChevronsLeft />
-                                <span className="sr-only">First page</span>
+                                <span className="sr-only">
+                                    {t('pagination.first_page')}
+                                    {/*First page*/}
+                                </span>
                             </Button>
 
                             <Button
@@ -224,11 +243,18 @@ export function DataTable({
                                 disabled={!table.getCanPreviousPage()}
                             >
                                 <ChevronLeft />
-                                <span className="sr-only">Previous page</span>
+                                <span className="sr-only">
+                                    {t('pagination.previous_page')}
+                                    {/*Previous page*/}
+                                </span>
                             </Button>
 
                             <span className="px-2 text-sm">
-                                Page {pageIndex + 1} of {pageCount}
+                                {t('pagination.page_of', {
+                                    page: pageIndex,
+                                    count: pageCount,
+                                })}
+                                {/*Page {pageIndex + 1} of {pageCount}*/}
                             </span>
 
                             <Button
@@ -238,7 +264,10 @@ export function DataTable({
                                 disabled={!table.getCanNextPage()}
                             >
                                 <ChevronRight />
-                                <span className="sr-only">Next page</span>
+                                <span className="sr-only">
+                                    {t('pagination.next_page')}
+                                    {/*Next page*/}
+                                </span>
                             </Button>
 
                             <Button
@@ -250,7 +279,10 @@ export function DataTable({
                                 disabled={!table.getCanNextPage()}
                             >
                                 <ChevronsRight />
-                                <span className="sr-only">Last page</span>
+                                <span className="sr-only">
+                                    {t('pagination.last_page')}
+                                    {/*Last page*/}
+                                </span>
                             </Button>
                         </div>
                     </div>

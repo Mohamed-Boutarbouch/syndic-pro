@@ -1,6 +1,7 @@
 import { ActiveSyndic } from '@/components/co-owners/active-syndic';
 import { CoOwnersCards } from '@/components/co-owners/co-owners-cards';
 import { DataTable } from '@/components/co-owners/data-table';
+import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnersProps } from '@/types/properties/co-owners';
 
 export default function CoOwners({
@@ -11,17 +12,18 @@ export default function CoOwners({
     transferCandidates,
     budget,
 }: CoOwnersProps) {
+    const { t } = useTranslation('properties.co_owners');
+
     return (
         <main className="p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-7xl space-y-6">
                 <header>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Co-Owners
+                        {t('title')}
                     </h1>
 
                     <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                        Manage unit shares, ownership records, and the active
-                        syndic for {property.name}.
+                        {t('subtitle', { property: property.name })}
                     </p>
                 </header>
 

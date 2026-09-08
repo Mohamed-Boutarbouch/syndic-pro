@@ -1,7 +1,14 @@
 import { useForm } from '@inertiajs/react';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Building2, Pencil, Warehouse } from 'lucide-react';
+import {
+    Building,
+    CircleEllipsis,
+    Pencil,
+    Store,
+    Warehouse,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
+import type { SubmitEvent } from 'react';
 
 import type { DataTableFeatures } from '@/components/co-owners/data-table-features';
 import { Badge } from '@/components/ui/badge';
@@ -20,20 +27,25 @@ import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Item, ItemContent, ItemTitle } from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
+import type { TFunction } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { UnitShare } from '@/types/properties/co-owners';
 
 const columnHelper = createColumnHelper<DataTableFeatures, UnitShare>();
 
+type CoefficientEditCellProps = {
+    unit: UnitShare;
+    propertyId: number;
+    ratePerPoint: number;
+    t: TFunction;
+};
+
 function CoefficientEditCell({
     unit,
     propertyId,
     ratePerPoint,
-}: {
-    unit: UnitShare;
-    propertyId: number;
-    ratePerPoint: number;
-}) {
+    t,
+}: CoefficientEditCellProps) {
     const [open, setOpen] = useState(false);
 
     const { data, setData, patch, processing, errors, reset } = useForm({
@@ -44,10 +56,11 @@ function CoefficientEditCell({
         if (!open) {
             setData('weight_coefficient', unit.coefficient);
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [unit.coefficient, open]);
 
-    function handleSubmit(event: React.FormEvent) {
+    function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
 
         patch(
@@ -60,6 +73,7 @@ function CoefficientEditCell({
     }
 
     const previewAnnual = ratePerPoint * data.weight_coefficient;
+
     const previewMonthly = previewAnnual / 12;
 
     return (
@@ -78,25 +92,31 @@ function CoefficientEditCell({
                     render={
                         <Button variant="ghost" size="icon-sm">
                             <Pencil />
-                            <span className="sr-only">Edit {unit.unit}</span>
+
+                            <span className="sr-only">
+                                {t('edit_dialog.trigger_sr_label', {
+                                    unit: unit.unit,
+                                })}
+                            </span>
                         </Button>
                     }
                 />
 
                 <DialogContent className="sm:max-w-sm">
                     <DialogHeader>
-                        <DialogTitle>Edit Coefficient</DialogTitle>
+                        <DialogTitle>{t('edit_dialog.title')}</DialogTitle>
 
                         <DialogDescription>
-                            Unit {unit.unit} · Adjusts the proportional budget
-                            share
+                            {t('edit_dialog.description', {
+                                unit: unit.unit,
+                            })}
                         </DialogDescription>
                     </DialogHeader>
 
                     <FieldGroup>
                         <Field>
                             <Label htmlFor={`coefficient-${unit.id}`}>
-                                Weight Coefficient
+                                {t('edit_dialog.weight_coefficient_label')}
                             </Label>
 
                             <Input
@@ -123,17 +143,22 @@ function CoefficientEditCell({
                     </FieldGroup>
 
                     <p className="text-sm text-muted-foreground">
-                        Standard: 1.0 · Commercial recommended: 1.5 · Storage:
-                        0.5
+                        {t('edit_dialog.coefficient_hint')}
                     </p>
 
                     <Item variant="muted">
                         <ItemContent>
-                            <ItemTitle>Recalculated Impact</ItemTitle>
+                            <ItemTitle>
+                                {t('edit_dialog.recalculated_impact.title')}
+                            </ItemTitle>
 
                             <div className="text-sm leading-normal text-muted-foreground">
                                 <div className="flex justify-between">
-                                    <span>Annual share</span>
+                                    <span>
+                                        {t(
+                                            'edit_dialog.recalculated_impact.annual_share_label',
+                                        )}
+                                    </span>
 
                                     <span className="font-medium text-foreground">
                                         {formatCurrency(previewAnnual)}
@@ -141,7 +166,11 @@ function CoefficientEditCell({
                                 </div>
 
                                 <div className="flex justify-between">
-                                    <span>Monthly</span>
+                                    <span>
+                                        {t(
+                                            'edit_dialog.recalculated_impact.monthly_label',
+                                        )}
+                                    </span>
 
                                     <span className="font-medium text-foreground">
                                         {formatCurrency(previewMonthly)}
@@ -153,11 +182,17 @@ function CoefficientEditCell({
 
                     <DialogFooter>
                         <DialogClose
-                            render={<Button variant="outline">Cancel</Button>}
+                            render={
+                                <Button variant="outline">
+                                    {t('edit_dialog.cancel_button')}
+                                </Button>
+                            }
                         />
 
                         <Button type="submit" disabled={processing}>
-                            {processing ? 'Applying…' : 'Apply'}
+                            {processing
+                                ? t('edit_dialog.applying_button')
+                                : t('edit_dialog.apply_button')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -166,60 +201,84 @@ function CoefficientEditCell({
     );
 }
 
-export function buildColumns(propertyId: number, ratePerPoint: number) {
+export function buildColumns(
+    propertyId: number,
+    ratePerPoint: number,
+    t: TFunction,
+) {
     return columnHelper.columns([
         columnHelper.accessor('unit', {
-            header: 'Unit',
+            header: t('columns.unit'),
+
             cell: ({ row }) => (
                 <span className="font-medium">{row.original.unit}</span>
             ),
         }),
 
         columnHelper.accessor('type', {
-            header: 'Type',
+            header: t('columns.type'),
+
             cell: ({ row }) => {
                 const type = row.original.type;
+
+                if (type === 'residential') {
+                    return (
+                        <Badge
+                            variant="outline"
+                            className="border-blue-600 text-blue-500"
+                        >
+                            <Building />
+
+                            {t('unit_types.residential')}
+                        </Badge>
+                    );
+                }
 
                 if (type === 'commercial') {
                     return (
                         <Badge
                             variant="outline"
-                            className="border-yellow-600 text-yellow-500"
+                            className="border-purple-600 text-purple-500"
                         >
-                            <Building2 />
-                            Commercial
+                            <Store />
+
+                            {t('unit_types.commercial')}
                         </Badge>
                     );
                 }
 
                 if (type === 'storage') {
                     return (
-                        <Badge variant="secondary">
+                        <Badge
+                            variant="outline"
+                            className="border-yellow-600 text-yellow-500"
+                        >
                             <Warehouse />
-                            Storage
+
+                            {t('unit_types.storage')}
                         </Badge>
                     );
                 }
 
                 return (
-                    <Badge
-                        variant="outline"
-                        className="border-blue-600 text-blue-500"
-                    >
-                        <Building2 />
-                        Apartment
+                    <Badge variant="secondary">
+                        <CircleEllipsis />
+
+                        {t('unit_types.other')}
                     </Badge>
                 );
             },
         }),
 
         columnHelper.accessor('coOwner', {
-            header: 'Co-Owner',
+            header: t('columns.co_owner'),
+
             cell: ({ row }) => <span>{row.original.coOwner}</span>,
         }),
 
         columnHelper.accessor('coefficient', {
-            header: 'Coeff.',
+            header: t('columns.coefficient'),
+
             cell: ({ row }) => (
                 <Badge variant="outline">
                     ×{row.original.coefficient.toFixed(1)}
@@ -228,7 +287,8 @@ export function buildColumns(propertyId: number, ratePerPoint: number) {
         }),
 
         columnHelper.accessor('quotaYear', {
-            header: 'Quota/yr',
+            header: t('columns.quota_year'),
+
             cell: ({ row }) => (
                 <span className="font-medium">
                     {formatCurrency(row.original.quotaYear)}
@@ -237,7 +297,8 @@ export function buildColumns(propertyId: number, ratePerPoint: number) {
         }),
 
         columnHelper.accessor('quotaMonth', {
-            header: 'Quota/mo',
+            header: t('columns.quota_month'),
+
             cell: ({ row }) => (
                 <span className="text-muted-foreground">
                     {formatCurrency(row.original.quotaMonth)}
@@ -246,27 +307,37 @@ export function buildColumns(propertyId: number, ratePerPoint: number) {
         }),
 
         columnHelper.accessor('status', {
-            header: 'Status',
+            header: t('columns.status'),
+
             cell: ({ row }) => {
                 const status = row.original.status;
 
-                return status === 'syndic' ? (
-                    <Badge>Syndic</Badge>
-                ) : (
-                    <Badge variant="outline">Co-owner</Badge>
+                if (status === 'syndic') {
+                    return <Badge>{t('status_values.syndic')}</Badge>;
+                }
+
+                return (
+                    <Badge variant="outline">
+                        {t('status_values.co_owner')}
+                    </Badge>
                 );
             },
         }),
 
         columnHelper.display({
             id: 'actions',
-            header: () => <div className="text-right">Actions</div>,
+
+            header: () => (
+                <div className="text-right">{t('columns.actions')}</div>
+            ),
+
             cell: ({ row }) => (
                 <div className="flex justify-end">
                     <CoefficientEditCell
                         unit={row.original}
                         propertyId={propertyId}
                         ratePerPoint={ratePerPoint}
+                        t={t}
                     />
                 </div>
             ),

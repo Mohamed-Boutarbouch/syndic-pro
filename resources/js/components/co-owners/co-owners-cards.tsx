@@ -1,5 +1,6 @@
-import { Archive, Building, Store } from 'lucide-react';
+import { Building, CircleEllipsis, Store, Warehouse } from 'lucide-react';
 import { KpiCard } from '@/components/kpi-card';
+import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnersKpis } from '@/types/properties/co-owners';
 
 type CoOwnersCardsProps = {
@@ -7,31 +8,43 @@ type CoOwnersCardsProps = {
 };
 
 export function CoOwnersCards({ kpis }: CoOwnersCardsProps) {
+    const { t } = useTranslation('properties.co_owners.kpis');
+
     const cards = [
         {
-            title: 'Apartements',
-            value: String(kpis.apartment),
-            description: 'Residential units',
+            id: 'residential',
+            title: t('residential.title'),
+            value: kpis.residential,
+            description: t('residential.description'),
             icon: Building,
         },
         {
-            title: 'Commercial',
-            value: String(kpis.commercial),
-            description: 'Commercial units',
+            id: 'commercial',
+            title: t('commercial.title'),
+            value: kpis.commercial,
+            description: t('commercial.description'),
             icon: Store,
         },
         {
-            title: 'Storage',
-            value: String(kpis.storage),
-            description: 'Storage units',
-            icon: Archive,
+            id: 'storage',
+            title: t('storage.title'),
+            value: kpis.storage,
+            description: t('storage.description'),
+            icon: Warehouse,
         },
-    ];
+        {
+            id: 'other',
+            title: t('other.title'),
+            value: kpis.other,
+            description: t('other.description'),
+            icon: CircleEllipsis,
+        },
+    ].filter((card) => card.value > 0);
 
     return (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
             {cards.map((card) => (
-                <KpiCard key={card.title} {...card} />
+                <KpiCard key={card.id} {...card} value={String(card.value)} />
             ))}
         </div>
     );
