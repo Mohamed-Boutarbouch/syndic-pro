@@ -6,6 +6,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { BudgetDistribution } from '@/types/properties/budget';
 
@@ -16,15 +17,18 @@ type CurrentDistributionProps = {
 export function CurrentDistribution({
     distribution,
 }: CurrentDistributionProps) {
+    const { t } = useTranslation('properties.budget.current_distribution');
     const { totalWeight, units } = distribution;
 
     return (
         <Card className="flex min-h-0 flex-1 flex-col">
             <CardHeader>
-                <CardTitle>Current Distribution</CardTitle>
+                <CardTitle>{t('title')}</CardTitle>
 
                 <CardDescription>
-                    Total weight: {totalWeight.toFixed(1)} points
+                    {t('description', {
+                        weight: totalWeight.toFixed(1),
+                    })}
                 </CardDescription>
             </CardHeader>
 
@@ -39,7 +43,7 @@ export function CurrentDistribution({
                                     </p>
 
                                     <p className="text-xs text-muted-foreground">
-                                        {unit.name ?? 'Unassigned'}
+                                        {unit.name ?? t('unassigned_unit')}
                                     </p>
                                 </TableCell>
 
@@ -49,7 +53,9 @@ export function CurrentDistribution({
                                     </p>
 
                                     <p className="text-xs text-muted-foreground tabular-nums">
-                                        coeff × {unit.points.toFixed(1)}
+                                        {t('coefficient_label', {
+                                            points: unit.points.toFixed(1),
+                                        })}
                                     </p>
                                 </TableCell>
                             </TableRow>

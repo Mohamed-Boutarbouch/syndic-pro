@@ -1,6 +1,7 @@
 import { BudgetActions } from '@/components/budget/budget-actions';
 import { CurrentDistribution } from '@/components/budget/current-distribution';
 import { FiscalYear } from '@/components/budget/fiscal-year';
+import { useTranslation } from '@/hooks/use-translation';
 import type { BudgetProps } from '@/types/properties/budget';
 
 export default function Budget({
@@ -8,17 +9,18 @@ export default function Budget({
     budget,
     distribution,
 }: BudgetProps) {
+    const { t } = useTranslation('properties.budget');
+
     return (
         <main className="p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-7xl space-y-6">
                 <header>
                     <h1 className="text-2xl font-semibold tracking-tight">
-                        Property Financial Budget
+                        {t('title')}
                     </h1>
 
                     <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                        Overview of your property finances, collections, and
-                        payments.
+                        {t('subtitle')}
                     </p>
                 </header>
 

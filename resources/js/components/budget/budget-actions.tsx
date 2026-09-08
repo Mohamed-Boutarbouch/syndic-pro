@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 
 type BudgetActionsProps = {
@@ -44,6 +45,7 @@ export function BudgetActions({
     const [weightCoefficient, setWeightCoefficient] = useState('1.0');
     const [open, setOpen] = useState(false);
     const [processing, setProcessing] = useState(false);
+    const { t } = useTranslation('properties.budget.actions');
 
     const parsedWeight = Number.parseFloat(weightCoefficient) || 0;
     const budgetImpact = parsedWeight * sharePerPoint;
@@ -74,7 +76,7 @@ export function BudgetActions({
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Actions</CardTitle>
+                <CardTitle>{t('title')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <Dialog open={open} onOpenChange={setOpen}>
@@ -85,39 +87,43 @@ export function BudgetActions({
                                     variant="outline"
                                     className="mb-2 w-full"
                                 >
-                                    Add unit mid-fiscal year
+                                    {t('add_unit_button')}
                                 </Button>
                             }
                         />
                         <DialogContent className="sm:max-w-sm">
                             <DialogHeader>
                                 <DialogTitle>
-                                    Add unit mid-fiscal year
+                                    {t('add_unit_dialog.title')}
                                 </DialogTitle>
                                 <DialogDescription>
-                                    This will recalculate only the projected
-                                    total budget. Existing co-owner quotas will
-                                    remain unchanged.
+                                    {t('add_unit_dialog.description')}
                                 </DialogDescription>
                             </DialogHeader>
                             <Alert>
                                 <TriangleAlert />
-                                <AlertTitle>Immutability Rules</AlertTitle>
+                                <AlertTitle>
+                                    {t(
+                                        'add_unit_dialog.immutability_alert.title',
+                                    )}
+                                </AlertTitle>
                                 <AlertDescription>
-                                    Existing resident monthly quotas are locked.
-                                    Only the total budget will be adjusted
-                                    upward.
+                                    {t(
+                                        'add_unit_dialog.immutability_alert.description',
+                                    )}
                                 </AlertDescription>
                             </Alert>
                             <FieldGroup>
                                 <Field>
                                     <Label htmlFor="unit-name">
-                                        Unit Name / Number
+                                        {t('add_unit_dialog.unit_name_label')}
                                     </Label>
                                     <Input
                                         id="unit-name"
                                         name="unit-name"
-                                        placeholder="e.g. A-502"
+                                        placeholder={t(
+                                            'add_unit_dialog.unit_name_placeholder',
+                                        )}
                                         value={unitName}
                                         onChange={(event) =>
                                             setUnitName(event.target.value)
@@ -127,7 +133,9 @@ export function BudgetActions({
                                 </Field>
                                 <Field>
                                     <Label htmlFor="weight-coefficient">
-                                        Weight Coefficient
+                                        {t(
+                                            'add_unit_dialog.weight_coefficient_label',
+                                        )}
                                     </Label>
                                     <Input
                                         type="number"
@@ -146,10 +154,21 @@ export function BudgetActions({
                             </FieldGroup>
                             <Item variant="muted">
                                 <ItemContent>
-                                    <ItemTitle>Budget Impact</ItemTitle>
+                                    <ItemTitle>
+                                        {t(
+                                            'add_unit_dialog.budget_impact.title',
+                                        )}
+                                    </ItemTitle>
                                     <ItemDescription>
-                                        + {formatCurrency(budgetImpact)} &rarr;
-                                        New total: {formatCurrency(newTotal)}
+                                        {t(
+                                            'add_unit_dialog.budget_impact.description',
+                                            {
+                                                impact: formatCurrency(
+                                                    budgetImpact,
+                                                ),
+                                                total: formatCurrency(newTotal),
+                                            },
+                                        )}
                                     </ItemDescription>
                                 </ItemContent>
                             </Item>
@@ -157,25 +176,24 @@ export function BudgetActions({
                                 <DialogClose
                                     render={
                                         <Button variant="outline">
-                                            Cancel
+                                            {t('add_unit_dialog.cancel_button')}
                                         </Button>
                                     }
                                 />
                                 <Button type="submit" disabled={processing}>
-                                    Confirm
+                                    {t('add_unit_dialog.confirm_button')}
                                 </Button>
                             </DialogFooter>
                         </DialogContent>
                     </form>
                 </Dialog>
                 <p className="mb-4 text-sm text-muted-foreground">
-                    Recalculation global budget without modifying existing
-                    quotas
+                    {t('recalculation_note')}
                 </p>
                 <Separator className="mb-4" />
                 <Button variant="outline" className="w-full">
-                    <RefreshCw data-icon="inline-start" /> Simulate new fiscal
-                    year
+                    <RefreshCw data-icon="inline-start" />{' '}
+                    {t('simulate_button')}
                 </Button>
             </CardContent>
         </Card>

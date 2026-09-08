@@ -43,23 +43,9 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
+import { useTranslation } from '@/hooks/use-translation';
 import { formatCurrency } from '@/lib/format-currency';
 import type { Budget, BudgetDistribution } from '@/types/properties/budget';
-
-const months = [
-    { label: 'January', value: '01' },
-    { label: 'February', value: '02' },
-    { label: 'March', value: '03' },
-    { label: 'April', value: '04' },
-    { label: 'May', value: '05' },
-    { label: 'June', value: '06' },
-    { label: 'July', value: '07' },
-    { label: 'August', value: '08' },
-    { label: 'September', value: '09' },
-    { label: 'October', value: '10' },
-    { label: 'November', value: '11' },
-    { label: 'December', value: '12' },
-];
 
 type FiscalYearProps = {
     budget: Budget | null;
@@ -71,6 +57,23 @@ function monthOf(dateString: string): string {
 }
 
 export function FiscalYear({ budget, distribution }: FiscalYearProps) {
+    const { t } = useTranslation('properties.budget.fiscal_year');
+
+    const months = [
+        { label: t('period.months.01'), value: '01' },
+        { label: t('period.months.02'), value: '02' },
+        { label: t('period.months.03'), value: '03' },
+        { label: t('period.months.04'), value: '04' },
+        { label: t('period.months.05'), value: '05' },
+        { label: t('period.months.06'), value: '06' },
+        { label: t('period.months.07'), value: '07' },
+        { label: t('period.months.08'), value: '08' },
+        { label: t('period.months.09'), value: '09' },
+        { label: t('period.months.10'), value: '10' },
+        { label: t('period.months.11'), value: '11' },
+        { label: t('period.months.12'), value: '12' },
+    ];
+
     const [isActive, setIsActive] = useState(false);
     const [startMonth, setStartMonth] = useState(
         budget ? monthOf(budget.startDate) : '',
@@ -116,10 +119,10 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
         <Card>
             <CardHeader>
                 <CardTitle className="mb-2 flex gap-2">
-                    <CalendarDays /> Fiscal Year
+                    <CalendarDays /> {t('title')}
                 </CardTitle>
 
-                <CardDescription>Fiscal year configuration</CardDescription>
+                <CardDescription>{t('description')}</CardDescription>
 
                 <CardAction>
                     {isActive ? (
@@ -128,17 +131,19 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                                 variant="outline"
                                 onClick={() => setIsActive(false)}
                             >
-                                Cancel
+                                {t('cancel_button')}
                             </Button>
 
-                            <Button onClick={handleSave}>Save</Button>
+                            <Button onClick={handleSave}>
+                                {t('save_button')}
+                            </Button>
                         </div>
                     ) : (
                         <Button
                             variant="outline"
                             onClick={() => setIsActive(true)}
                         >
-                            Edit
+                            {t('edit_button')}
                         </Button>
                     )}
                 </CardAction>
@@ -147,13 +152,13 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
             <CardContent className="space-y-6">
                 <div>
                     <h2 className="cn-font-heading text-base leading-snug font-medium">
-                        Fiscal Period
+                        {t('period.title')}
                     </h2>
 
                     <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="space-y-1.5">
                             <p className="text-sm text-muted-foreground">
-                                Start Month
+                                {t('period.start_month_label')}
                             </p>
 
                             <Select
@@ -184,7 +189,7 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
 
                         <div className="space-y-1.5">
                             <p className="text-sm text-muted-foreground">
-                                End Month
+                                {t('period.end_month_label')}
                             </p>
 
                             <Select
@@ -195,7 +200,11 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                                 }
                             >
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select a month" />
+                                    <SelectValue
+                                        placeholder={t(
+                                            'period.month_placeholder',
+                                        )}
+                                    />
                                 </SelectTrigger>
 
                                 <SelectContent>
@@ -221,7 +230,7 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                     <h2 className="cn-font-heading mb-4 text-base leading-snug font-medium">
                         <span className="mb-2 flex gap-2">
                             <Calculator />
-                            Annual Target Budget
+                            {t('annual_target.title')}
                         </span>
                     </h2>
 
@@ -230,7 +239,9 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                             <div className="flex items-center gap-2">
                                 <Input
                                     type="number"
-                                    placeholder="Enter amount"
+                                    placeholder={t(
+                                        'annual_target.amount_placeholder',
+                                    )}
                                     className="w-40"
                                     value={annualTarget}
                                     disabled={isLocked}
@@ -240,18 +251,28 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                                 />
 
                                 <span className="text-sm text-muted-foreground">
-                                    MAD
+                                    {t('annual_target.currency_label')}
                                 </span>
                             </div>
 
                             <Item variant="muted">
                                 <ItemContent>
-                                    <ItemTitle>Auto-calculation</ItemTitle>
+                                    <ItemTitle>
+                                        {t(
+                                            'annual_target.auto_calculation.title',
+                                        )}
+                                    </ItemTitle>
 
                                     <ItemDescription>
-                                        Total weight: {totalWeight.toFixed(1)}{' '}
-                                        pts → Share per point:{' '}
-                                        {formatCurrency(sharePerPoint)}
+                                        {t(
+                                            'annual_target.auto_calculation.description',
+                                            {
+                                                weight: totalWeight.toFixed(1),
+                                                share: formatCurrency(
+                                                    sharePerPoint,
+                                                ),
+                                            },
+                                        )}
                                     </ItemDescription>
                                 </ItemContent>
                             </Item>
@@ -263,7 +284,9 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                             </h2>
 
                             <Badge variant="secondary">
-                                {formatCurrency(sharePerPoint)} / point
+                                {t('annual_target.per_point_badge', {
+                                    amount: formatCurrency(sharePerPoint),
+                                })}
                             </Badge>
                         </div>
                     )}
@@ -284,10 +307,10 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                         </div>
 
                         <FieldContent className="flex-1">
-                            <FieldTitle>Budget Active & Locked</FieldTitle>
+                            <FieldTitle>{t('lock.title')}</FieldTitle>
 
                             <FieldDescription>
-                                Existing co-owner quotas are immutable
+                                {t('lock.description')}
                             </FieldDescription>
                         </FieldContent>
 
@@ -304,12 +327,10 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                 <Alert>
                     <BadgeCheck />
 
-                    <AlertTitle>Immutable Quotas</AlertTitle>
+                    <AlertTitle>{t('immutable_alert.title')}</AlertTitle>
 
                     <AlertDescription>
-                        Existing co-owners monthly obligations cannot be
-                        modified. Any new unit will only adjust the total
-                        budget.
+                        {t('immutable_alert.description')}
                     </AlertDescription>
                 </Alert>
             </CardContent>
