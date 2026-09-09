@@ -1,4 +1,5 @@
 import type { Auth } from '@/types/auth';
+import type { I18nSharedProps } from '@/types/i18n';
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,9 +14,8 @@ declare module '@inertiajs/core' {
       name: string;
       auth: Auth;
       sidebarOpen: boolean;
-      [key: string]: unknown;
-      auth: Auth;
       i18n: I18nSharedProps;
+      [key: string]: unknown;
     };
   }
 }

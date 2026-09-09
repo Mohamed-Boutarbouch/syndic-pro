@@ -1,5 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Building2, LayoutGrid, ReceiptText, Wallet } from 'lucide-react';
+
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -12,6 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { useTranslation } from '@/hooks/use-translation';
+
 import type { NavItem } from '@/types';
 
 type SharedProps = {
@@ -23,6 +26,7 @@ type SharedProps = {
 
 export function AppSidebar() {
   const { property } = usePage<SharedProps>().props;
+  const { isRtl } = useTranslation();
 
   const mainNavItems: NavItem[] = [
     {
@@ -53,7 +57,12 @@ export function AppSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar
+      collapsible="icon"
+      variant="inset"
+      side={isRtl ? 'right' : 'left'}
+      dir={isRtl ? 'rtl' : 'ltr'}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -66,11 +75,12 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
         <NavMain items={mainNavItems} />
       </SidebarContent>
+
       <SidebarFooter>
-        {/*<NavFooter className="mt-auto" />*/}
         <NavUser />
       </SidebarFooter>
     </Sidebar>
