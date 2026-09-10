@@ -6,7 +6,6 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { CollectionProgressData, DashboardProperty } from '@/types/properties/dashboard';
 
 type CollectionProgressProps = {
@@ -25,7 +24,7 @@ function getInitials(name: string) {
 }
 
 export function CollectionProgress({ property, data }: CollectionProgressProps) {
-  const { t, tChoice } = useTranslation('properties.dashboard');
+  const { t, tChoice, money, isRtl } = useTranslation('properties.dashboard');
 
   if (!data) {
     return (
@@ -46,7 +45,7 @@ export function CollectionProgress({ property, data }: CollectionProgressProps) 
   const remainingOwners = Math.max(totalOwners - owners.length, 0);
 
   return (
-    <Card>
+    <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader className="flex flex-row items-start justify-between space-y-0">
         <div className="space-y-1.5">
           <CardTitle>{t('collection_progress.title')}</CardTitle>
@@ -64,13 +63,13 @@ export function CollectionProgress({ property, data }: CollectionProgressProps) 
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
               {t('collection_progress.amount_collected', {
-                amount: formatCurrency(collected),
+                amount: money(collected),
               })}
             </span>
 
             <span className="text-muted-foreground">
               {t('collection_progress.target_label', {
-                amount: formatCurrency(target),
+                amount: money(target),
               })}
             </span>
           </div>

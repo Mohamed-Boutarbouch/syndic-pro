@@ -1,6 +1,6 @@
 import { useWatch } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
-import { formatCurrency } from '@/lib/format-currency';
+import { useTranslation } from '@/hooks/use-translation';
 import { calculateUnitBudgets } from '@/lib/onboarding/unit-budget';
 import type { UnitsFormValues } from '@/schemas/onboarding/units';
 
@@ -13,6 +13,7 @@ export function UnitBudgetShare({
   index: number;
   totalBudget: number;
 }) {
+  const { money, isRtl } = useTranslation();
   const weightCoefficients = useWatch({
     control,
     name: 'units',
@@ -21,5 +22,9 @@ export function UnitBudgetShare({
   const budgets = calculateUnitBudgets(weightCoefficients ?? [], totalBudget);
   const share = budgets[index] ?? 0;
 
-  return <span className="text-sm text-muted-foreground">{formatCurrency(share)}/year</span>;
+  return (
+    <span className="text-sm text-muted-foreground" dir={isRtl ? 'rtl' : 'ltr'}>
+      {money(share)}/year
+    </span>
+  );
 }

@@ -25,8 +25,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { UnitTypeBadge } from '@/components/unit-type-badge';
+import { useTranslation } from '@/hooks/use-translation';
 import { calculateInstallmentAmount } from '@/lib/billing';
-import { formatCurrency } from '@/lib/format-currency';
 import type { CoOwnerPageProps } from '@/pages/onboarding/co-owner';
 import { coOwnersSchema, createEmptyCoOwner } from '@/schemas/onboarding/co-owners';
 import type { CoOwnerFormValues } from '@/schemas/onboarding/co-owners';
@@ -37,6 +37,7 @@ export function CoOwnerForm({
   units,
   billingFrequency: BILLING_FREQUENCY,
 }: CoOwnerPageProps) {
+  const { money, isRtl } = useTranslation();
   const form = useForm<CoOwnerFormValues>({
     resolver: valibotResolver(coOwnersSchema),
     defaultValues: {
@@ -68,7 +69,7 @@ export function CoOwnerForm({
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -79,7 +80,7 @@ export function CoOwnerForm({
           </div>
           <div className="shrink-0 rounded-lg border bg-muted/30 px-4 py-2 text-right">
             <div className="text-xs text-muted-foreground">Overall budget</div>
-            <div className="text-lg font-semibold tabular-nums">{formatCurrency(budget)}</div>
+            <div className="text-lg font-semibold tabular-nums">{money(budget)}</div>
           </div>
         </div>
       </CardHeader>
@@ -112,7 +113,7 @@ export function CoOwnerForm({
 
                             <div className="text-right">
                               <span className="text-sm font-semibold tabular-nums">
-                                {formatCurrency(unit.calculated_annual_budget)}
+                                {money(unit.calculated_annual_budget)}
                               </span>
                               <div className="text-xs text-muted-foreground">Annual budget</div>
                             </div>
@@ -215,7 +216,7 @@ export function CoOwnerForm({
                                                 <span>{frequency.label}</span>
                                                 {amount !== null && (
                                                   <span className="text-xs text-muted-foreground tabular-nums">
-                                                    {formatCurrency(amount)}
+                                                    {money(amount)}
                                                   </span>
                                                 )}
                                               </span>
@@ -226,7 +227,7 @@ export function CoOwnerForm({
                                     </Select>
                                     {installmentAmount !== null && !fieldState.invalid && (
                                       <span className="text-xs text-muted-foreground">
-                                        {formatCurrency(installmentAmount)} per installment
+                                        {money(installmentAmount)} per installment
                                       </span>
                                     )}
                                     {fieldState.invalid && (

@@ -1,18 +1,21 @@
 import { usePage } from '@inertiajs/react';
 import { useCallback } from 'react';
 
+import { formatCurrency } from '@/lib/currency';
+import type { FormatCurrencyOptions } from '@/lib/currency';
 import { translate, translateChoice } from '@/lib/translate';
 
 import type { TranslationParams } from '@/lib/translate';
 import type { I18nSharedProps, Locale } from '@/types/i18n';
 
 export type TFunction = (key: string, params?: TranslationParams) => string;
-
 export type TChoiceFunction = (key: string, count: number, params?: TranslationParams) => string;
+export type MoneyFunction = (value: number, options?: FormatCurrencyOptions) => string;
 
 interface UseTranslationResult {
-  t: (key: string, params?: TranslationParams) => string;
-  tChoice: (key: string, count: number, params?: TranslationParams) => string;
+  t: TFunction;
+  tChoice: TChoiceFunction;
+  money: MoneyFunction;
   locale: Locale;
   isRtl: boolean;
 }
@@ -36,9 +39,15 @@ export function useTranslation(namespace?: string): UseTranslationResult {
     [i18n.translations, prefix],
   );
 
+  const money = useCallback(
+    (value: number, options?: FormatCurrencyOptions) => formatCurrency(value, i18n.locale, options),
+    [i18n.locale],
+  );
+
   return {
     t,
     tChoice,
+    money,
     locale: i18n.locale,
     isRtl: RTL_LOCALES.has(i18n.locale),
   };

@@ -17,14 +17,15 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { CoOwnerPaymentCardProps } from '@/types/properties/billing';
 
 export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymentCardProps) {
-  const { t, tChoice } = useTranslation();
+  const { t, tChoice, money, isRtl } = useTranslation();
 
   const [open, setOpen] = useState(false);
   const [frequencyDialogOpen, setFrequencyDialogOpen] = useState(false);
+
+  const dir = isRtl ? 'rtl' : 'ltr';
 
   const frequency = getPaymentFrequency(payment.frequency);
   const translatedFrequency = t(frequency.labelKey);
@@ -45,9 +46,10 @@ export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymen
             nativeButton={false}
             render={
               <div
+                dir={dir}
                 className={cn(
                   buttonVariants({ variant: 'ghost' }),
-                  'group h-auto w-full flex-col items-stretch gap-0 rounded-lg p-4 text-left',
+                  'group h-auto w-full flex-col items-stretch gap-0 rounded-lg p-4 text-start',
                 )}
                 onClick={(event) => {
                   const target = event.target as HTMLElement;
@@ -87,9 +89,9 @@ export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymen
                     <ItemDescription>
                       {t('properties.billing.payment_card.description', {
                         unit: payment.unit,
-                        installment: formatCurrency(installment),
+                        installment: money(installment),
                         frequency: translatedFrequency,
-                        quota: formatCurrency(payment.quota),
+                        quota: money(payment.quota),
                       })}
                     </ItemDescription>
                   </ItemContent>
@@ -129,7 +131,7 @@ export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymen
                   </div>
                 </Item>
 
-                <div className="mt-3 flex items-center gap-2 pl-11">
+                <div className="mt-3 flex items-center gap-2 ps-11">
                   <Progress
                     value={progress}
                     className="min-w-0 flex-1 **:data-[slot=progress-track]:h-2"
@@ -140,7 +142,7 @@ export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymen
                   {remaining > 0 && (
                     <span className="shrink-0 text-xs text-muted-foreground">
                       {t('properties.billing.payment_card.remaining', {
-                        amount: formatCurrency(remaining),
+                        amount: money(remaining),
                       })}
                     </span>
                   )}

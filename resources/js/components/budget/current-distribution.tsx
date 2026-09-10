@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { BudgetDistribution } from '@/types/properties/budget';
 
 type CurrentDistributionProps = {
@@ -9,11 +8,11 @@ type CurrentDistributionProps = {
 };
 
 export function CurrentDistribution({ distribution }: CurrentDistributionProps) {
-  const { t } = useTranslation('properties.budget.current_distribution');
+  const { t, money, isRtl } = useTranslation('properties.budget.current_distribution');
   const { totalWeight, units } = distribution;
 
   return (
-    <Card className="flex min-h-0 flex-1 flex-col">
+    <Card className="flex min-h-0 flex-1 flex-col" dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle>{t('title')}</CardTitle>
 
@@ -38,9 +37,7 @@ export function CurrentDistribution({ distribution }: CurrentDistributionProps) 
                 </TableCell>
 
                 <TableCell className="py-3 pr-0 text-right">
-                  <p className="text-sm font-semibold tabular-nums">
-                    {formatCurrency(unit.amount)}
-                  </p>
+                  <p className="text-sm font-semibold tabular-nums">{money(unit.amount)}</p>
 
                   <p className="text-xs text-muted-foreground tabular-nums">
                     {t('coefficient_label', {

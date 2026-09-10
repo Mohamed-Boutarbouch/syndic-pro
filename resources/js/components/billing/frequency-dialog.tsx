@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { FrequencyDialogProps, PaymentFrequency } from '@/types/properties/billing';
 
 export function FrequencyDialog({
@@ -34,7 +33,10 @@ export function FrequencyDialog({
   frequency,
   onSave,
 }: FrequencyDialogProps) {
-  const { t } = useTranslation('properties.billing.frequency_dialog');
+  const { t, money, isRtl } = useTranslation('properties.billing.frequency_dialog');
+
+  const dir = isRtl ? 'rtl' : 'ltr';
+
   const [value, setValue] = useState<PaymentFrequency>(frequency);
 
   function handleOpenChange(nextOpen: boolean) {
@@ -56,7 +58,7 @@ export function FrequencyDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent className="sm:max-w-sm" dir={dir}>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>{t('title')}</DialogTitle>
@@ -84,14 +86,14 @@ export function FrequencyDialog({
                   }
                 }}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" dir={dir}>
                   <SelectValue />
                 </SelectTrigger>
 
-                <SelectContent>
+                <SelectContent dir={dir}>
                   {Object.entries(PAYMENT_FREQUENCIES).map(([key, item]) => (
                     <SelectItem key={key} value={key} className="py-2">
-                      <div className="flex flex-col items-start gap-0.5">
+                      <div className="flex flex-col items-start gap-0.5 text-start">
                         <span className="text-sm">{t(item.labelKey)}</span>
 
                         <span className="text-xs text-muted-foreground">
@@ -112,7 +114,7 @@ export function FrequencyDialog({
 
                 <ItemDescription>
                   {t('installment.description', {
-                    amount: formatCurrency(installment),
+                    amount: money(installment),
                   })}
                 </ItemDescription>
               </ItemContent>

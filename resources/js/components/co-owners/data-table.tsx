@@ -32,7 +32,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { UnitShare } from '@/types/properties/co-owners';
 
 interface DataTableProps {
@@ -43,12 +42,12 @@ interface DataTableProps {
 }
 
 export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataTableProps) {
-  const { t } = useTranslation('properties.co_owners.data_table');
+  const { t, money, isRtl } = useTranslation('properties.co_owners.data_table');
   const [search, setSearch] = useState('');
 
   const columns = useMemo(
-    () => buildColumns(propertyId, ratePerPoint, t),
-    [propertyId, ratePerPoint, t],
+    () => buildColumns(propertyId, ratePerPoint, t, money),
+    [propertyId, ratePerPoint, t, money],
   );
 
   const table = useTable({
@@ -73,7 +72,7 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
   const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
 
   return (
-    <Card>
+    <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle>
           {t('title')}
@@ -83,10 +82,8 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
         <CardDescription>
           {t('description', {
             weight: totalWeight.toFixed(1),
-            rate: formatCurrency(ratePerPoint),
+            rate: money(ratePerPoint),
           })}
-          {/*Total weight: {totalWeight.toFixed(1)} pts · Rate:{' '}
-                    {formatCurrency(ratePerPoint)}/pt/yr*/}
         </CardDescription>
       </CardHeader>
 
@@ -110,17 +107,13 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
                   <Button variant="outline">
                     <Columns3 />
                     {t('columns_button')}
-                    {/*Columns*/}
                   </Button>
                 }
               />
 
               <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel>
-                    {t('toggle_columns_label')}
-                    {/*Toggle columns*/}
-                  </DropdownMenuLabel>
+                  <DropdownMenuLabel>{t('toggle_columns_label')}</DropdownMenuLabel>
 
                   {table
                     .getAllColumns()
@@ -171,7 +164,6 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
                       {t('empty_state')}
-                      {/*No co-owners found.*/}
                     </TableCell>
                   </TableRow>
                 )}
@@ -198,10 +190,7 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
                 disabled={!table.getCanPreviousPage()}
               >
                 <ChevronsLeft />
-                <span className="sr-only">
-                  {t('pagination.first_page')}
-                  {/*First page*/}
-                </span>
+                <span className="sr-only">{t('pagination.first_page')}</span>
               </Button>
 
               <Button
@@ -211,10 +200,7 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
                 disabled={!table.getCanPreviousPage()}
               >
                 <ChevronLeft />
-                <span className="sr-only">
-                  {t('pagination.previous_page')}
-                  {/*Previous page*/}
-                </span>
+                <span className="sr-only">{t('pagination.previous_page')}</span>
               </Button>
 
               <span className="px-2 text-sm">
@@ -222,7 +208,6 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
                   page: pageIndex,
                   count: pageCount,
                 })}
-                {/*Page {pageIndex + 1} of {pageCount}*/}
               </span>
 
               <Button
@@ -232,10 +217,7 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
                 disabled={!table.getCanNextPage()}
               >
                 <ChevronRight />
-                <span className="sr-only">
-                  {t('pagination.next_page')}
-                  {/*Next page*/}
-                </span>
+                <span className="sr-only">{t('pagination.next_page')}</span>
               </Button>
 
               <Button
@@ -245,10 +227,7 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
                 disabled={!table.getCanNextPage()}
               >
                 <ChevronsRight />
-                <span className="sr-only">
-                  {t('pagination.last_page')}
-                  {/*Last page*/}
-                </span>
+                <span className="sr-only">{t('pagination.last_page')}</span>
               </Button>
             </div>
           </div>

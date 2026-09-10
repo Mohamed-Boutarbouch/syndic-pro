@@ -26,12 +26,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
-import { formatCurrency } from '@/lib/format-currency';
+import { useTranslation } from '@/hooks/use-translation';
 import type { UnitPageProps } from '@/pages/onboarding/unit';
 import type { UnitsFormOutputValues, UnitsFormValues } from '@/schemas/onboarding/units';
 import { createEmptyUnit, unitsSchema } from '@/schemas/onboarding/units';
 
 export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: UnitPageProps) {
+  const { money, isRtl } = useTranslation();
   const form = useForm<UnitsFormValues, any, UnitsFormOutputValues>({
     resolver: valibotResolver(unitsSchema),
     defaultValues: {
@@ -62,7 +63,7 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
   }
 
   return (
-    <Card>
+    <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle>Add your units</CardTitle>
         <CardDescription>
@@ -73,7 +74,7 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
         <Item className="mb-4" variant="outline" size="sm">
           <ItemMedia className="text-muted-foreground">Budget:</ItemMedia>
           <ItemContent>
-            <ItemTitle>{formatCurrency(budget.total_budget)}/year</ItemTitle>
+            <ItemTitle>{money(budget.total_budget)}/year</ItemTitle>
           </ItemContent>
         </Item>
         <form id="onboarding-units-form" onSubmit={form.handleSubmit(submitHandler)}>

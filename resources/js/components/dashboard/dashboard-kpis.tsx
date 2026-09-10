@@ -2,7 +2,6 @@ import { CircleDollarSign, Coins, Users, Wallet } from 'lucide-react';
 
 import { KpiCard } from '@/components/kpi-card';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { DashboardKpis as DashboardKpisData } from '@/types/properties/dashboard';
 
 type DashboardKpisProps = {
@@ -10,21 +9,21 @@ type DashboardKpisProps = {
 };
 
 export function DashboardKpis({ kpis }: DashboardKpisProps) {
-  const { t } = useTranslation('properties.dashboard');
+  const { t, money } = useTranslation('properties.dashboard');
 
   const cards = kpis
     ? [
         {
           id: 'annual-budget',
           title: t('kpis.annual_budget.title'),
-          value: formatCurrency(kpis.targetBudget),
+          value: money(kpis.targetBudget),
           description: kpis.fiscalYearLabel,
           icon: CircleDollarSign,
         },
         {
           id: 'collected',
           title: t('kpis.collected.title'),
-          value: formatCurrency(kpis.collectedYtd),
+          value: money(kpis.collectedYtd),
           description: t('kpis.collected.description', {
             percent: kpis.percentOfTarget,
           }),

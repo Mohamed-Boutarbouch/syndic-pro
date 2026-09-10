@@ -9,14 +9,13 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 
 import type { PaymentLog } from '@/types/properties/ledger';
 
 const columnHelper = createColumnHelper<DataTableFeatures, PaymentLog>();
 
 export function useColumns() {
-  const { t: columnsT } = useTranslation('properties.ledger.columns');
+  const { t: columnsT, money, isRtl } = useTranslation('properties.ledger.columns');
   const { t: paymentTypeT } = useTranslation('properties.ledger.payment_type');
 
   return useMemo(
@@ -118,7 +117,11 @@ export function useColumns() {
           cell: ({ row }) => {
             const amount = row.getValue<number>('amount');
 
-            return <div className="text-right font-medium">{formatCurrency(amount)}</div>;
+            return (
+              <div className={isRtl ? 'text-left' : 'text-right'}>
+                <span className="font-medium">{money(amount)}</span>
+              </div>
+            );
           },
         }),
 
@@ -132,6 +135,6 @@ export function useColumns() {
           },
         }),
       ]),
-    [columnsT, paymentTypeT],
+    [columnsT, paymentTypeT, money, isRtl],
   );
 }

@@ -27,11 +27,10 @@ import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { HouseholdCoPayer, HouseholdCoPayersProps } from '@/types/properties/billing';
 
 export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
-  const { t } = useTranslation('properties.billing.household');
+  const { t, money } = useTranslation('properties.billing.household');
   const coPayers = payment.coPayers ?? [];
 
   const totalCollected = coPayers.reduce((total, coPayer) => total + coPayer.collected, 0);
@@ -65,7 +64,7 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
                 <DialogDescription>
                   {t('add_dialog.description', {
                     name: payment.name,
-                    quota: formatCurrency(payment.quota),
+                    quota: money(payment.quota),
                   })}
                 </DialogDescription>
               </DialogHeader>
@@ -122,7 +121,7 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
             <ItemTitle className="text-xs">{t('shared_goal')}</ItemTitle>
           </ItemContent>
 
-          <span className="text-xs font-medium">{formatCurrency(payment.quota)}</span>
+          <span className="text-xs font-medium">{money(payment.quota)}</span>
         </Item>
 
         <Progress value={progress} className="mt-2 h-2" />
@@ -130,13 +129,13 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
         <div className="mt-1.5 flex justify-between text-xs text-muted-foreground">
           <span>
             {t('collected', {
-              amount: formatCurrency(totalCollected),
+              amount: money(totalCollected),
             })}
           </span>
 
           <span>
             {t('remaining', {
-              amount: formatCurrency(Math.max(0, payment.quota - totalCollected)),
+              amount: money(Math.max(0, payment.quota - totalCollected)),
             })}
           </span>
         </div>
@@ -174,13 +173,13 @@ function CoPayer({
   coPayer: HouseholdCoPayer;
   householdQuota: number;
 }) {
-  const { t } = useTranslation('properties.billing.household');
+  const { t, money, isRtl } = useTranslation('properties.billing.household');
   const quota = householdQuota * (coPayer.sharePercentage / 100);
 
   const progress = getProgress(coPayer.collected, quota);
 
   return (
-    <Item className="px-0">
+    <Item className="px-0" dir={isRtl ? 'rtl' : 'ltr'}>
       <ItemMedia>
         <Avatar className="size-6">
           <AvatarFallback className="text-[10px] font-medium">{coPayer.initials}</AvatarFallback>
@@ -200,8 +199,8 @@ function CoPayer({
           <span className="shrink-0 text-xs text-muted-foreground">
             {t('co_payer_progress', {
               percentage: coPayer.sharePercentage,
-              collected: formatCurrency(coPayer.collected),
-              quota: formatCurrency(quota),
+              collected: money(coPayer.collected),
+              quota: money(quota),
             })}
           </span>
         </div>

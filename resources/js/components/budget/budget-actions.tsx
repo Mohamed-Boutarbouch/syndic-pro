@@ -23,7 +23,6 @@ import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/i
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 
 type BudgetActionsProps = {
   propertyId: number;
@@ -40,7 +39,7 @@ export function BudgetActions({
   const [weightCoefficient, setWeightCoefficient] = useState('1.0');
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const { t } = useTranslation('properties.budget.actions');
+  const { t, money, isRtl } = useTranslation('properties.budget.actions');
 
   const parsedWeight = Number.parseFloat(weightCoefficient) || 0;
   const budgetImpact = parsedWeight * sharePerPoint;
@@ -69,7 +68,7 @@ export function BudgetActions({
   };
 
   return (
-    <Card>
+    <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle>{t('title')}</CardTitle>
       </CardHeader>
@@ -127,8 +126,8 @@ export function BudgetActions({
                   <ItemTitle>{t('add_unit_dialog.budget_impact.title')}</ItemTitle>
                   <ItemDescription>
                     {t('add_unit_dialog.budget_impact.description', {
-                      impact: formatCurrency(budgetImpact),
-                      total: formatCurrency(newTotal),
+                      impact: money(budgetImpact),
+                      total: money(newTotal),
                     })}
                   </ItemDescription>
                 </ItemContent>

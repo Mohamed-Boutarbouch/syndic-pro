@@ -21,8 +21,8 @@ import { Field, FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Item, ItemContent, ItemTitle } from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
-import type { TFunction } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
+import { useTranslation } from '@/hooks/use-translation';
+import type { MoneyFunction, TFunction } from '@/hooks/use-translation';
 import type { UnitShare } from '@/types/properties/co-owners';
 
 const columnHelper = createColumnHelper<DataTableFeatures, UnitShare>();
@@ -35,7 +35,11 @@ type CoefficientEditCellProps = {
 };
 
 function CoefficientEditCell({ unit, propertyId, ratePerPoint, t }: CoefficientEditCellProps) {
+  const { money, isRtl } = useTranslation();
+
   const [open, setOpen] = useState(false);
+
+  const dir = isRtl ? 'rtl' : 'ltr';
 
   const { data, setData, patch, processing, errors, reset } = useForm({
     weight_coefficient: unit.coefficient,
@@ -88,7 +92,7 @@ function CoefficientEditCell({ unit, propertyId, ratePerPoint, t }: CoefficientE
           }
         />
 
-        <DialogContent className="sm:max-w-sm">
+        <DialogContent className="sm:max-w-sm" dir={dir}>
           <DialogHeader>
             <DialogTitle>{t('edit_dialog.title')}</DialogTitle>
 
@@ -128,19 +132,19 @@ function CoefficientEditCell({ unit, propertyId, ratePerPoint, t }: CoefficientE
               <ItemTitle>{t('edit_dialog.recalculated_impact.title')}</ItemTitle>
 
               <div className="text-sm leading-normal text-muted-foreground">
-                <div className="flex justify-between">
+                <div className="flex justify-between gap-4">
                   <span>{t('edit_dialog.recalculated_impact.annual_share_label')}</span>
 
-                  <span className="font-medium text-foreground">
-                    {formatCurrency(previewAnnual)}
+                  <span className="shrink-0 font-medium text-foreground">
+                    {money(previewAnnual)}
                   </span>
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex justify-between gap-4">
                   <span>{t('edit_dialog.recalculated_impact.monthly_label')}</span>
 
-                  <span className="font-medium text-foreground">
-                    {formatCurrency(previewMonthly)}
+                  <span className="shrink-0 font-medium text-foreground">
+                    {money(previewMonthly)}
                   </span>
                 </div>
               </div>
@@ -162,7 +166,12 @@ function CoefficientEditCell({ unit, propertyId, ratePerPoint, t }: CoefficientE
   );
 }
 
-export function buildColumns(propertyId: number, ratePerPoint: number, t: TFunction) {
+export function buildColumns(
+  propertyId: number,
+  ratePerPoint: number,
+  t: TFunction,
+  money: MoneyFunction,
+) {
   return columnHelper.columns([
     columnHelper.accessor('unit', {
       header: t('columns.unit'),
@@ -231,16 +240,14 @@ export function buildColumns(propertyId: number, ratePerPoint: number, t: TFunct
     columnHelper.accessor('quotaYear', {
       header: t('columns.quota_year'),
 
-      cell: ({ row }) => (
-        <span className="font-medium">{formatCurrency(row.original.quotaYear)}</span>
-      ),
+      cell: ({ row }) => <span className="font-medium">{money(row.original.quotaYear)}</span>,
     }),
 
     columnHelper.accessor('quotaMonth', {
       header: t('columns.quota_month'),
 
       cell: ({ row }) => (
-        <span className="text-muted-foreground">{formatCurrency(row.original.quotaMonth)}</span>
+        <span className="text-muted-foreground">{money(row.original.quotaMonth)}</span>
       ),
     }),
 
@@ -261,7 +268,7 @@ export function buildColumns(propertyId: number, ratePerPoint: number, t: TFunct
     columnHelper.display({
       id: 'actions',
 
-      header: () => <div className="text-right">{t('columns.actions')}</div>,
+      header: () => <div className="text-end">{t('columns.actions')}</div>,
 
       cell: ({ row }) => (
         <div className="flex justify-end">

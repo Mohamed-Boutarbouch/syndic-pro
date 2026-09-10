@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 
 type FiscalYearCollectionCardProps = {
   collected: number;
@@ -14,10 +13,10 @@ export function FiscalYearCollectionCard({
   target,
   percentage,
 }: FiscalYearCollectionCardProps) {
-  const { t } = useTranslation('properties.ledger.fiscal_year_card');
+  const { t, money, isRtl } = useTranslation('properties.ledger.fiscal_year_card');
 
   return (
-    <Card>
+    <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-sm font-medium">{t('title')}</CardTitle>
 
@@ -30,12 +29,12 @@ export function FiscalYearCollectionCard({
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           <span>
             {t('amount_collected', {
-              amount: formatCurrency(collected),
+              amount: money(collected),
             })}
           </span>
           <span>
             {t('target_label', {
-              amount: formatCurrency(target),
+              amount: money(target),
             })}
           </span>
         </div>

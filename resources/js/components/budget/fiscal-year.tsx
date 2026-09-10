@@ -34,7 +34,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { Budget, BudgetDistribution } from '@/types/properties/budget';
 
 type FiscalYearProps = {
@@ -47,7 +46,7 @@ function monthOf(dateString: string): string {
 }
 
 export function FiscalYear({ budget, distribution }: FiscalYearProps) {
-  const { t } = useTranslation('properties.budget.fiscal_year');
+  const { t, money, isRtl } = useTranslation('properties.budget.fiscal_year');
 
   const months = [
     { label: t('period.months.01'), value: '01' },
@@ -100,7 +99,7 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
   const { totalWeight, sharePerPoint } = distribution;
 
   return (
-    <Card>
+    <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle className="mb-2 flex gap-2">
           <CalendarDays /> {t('title')}
@@ -216,7 +215,7 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
                   <ItemDescription>
                     {t('annual_target.auto_calculation.description', {
                       weight: totalWeight.toFixed(1),
-                      share: formatCurrency(sharePerPoint),
+                      share: money(sharePerPoint),
                     })}
                   </ItemDescription>
                 </ItemContent>
@@ -225,12 +224,12 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
           ) : (
             <div className="flex items-center gap-4">
               <h2 className="cn-font-heading text-2xl leading-snug font-bold">
-                {formatCurrency(totalBudget)}
+                {money(totalBudget)}
               </h2>
 
               <Badge variant="secondary">
                 {t('annual_target.per_point_badge', {
-                  amount: formatCurrency(sharePerPoint),
+                  amount: money(sharePerPoint),
                 })}
               </Badge>
             </div>

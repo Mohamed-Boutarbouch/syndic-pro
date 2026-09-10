@@ -16,7 +16,6 @@ import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useTranslation } from '@/hooks/use-translation';
-import { formatCurrency } from '@/lib/format-currency';
 import type { CoOwnerStatusData } from '@/types/properties/ledger';
 
 type CoOwnerStatusProps = {
@@ -54,7 +53,7 @@ function getStatus(paid: number, quota: number) {
 }
 
 function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
-  const { t } = useTranslation('properties.ledger.co_owner_status');
+  const { t, money, isRtl } = useTranslation('properties.ledger.co_owner_status');
 
   const paid = getTotalPaid(coOwner);
 
@@ -72,7 +71,7 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
         render={
           <button
             type="button"
-            className="flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex w-full items-center gap-3 rounded-lg border p-3 text-start transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           />
         }
       >
@@ -87,19 +86,20 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
 
               <Badge variant="outline" className={status.className}>
                 <StatusIcon data-icon="inline-start" />
+
                 {t(`status.${status.key}`)}
               </Badge>
             </div>
 
             <span className="shrink-0 text-xs text-muted-foreground">
               {t('balance_summary', {
-                paid: formatCurrency(paid),
-                quota: formatCurrency(coOwner.quota),
+                paid: money(paid),
+                quota: money(coOwner.quota),
               })}
 
               {remaining > 0 &&
                 ` ${t('balance_remaining_suffix', {
-                  amount: formatCurrency(remaining),
+                  amount: money(remaining),
                 })}`}
             </span>
           </div>
@@ -107,7 +107,9 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
           <Progress value={percentage} className="mt-1 h-2" />
         </div>
 
-        <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground" />
+        <ChevronRightIcon
+          className={`size-4 shrink-0 text-muted-foreground ${isRtl ? 'rotate-180' : ''}`}
+        />
       </DialogTrigger>
 
       <DialogContent>
@@ -127,21 +129,21 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
           <DialogDescription>
             {t('detail_dialog.quota_label', {
               unit: coOwner.unit,
-              amount: formatCurrency(coOwner.quota),
+              amount: money(coOwner.quota),
             })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="mt-6">
-          <div className="mb-2 flex items-center justify-between">
+          <div className="mb-2 flex items-center justify-between gap-4">
             <span className="text-sm text-muted-foreground">
               {t('detail_dialog.progress_label')}
             </span>
 
-            <span className="text-sm font-medium">
+            <span className="text-end text-sm font-medium">
               {t('detail_dialog.progress_summary', {
-                paid: formatCurrency(paid),
-                quota: formatCurrency(coOwner.quota),
+                paid: money(paid),
+                quota: money(coOwner.quota),
                 percent: percentage,
               })}
             </span>
@@ -164,7 +166,7 @@ function CoOwnerRow({ coOwner }: { coOwner: CoOwnerStatusData }) {
                   </ItemContent>
 
                   <ItemActions>
-                    <span className="text-sm font-medium">{formatCurrency(payment.amount)}</span>
+                    <span className="text-sm font-medium">{money(payment.amount)}</span>
                   </ItemActions>
                 </Item>
               ))
