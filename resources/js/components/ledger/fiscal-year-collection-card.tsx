@@ -24,7 +24,7 @@ export function FiscalYearCollectionCard({
       </CardHeader>
 
       <CardContent>
-        <Progress value={percentage} className="h-2" />
+        <Progress value={percentage} className="h-2 **:data-[slot=progress-track]:h-2" />
 
         <div className="mt-2 flex justify-between text-xs text-muted-foreground">
           <span>

@@ -48,20 +48,14 @@ function monthOf(dateString: string): string {
 export function FiscalYear({ budget, distribution }: FiscalYearProps) {
   const { t, money, isRtl } = useTranslation('properties.budget.fiscal_year');
 
-  const months = [
-    { label: t('period.months.01'), value: '01' },
-    { label: t('period.months.02'), value: '02' },
-    { label: t('period.months.03'), value: '03' },
-    { label: t('period.months.04'), value: '04' },
-    { label: t('period.months.05'), value: '05' },
-    { label: t('period.months.06'), value: '06' },
-    { label: t('period.months.07'), value: '07' },
-    { label: t('period.months.08'), value: '08' },
-    { label: t('period.months.09'), value: '09' },
-    { label: t('period.months.10'), value: '10' },
-    { label: t('period.months.11'), value: '11' },
-    { label: t('period.months.12'), value: '12' },
-  ];
+  const months = Array.from({ length: 12 }, (_, index) => {
+    const value = String(index + 1).padStart(2, '0');
+
+    return {
+      value,
+      label: t(`period.months.${value}`),
+    };
+  });
 
   const [isActive, setIsActive] = useState(false);
   const [startMonth, setStartMonth] = useState(budget ? monthOf(budget.startDate) : '');
@@ -102,7 +96,8 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
     <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle className="mb-2 flex gap-2">
-          <CalendarDays /> {t('title')}
+          <CalendarDays />
+          {t('title')}
         </CardTitle>
 
         <CardDescription>{t('description')}</CardDescription>
@@ -135,12 +130,13 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
               <p className="text-sm text-muted-foreground">{t('period.start_month_label')}</p>
 
               <Select
+                items={months}
                 disabled={!isActive}
                 value={startMonth}
                 onValueChange={(value) => setStartMonth(value ?? '')}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a month" />
+                  <SelectValue placeholder={t('period.month_placeholder')} />
                 </SelectTrigger>
 
                 <SelectContent>
@@ -159,6 +155,7 @@ export function FiscalYear({ budget, distribution }: FiscalYearProps) {
               <p className="text-sm text-muted-foreground">{t('period.end_month_label')}</p>
 
               <Select
+                items={months}
                 disabled={!isActive}
                 value={endMonth}
                 onValueChange={(value) => setEndMonth(value ?? '')}
