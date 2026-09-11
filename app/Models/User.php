@@ -129,6 +129,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany<SyndicDesignation, $this>
+     */
+    public function currentSyndicDesignations(): HasMany
+    {
+        return $this->syndicDesignations()->current();
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

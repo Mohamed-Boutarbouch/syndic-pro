@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/properties/dashboard',
+    'home' => '/onboarding/property',
 
     /*
     |--------------------------------------------------------------------------

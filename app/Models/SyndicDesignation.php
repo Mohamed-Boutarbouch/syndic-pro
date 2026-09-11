@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\SyndicEvent;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -62,6 +63,17 @@ class SyndicDesignation extends Model
             User::class,
             'transferred_from_user_id'
         );
+    }
+
+    /**
+     * Scope a query to only current (active) syndic designations.
+     *
+     * @param  Builder<SyndicDesignation>  $query
+     * @return Builder<SyndicDesignation>
+     */
+    public function scopeCurrent(Builder $query): Builder
+    {
+        return $query->whereNull('resigned_at');
     }
 
     /**

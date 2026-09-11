@@ -6,6 +6,7 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CoOwnerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LedgerController;
+use App\Http\Controllers\PropertySelectionController;
 use App\Http\Controllers\StorePaymentController;
 use App\Http\Controllers\TransferSyndicController;
 use App\Http\Controllers\UpdateAnnualTargetBudgetController;
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/properties/select', PropertySelectionController::class)
+        ->name('properties.select');
+
     Route::get(
         'properties/{property}/dashboard',
         DashboardController::class,
