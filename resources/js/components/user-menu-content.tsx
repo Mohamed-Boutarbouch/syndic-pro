@@ -25,18 +25,22 @@ type Props = {
 
 const LOCALES: ReadonlyArray<{
   code: Locale;
+  emoji: string;
   nativeLabel: string;
 }> = [
   {
     code: 'en',
+    emoji: '🇬🇧',
     nativeLabel: 'English',
   },
   {
     code: 'fr',
+    emoji: '🇫🇷',
     nativeLabel: 'Français',
   },
   {
     code: 'ar',
+    emoji: '🇲🇦',
     nativeLabel: 'العربية',
   },
 ];
@@ -110,7 +114,9 @@ export function UserMenuContent({ user }: Props) {
                 onClick={() => handleLocaleChange(item.code)}
                 className="cursor-pointer"
               >
-                <span>{item.nativeLabel}</span>
+                <span>
+                  {item.emoji} {item.nativeLabel}
+                </span>
 
                 {item.code === locale && (
                   <span className="ml-auto text-xs text-muted-foreground">✓</span>
