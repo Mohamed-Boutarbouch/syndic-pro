@@ -3,7 +3,7 @@ import { RefreshCw, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import type { SubmitEvent } from 'react';
 
-import addMidYearUnit from '@/actions/App/Http/Controllers/AddMidYearUnitController';
+import addMidYearUnit from '@/actions/App/Http/Controllers/Budget/AddMidYearUnitController';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

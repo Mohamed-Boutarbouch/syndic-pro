@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 
-import ledger from '@/actions/App/Http/Controllers/LedgerController';
+import ledger from '@/actions/App/Http/Controllers/Ledger/ShowLedgerController';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

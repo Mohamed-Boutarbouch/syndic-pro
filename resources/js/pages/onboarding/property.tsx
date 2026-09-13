@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
-import OnboardingLayout from '@/layouts/onboarding/layout';
 import { PropertyForm } from '@/components/onboarding/property-form';
+import OnboardingLayout from '@/layouts/onboarding/layout';
 
 export default function PropertyPage() {
   return (

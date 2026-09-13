@@ -3,8 +3,7 @@ import { format } from 'date-fns';
 import { Notebook, Plus } from 'lucide-react';
 import { useState } from 'react';
 
-import store from '@/actions/App/Http/Controllers/StorePaymentController';
-
+import store from '@/actions/App/Http/Controllers/Ledger/StorePaymentController';
 import { CoOwnerSelect } from '@/components/ledger/co-owner-select';
 import { useColumns } from '@/components/ledger/columns';
 import { DataTable } from '@/components/ledger/data-table';

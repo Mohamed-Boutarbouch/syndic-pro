@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react';
 import { BadgeCheck, Calculator, CalendarDays, LockKeyhole } from 'lucide-react';
 import { useState } from 'react';
 
-import update from '@/actions/App/Http/Controllers/UpdateAnnualTargetBudgetController';
+import update from '@/actions/App/Http/Controllers/Budget/UpdateBudgetController';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

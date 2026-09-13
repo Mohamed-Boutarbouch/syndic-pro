@@ -2,7 +2,7 @@ import { valibotResolver } from '@hookform/resolvers/valibot';
 import { router } from '@inertiajs/react';
 import { UserPlus } from 'lucide-react';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import * as v from 'valibot';
 
 import { Button } from '@/components/ui/button';
@@ -42,15 +42,6 @@ type AssignCoOwnerCellProps = {
   t: TFunction;
 };
 
-// Mirrors StoreUnitCoOwnerRequest's mode-dependent rules exactly:
-//  - mode "existing" requires co_owner_id (must be one of the unassigned
-//    co-owner ids passed in, mirroring the backend's exists:co_owners,id)
-//  - mode "new" requires name; email/phone optional
-// v.variant('mode', [...]) is valibot's discriminated union — it picks
-// the branch schema based on the literal value of `mode`, so a payload
-// tagged "existing" is never checked against the "new" branch's rules
-// and vice versa. Keep both this schema and StoreUnitCoOwnerRequest in
-// sync if either side's rules change.
 function buildSchema(unassignedCoOwnerIds: number[]) {
   return v.variant('mode', [
     v.object({
@@ -97,7 +88,7 @@ export function AssignCoOwnerCell({
 
   const schema = buildSchema(unassignedCoOwners.map((c) => c.id));
 
-  const form = useForm<AssignCoOwnerFormValues>({
+  const { control, reset, setError, handleSubmit } = useForm<AssignCoOwnerFormValues>({
     resolver: valibotResolver(schema),
     defaultValues: {
       mode: defaultMode,
@@ -108,22 +99,21 @@ export function AssignCoOwnerCell({
     } as never,
   });
 
-  const mode = form.watch('mode');
+  const mode = useWatch({
+    control,
+    name: 'mode',
+  });
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
 
     if (!next) {
-      form.reset();
+      reset();
     }
   }
 
   function handleModeChange(next: 'existing' | 'new') {
-    // Reset the whole form to the new branch's shape rather than patching
-    // individual fields — since the schema is a discriminated variant,
-    // stale fields from the other branch (e.g. leftover co_owner_id when
-    // switching to "new") must not linger and get validated.
-    form.reset(
+    reset(
       next === 'existing'
         ? { mode: 'existing', co_owner_id: undefined }
         : { mode: 'new', name: '', email: '', phone: '' },
@@ -137,14 +127,11 @@ export function AssignCoOwnerCell({
       preserveScroll: true,
       onSuccess: () => {
         setOpen(false);
-        form.reset();
+        reset();
       },
-      // Bridge Laravel FormRequest errors back onto the matching RHF field
-      // — covers backend-only rules the valibot schema can't express
-      // (e.g. Rule::exists('co_owners', 'id') against the live DB state).
       onError: (errors) => {
         Object.entries(errors).forEach(([field, message]) => {
-          form.setError(field as keyof AssignCoOwnerFormValues, {
+          setError(field as keyof AssignCoOwnerFormValues, {
             type: 'server',
             message: message as string,
           });
@@ -175,7 +162,7 @@ export function AssignCoOwnerCell({
           </DialogDescription>
         </DialogHeader>
 
-        <form id={FORM_ID} onSubmit={form.handleSubmit(onSubmit)}>
+        <form id={FORM_ID} onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-4">
             <Tabs
               value={mode}
@@ -196,7 +183,7 @@ export function AssignCoOwnerCell({
                 <FieldGroup>
                   <Controller
                     name="co_owner_id"
-                    control={form.control}
+                    control={control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor="existing-co-owner">
@@ -243,7 +230,7 @@ export function AssignCoOwnerCell({
                 <FieldGroup>
                   <Controller
                     name="name"
-                    control={form.control}
+                    control={control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor={field.name}>
@@ -264,7 +251,7 @@ export function AssignCoOwnerCell({
 
                   <Controller
                     name="email"
-                    control={form.control}
+                    control={control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor={field.name}>
@@ -286,7 +273,7 @@ export function AssignCoOwnerCell({
 
                   <Controller
                     name="phone"
-                    control={form.control}
+                    control={control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor={field.name}>

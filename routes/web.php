@@ -1,19 +1,19 @@
 <?php
 
-use App\Http\Controllers\AddMidYearUnitController;
-use App\Http\Controllers\BillingController;
-use App\Http\Controllers\BudgetController;
-use App\Http\Controllers\CoOwnerController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LedgerController;
-use App\Http\Controllers\PropertySelectionController;
-use App\Http\Controllers\StorePaymentController;
-use App\Http\Controllers\StoreUnitController;
-use App\Http\Controllers\StoreUnitCoOwnerController;
-use App\Http\Controllers\TransferSyndicController;
-use App\Http\Controllers\UpdateAnnualTargetBudgetController;
-use App\Http\Controllers\UpdateBillingFrequencyController;
-use App\Http\Controllers\UpdateUnitCoefficientController;
+use App\Http\Controllers\Billing\ShowBillingController;
+use App\Http\Controllers\Billing\UpdateBillingFrequencyController;
+use App\Http\Controllers\Budget\AddMidYearUnitController;
+use App\Http\Controllers\Budget\ShowBudgetController;
+use App\Http\Controllers\Budget\UpdateBudgetController;
+use App\Http\Controllers\CoOwners\ShowCoOwnersController;
+use App\Http\Controllers\CoOwners\StoreUnitController;
+use App\Http\Controllers\CoOwners\StoreUnitCoOwnerController;
+use App\Http\Controllers\CoOwners\TransferSyndicController;
+use App\Http\Controllers\CoOwners\UpdateUnitCoefficientController;
+use App\Http\Controllers\Ledger\ShowLedgerController;
+use App\Http\Controllers\Ledger\StorePaymentController;
+use App\Http\Controllers\Property\DashboardController;
+use App\Http\Controllers\Property\PropertySelectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -31,7 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // how properties/{property} routes are already grouped in your routes file).
     Route::get(
         'properties/{property}/budget',
-        BudgetController::class,
+        ShowBudgetController::class,
     )->name('properties.budget');
 
     Route::post('properties/{property}/budget/units', AddMidYearUnitController::class)
@@ -42,12 +42,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // you drop the manual abort_unless() check in the controller.
     Route::patch(
         'properties/{property}/budget/{budget}',
-        UpdateAnnualTargetBudgetController::class
+        UpdateBudgetController::class
     )->name('properties.budget.update');
 
     Route::get(
         'properties/{property}/co-owners',
-        CoOwnerController::class,
+        ShowCoOwnersController::class,
     )->name('properties.co-owners');
 
     Route::patch(
@@ -72,7 +72,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get(
         'properties/{property}/billing',
-        BillingController::class,
+        ShowBillingController::class,
     )->name('properties.billing');
 
     Route::patch(
@@ -82,7 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get(
         'properties/{property}/ledger',
-        LedgerController::class,
+        ShowLedgerController::class,
     )->name('properties.ledger');
 
     Route::post(
