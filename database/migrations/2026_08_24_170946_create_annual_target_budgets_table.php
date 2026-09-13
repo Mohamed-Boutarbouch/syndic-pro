@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('annual_target_budgets', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('property_id')
+            $table->foreignUlid('property_id')
                 ->constrained('properties')
                 ->restrictOnDelete();
 

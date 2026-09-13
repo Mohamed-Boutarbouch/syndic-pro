@@ -35,7 +35,7 @@ import {
 import { useTranslation } from '@/hooks/use-translation';
 
 type AddUnitDialogProps = {
-  propertyId: number;
+  propertyId: string;
 };
 
 const UNIT_TYPES = ['residential', 'commercial', 'storage', 'other'] as const;

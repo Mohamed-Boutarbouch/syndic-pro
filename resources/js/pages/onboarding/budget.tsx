@@ -6,7 +6,7 @@ import OnboardingLayout from '@/layouts/onboarding/layout';
 
 type BudgetPageProps = {
   property: {
-    id: number;
+    id: string;
     name: string;
   };
 };

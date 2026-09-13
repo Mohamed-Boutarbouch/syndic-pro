@@ -29,7 +29,7 @@ import {
 
 type BudgetFormProps = {
   property: {
-    id: number;
+    id: string;
     name: string;
   };
 };

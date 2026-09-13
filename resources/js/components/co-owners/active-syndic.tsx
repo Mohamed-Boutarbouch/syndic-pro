@@ -41,7 +41,7 @@ import type {
 } from '@/types/properties/co-owners';
 
 type ActiveSyndicProps = {
-  propertyId: number;
+  propertyId: string;
   activeSyndic: ActiveSyndicData | null;
   candidates: TransferCandidate[];
 };

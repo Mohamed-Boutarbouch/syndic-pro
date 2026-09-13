@@ -6,7 +6,7 @@ import OnboardingLayout from '@/layouts/onboarding/layout';
 
 export type CoOwnerPageProps = {
   property: {
-    id: number;
+    id: string;
     name: string;
   };
 
@@ -14,7 +14,7 @@ export type CoOwnerPageProps = {
 
   units: {
     id: number;
-    property_id: number;
+    property_id: string;
     label: string;
     floor: number;
     type: string;

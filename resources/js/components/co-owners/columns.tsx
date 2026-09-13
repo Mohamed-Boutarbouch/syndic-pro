@@ -30,7 +30,7 @@ const columnHelper = createColumnHelper<DataTableFeatures, UnitShare>();
 
 type CoefficientEditCellProps = {
   unit: UnitShare;
-  propertyId: number;
+  propertyId: string;
   ratePerPoint: number;
   t: TFunction;
 };
@@ -168,7 +168,7 @@ function CoefficientEditCell({ unit, propertyId, ratePerPoint, t }: CoefficientE
 }
 
 export function buildColumns(
-  propertyId: number,
+  propertyId: string,
   ratePerPoint: number,
   t: TFunction,
   money: MoneyFunction,

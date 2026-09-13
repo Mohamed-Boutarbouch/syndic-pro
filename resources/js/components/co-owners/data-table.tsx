@@ -44,7 +44,7 @@ import type { UnitShare } from '@/types/properties/co-owners';
 
 interface DataTableProps {
   data: UnitShare[];
-  propertyId: number;
+  propertyId: string;
   ratePerPoint: number;
   totalWeight: number;
   unassignedCoOwners: { id: number; name: string }[]; // new

@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('syndic_designations', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('property_id')
+            $table->foreignUlid('property_id')
                 ->constrained('properties')
                 ->cascadeOnDelete();
 

@@ -6,7 +6,7 @@ import OnboardingLayout from '@/layouts/onboarding/layout';
 
 export type UnitPageProps = {
   property: {
-    id: number;
+    id: string;
     name: string;
   };
 

@@ -35,7 +35,7 @@ type UnassignedCoOwnerOption = {
 };
 
 type AssignCoOwnerCellProps = {
-  propertyId: number;
+  propertyId: string;
   unitId: number;
   unitLabel: string;
   unassignedCoOwners: UnassignedCoOwnerOption[];

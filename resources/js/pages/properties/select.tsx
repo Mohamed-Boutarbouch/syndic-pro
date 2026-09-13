@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/item';
 
 type SelectableProperty = {
-  id: number;
+  id: string;
   name: string;
   address: string | null;
   city: string;

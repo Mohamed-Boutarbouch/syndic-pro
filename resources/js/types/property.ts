@@ -1,4 +1,4 @@
 export type Property = {
-  id: number;
+  id: string;
   name: string;
 };

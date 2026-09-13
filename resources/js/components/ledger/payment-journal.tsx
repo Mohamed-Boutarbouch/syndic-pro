@@ -42,7 +42,7 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnerOption, PaymentLog } from '@/types/properties/ledger';
 
 type PaymentJournalProps = {
-  propertyId: number;
+  propertyId: string;
   coOwners: CoOwnerOption[];
   payments: PaymentLog[];
   transactionCount: number;

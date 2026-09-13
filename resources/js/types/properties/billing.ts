@@ -40,7 +40,7 @@ export type BillingProps = {
 };
 
 export type CoOwnerPaymentsProps = {
-  propertyId: number | string;
+  propertyId: string;
   payments: CoOwnerPayment[];
 };
 

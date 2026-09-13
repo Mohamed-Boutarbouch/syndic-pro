@@ -1,5 +1,5 @@
 export type DashboardProperty = {
-  id: number;
+  id: string;
   name: string;
 };
 

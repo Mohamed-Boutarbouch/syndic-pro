@@ -19,7 +19,7 @@ import type { NavItem } from '@/types';
 
 type SharedProps = {
   property: {
-    id: number;
+    id: string;
     name: string;
   };
 };
