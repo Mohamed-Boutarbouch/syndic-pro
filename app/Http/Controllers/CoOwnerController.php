@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\SyndicEvent;
+use App\Models\CoOwner;
 use App\Models\Property;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -31,10 +32,40 @@ class CoOwnerController
             : 0;
 
         $unitShares = $units->flatMap(function ($unit) {
+            if ($unit->unitCoOwners->isEmpty()) {
+                // Surface the unit even with no co-owner attached yet, so it's
+                // discoverable for assignment. unitCoOwnerId/coOwnerId/billing
+                // fields are null — the frontend's actions column swaps the
+                // coefficient-edit pencil for the "assign co-owner" action when
+                // it sees unitCoOwnerId === null.
+                return [[
+                    'id' => 'unit-'.$unit->id,
+                    'unitId' => $unit->id,
+                    'unitCoOwnerId' => null,
+                    'unit' => $unit->label,
+                    'floor' => $unit->floor,
+                    'type' => $unit->type->value,
+                    'coOwner' => null,
+                    'coOwnerId' => null,
+                    'coefficient' => (float) $unit->weight_coefficient,
+                    'quotaYear' => (float) $unit->calculated_annual_budget,
+                    'quotaMonth' => round(((float) $unit->calculated_annual_budget) / 12, 2),
+                    'billingFrequency' => null,
+                    'status' => 'unassigned',
+                ]];
+            }
+
             // A unit can have multiple co-owners linked (joint ownership);
             // surface one matrix row per unit_co_owner link so coefficient
             // edits stay scoped to the unit, and status/billing reflect the
             // specific co-owner link.
+            //
+            // NOTE: AssignCoOwnerToUnit currently enforces ONE co-owner per unit
+            // (per product decision), so in practice this map now only ever
+            // produces a single row per unit. Left as flatMap/map rather than
+            // simplified to a single lookup, since joint ownership may return —
+            // this keeps the two code paths (read side here, write side in the
+            // action) independently reversible.
             return $unit->unitCoOwners->map(function ($unitCoOwner) use ($unit) {
                 $coOwner = $unitCoOwner->coOwner;
 
@@ -108,6 +139,23 @@ class CoOwnerController
             ])
             ->values();
 
+        // Co-owners not linked to any unit on this property — feeds the
+        // "assign existing" tab in AssignCoOwnerCell. Property-scoped via the
+        // units already loaded, since CoOwner has no direct property_id.
+        $linkedCoOwnerIds = $units
+            ->flatMap(fn ($unit) => $unit->unitCoOwners->pluck('co_owner_id'))
+            ->all();
+
+        $unassignedCoOwners = CoOwner::query()
+            ->where('is_active', true)
+            ->whereNotIn('id', $linkedCoOwnerIds)
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn ($coOwner) => [
+                'id' => $coOwner->id,
+                'name' => $coOwner->name,
+            ]);
+
         return Inertia::render('properties/co-owners', [
             'property' => [
                 'id' => $property->id,
@@ -124,6 +172,7 @@ class CoOwnerController
                 'totalWeight' => $totalWeight,
                 'isLocked' => $currentBudget->is_budget_locked,
             ] : null,
+            'unassignedCoOwners' => $unassignedCoOwners,
         ]);
     }
 }

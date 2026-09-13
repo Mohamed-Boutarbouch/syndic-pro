@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\PropertySelectionController;
 use App\Http\Controllers\StorePaymentController;
+use App\Http\Controllers\StoreUnitController;
+use App\Http\Controllers\StoreUnitCoOwnerController;
 use App\Http\Controllers\TransferSyndicController;
 use App\Http\Controllers\UpdateAnnualTargetBudgetController;
 use App\Http\Controllers\UpdateBillingFrequencyController;
@@ -57,6 +59,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/co-owners/syndic/transfer',
         TransferSyndicController::class,
     )->name('properties.co-owners.syndic.transfer');
+
+    Route::post(
+        'properties/{property}/units',
+        StoreUnitController::class,
+    )->name('properties.units.store');
+
+    Route::post(
+        'properties/{property}/units/{unit}/co-owners',
+        StoreUnitCoOwnerController::class,
+    )->name('properties.units.co-owners.store');
 
     Route::get(
         'properties/{property}/billing',

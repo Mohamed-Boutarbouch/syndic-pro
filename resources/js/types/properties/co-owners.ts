@@ -10,17 +10,17 @@ export type CoOwnersKpis = {
 export type UnitShare = {
   id: string;
   unitId: number;
-  unitCoOwnerId: number;
+  unitCoOwnerId: number | null; // was: number
   unit: string;
   floor: string | null;
   type: 'residential' | 'commercial' | 'storage' | 'other';
-  coOwner: string;
+  coOwner: string | null; // was: string
   coOwnerId: number | null;
   coefficient: number;
   quotaYear: number;
   quotaMonth: number;
-  billingFrequency: 'monthly' | 'bi_monthly' | 'quarterly' | 'semestral' | string;
-  status: 'syndic' | 'co-owner';
+  billingFrequency: 'monthly' | 'bi_monthly' | 'quarterly' | 'semestral' | string | null; // was non-null
+  status: 'syndic' | 'co-owner' | 'unassigned'; // added 'unassigned'
 };
 
 export type TransferCandidate = {
@@ -54,4 +54,5 @@ export type CoOwnersProps = {
   activeSyndic: ActiveSyndic | null;
   transferCandidates: TransferCandidate[];
   budget: BudgetSummary | null;
+  unassignedCoOwners: { id: number; name: string }[]; // new
 };

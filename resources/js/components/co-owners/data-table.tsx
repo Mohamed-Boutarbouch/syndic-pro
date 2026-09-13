@@ -9,11 +9,19 @@ import {
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import { AddUnitDialog } from '@/components/co-owners/add-unit-dialog';
 import { buildColumns } from '@/components/co-owners/columns';
 import { features } from '@/components/co-owners/data-table-features';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -39,15 +47,22 @@ interface DataTableProps {
   propertyId: number;
   ratePerPoint: number;
   totalWeight: number;
+  unassignedCoOwners: { id: number; name: string }[]; // new
 }
 
-export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataTableProps) {
+export function DataTable({
+  data,
+  propertyId,
+  ratePerPoint,
+  totalWeight,
+  unassignedCoOwners,
+}: DataTableProps) {
   const { t, money, isRtl } = useTranslation('properties.co_owners.data_table');
   const [search, setSearch] = useState('');
 
   const columns = useMemo(
-    () => buildColumns(propertyId, ratePerPoint, t, money),
-    [propertyId, ratePerPoint, t, money],
+    () => buildColumns(propertyId, ratePerPoint, t, money, unassignedCoOwners),
+    [propertyId, ratePerPoint, t, money, unassignedCoOwners],
   );
 
   const table = useTable({
@@ -74,10 +89,7 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
   return (
     <Card dir={isRtl ? 'rtl' : 'ltr'}>
       <CardHeader>
-        <CardTitle>
-          {t('title')}
-          {/*Unit Shares & Co-Owners Matrix*/}
-        </CardTitle>
+        <CardTitle>{t('title')}</CardTitle>
 
         <CardDescription>
           {t('description', {
@@ -85,6 +97,10 @@ export function DataTable({ data, propertyId, ratePerPoint, totalWeight }: DataT
             rate: money(ratePerPoint),
           })}
         </CardDescription>
+
+        <CardAction>
+          <AddUnitDialog propertyId={propertyId} />
+        </CardAction>
       </CardHeader>
 
       <CardContent>

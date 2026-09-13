@@ -4,6 +4,7 @@ import { Building, CircleEllipsis, Pencil, Store, Warehouse } from 'lucide-react
 import { useEffect, useState } from 'react';
 import type { SubmitEvent } from 'react';
 
+import { AssignCoOwnerCell } from '@/components/co-owners/assign-co-owner-cell';
 import type { DataTableFeatures } from '@/components/co-owners/data-table-features';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -171,6 +172,7 @@ export function buildColumns(
   ratePerPoint: number,
   t: TFunction,
   money: MoneyFunction,
+  unassignedCoOwners: { id: number; name: string }[],
 ) {
   return columnHelper.columns([
     columnHelper.accessor('unit', {
@@ -228,7 +230,19 @@ export function buildColumns(
     columnHelper.accessor('coOwner', {
       header: t('columns.co_owner'),
 
-      cell: ({ row }) => <span>{row.original.coOwner}</span>,
+      cell: ({ row }) => {
+        const status = row.original.status;
+
+        if (status === 'syndic') {
+          return <Badge>{t('status_values.syndic')}</Badge>;
+        }
+
+        if (status === 'unassigned') {
+          return <Badge variant="secondary">{t('status_values.unassigned')}</Badge>;
+        }
+
+        return <Badge variant="outline">{t('status_values.co_owner')}</Badge>;
+      },
     }),
 
     columnHelper.accessor('coefficient', {
@@ -272,12 +286,22 @@ export function buildColumns(
 
       cell: ({ row }) => (
         <div className="flex justify-end">
-          <CoefficientEditCell
-            unit={row.original}
-            propertyId={propertyId}
-            ratePerPoint={ratePerPoint}
-            t={t}
-          />
+          {row.original.unitCoOwnerId === null ? (
+            <AssignCoOwnerCell
+              propertyId={propertyId}
+              unitId={row.original.unitId}
+              unitLabel={row.original.unit}
+              unassignedCoOwners={unassignedCoOwners}
+              t={t}
+            />
+          ) : (
+            <CoefficientEditCell
+              unit={row.original}
+              propertyId={propertyId}
+              ratePerPoint={ratePerPoint}
+              t={t}
+            />
+          )}
         </div>
       ),
     }),
