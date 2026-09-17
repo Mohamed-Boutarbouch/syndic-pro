@@ -181,6 +181,20 @@ export function buildColumns(
       cell: ({ row }) => <span className="font-medium">{row.original.unit}</span>,
     }),
 
+    columnHelper.accessor('coOwner', {
+      header: t('columns.co_owner'),
+
+      cell: ({ row }) => {
+        const coOwner = row.original.coOwner;
+
+        return coOwner ? (
+          <span className="font-medium">{coOwner}</span>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        );
+      },
+    }),
+
     columnHelper.accessor('type', {
       header: t('columns.type'),
 
@@ -224,24 +238,6 @@ export function buildColumns(
             {t('unit_types.other')}
           </Badge>
         );
-      },
-    }),
-
-    columnHelper.accessor('coOwner', {
-      header: t('columns.co_owner'),
-
-      cell: ({ row }) => {
-        const status = row.original.status;
-
-        if (status === 'syndic') {
-          return <Badge>{t('status_values.syndic')}</Badge>;
-        }
-
-        if (status === 'unassigned') {
-          return <Badge variant="secondary">{t('status_values.unassigned')}</Badge>;
-        }
-
-        return <Badge variant="outline">{t('status_values.co_owner')}</Badge>;
       },
     }),
 

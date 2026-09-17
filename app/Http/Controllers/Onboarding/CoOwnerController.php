@@ -23,6 +23,7 @@ class CoOwnerController
     public function create(Property $property): Response
     {
         $units = $property->units()
+            ->with('unitCoOwners.coOwner')
             ->orderBy('id', 'asc')
             ->get([
                 'id',
@@ -53,6 +54,7 @@ class CoOwnerController
                 'weight_coefficient' => (float) $unit->weight_coefficient,
                 'calculated_annual_budget' => (float) $unit->calculated_annual_budget,
                 'is_active' => $unit->is_active,
+                'coOwner' => $unit->unitCoOwners->first()?->coOwner?->name,
             ])->values(),
 
             'billingFrequency' => collect(BillingFrequency::cases())
