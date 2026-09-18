@@ -183,6 +183,11 @@
   "properties.co_owners.data_table.assign_dialog.cancel_button": "Cancel",
   "properties.co_owners.data_table.assign_dialog.assign_button": "Assign Co-Owner",
   "properties.co_owners.data_table.assign_dialog.assigning_button": "Assigning…",
+  "properties.co_owners.data_table.columns.billing_frequency": "Payment frequency",
+  "properties.co_owners.data_table.billing_frequency.monthly": "Monthly",
+  "properties.co_owners.data_table.billing_frequency.bimonthly": "Bimonthly",
+  "properties.co_owners.data_table.billing_frequency.quarterly": "Quarterly",
+  "properties.co_owners.data_table.billing_frequency.semi_annual": "Semi-annual",
 
   "properties.co_owners.data_table.status_values.unassigned": "Unassigned",
 

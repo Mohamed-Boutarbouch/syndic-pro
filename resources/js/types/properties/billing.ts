@@ -1,5 +1,5 @@
 export type BillingProperty = {
-  id: number;
+  id: string;
   name: string;
 };
 

@@ -25,6 +25,7 @@ import { Label } from '@/components/ui/label';
 import { useTranslation } from '@/hooks/use-translation';
 import type { MoneyFunction, TFunction } from '@/hooks/use-translation';
 import type { UnitShare } from '@/types/properties/co-owners';
+import { BillingFrequencyBadge } from '../billing-frequency-badge';
 
 const columnHelper = createColumnHelper<DataTableFeatures, UnitShare>();
 
@@ -251,6 +252,20 @@ export function buildColumns(
       header: t('columns.quota_year'),
 
       cell: ({ row }) => <span className="font-medium">{money(row.original.quotaYear)}</span>,
+    }),
+
+    columnHelper.accessor('billingFrequency', {
+      header: t('columns.billing_frequency'),
+
+      cell: ({ row }) => {
+        const frequency = row.original.billingFrequency;
+
+        if (!frequency) {
+          return <span className="text-muted-foreground">—</span>;
+        }
+
+        return <BillingFrequencyBadge frequency={frequency} />;
+      },
     }),
 
     columnHelper.accessor('quotaMonth', {
