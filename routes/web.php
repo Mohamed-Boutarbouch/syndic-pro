@@ -9,7 +9,7 @@ use App\Http\Controllers\CoOwners\ShowCoOwnersController;
 use App\Http\Controllers\CoOwners\StoreUnitController;
 use App\Http\Controllers\CoOwners\StoreUnitCoOwnerController;
 use App\Http\Controllers\CoOwners\TransferSyndicController;
-use App\Http\Controllers\CoOwners\UpdateUnitCoefficientController;
+use App\Http\Controllers\CoOwners\UpdateUnitRowController;
 use App\Http\Controllers\Ledger\ShowLedgerController;
 use App\Http\Controllers\Ledger\StorePaymentController;
 use App\Http\Controllers\Property\DashboardController;
@@ -51,9 +51,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )->name('properties.co-owners');
 
     Route::patch(
-        'properties/{property}/co-owners/units/{unit}/coefficient',
-        UpdateUnitCoefficientController::class,
-    )->name('properties.co-owners.units.coefficient');
+        'properties/{property}/co-owners/units/{unit}',
+        UpdateUnitRowController::class,
+    )->name('properties.co-owners.units.update');
 
     Route::post(
         'properties/{property}/co-owners/syndic/transfer',

@@ -96,9 +96,6 @@ export function AddUnitDialog({ propertyId }: AddUnitDialogProps) {
         setOpen(false);
         form.reset();
       },
-      // Surface backend (Laravel FormRequest) validation errors on the
-      // matching RHF fields, so server-side rules beyond the valibot
-      // schema (e.g. uniqueness) still show up per-field.
       onError: (errors) => {
         Object.entries(errors).forEach(([field, message]) => {
           form.setError(field as keyof UnitFormValues, {
@@ -115,10 +112,9 @@ export function AddUnitDialog({ propertyId }: AddUnitDialogProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger
         render={
-          <Button variant="outline">
+          <Button>
             <Plus data-icon="inline-start" />
             {t('trigger_button')}
-            {/*Add Unit*/}
           </Button>
         }
       />

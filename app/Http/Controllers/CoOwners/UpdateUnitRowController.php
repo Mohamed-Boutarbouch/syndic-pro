@@ -2,26 +2,31 @@
 
 namespace App\Http\Controllers\CoOwners;
 
-use App\Actions\CoOwners\UpdateUnitCoefficient;
-use App\Http\Requests\CoOwners\UpdateUnitCoefficientRequest;
+use App\Actions\CoOwners\UpdateUnitRow;
+use App\Http\Requests\CoOwners\UpdateUnitRowRequest;
 use App\Models\Property;
 use App\Models\Unit;
 use Illuminate\Http\RedirectResponse;
 
-class UpdateUnitCoefficientController
+class UpdateUnitRowController
 {
     public function __invoke(
-        UpdateUnitCoefficientRequest $request,
+        UpdateUnitRowRequest $request,
         Property $property,
         Unit $unit,
-        UpdateUnitCoefficient $action,
+        UpdateUnitRow $action,
     ): RedirectResponse {
         abort_unless($unit->property_id === $property->id, 404);
+
+        $unitCoOwner = $unit->unitCoOwners()->findOrFail(
+            $request->validated('unitCoOwnerId')
+        );
 
         $action->handle(
             $property,
             $unit,
-            (float) $request->validated('weight_coefficient'),
+            $unitCoOwner,
+            $request->validated(),
         );
 
         return back();

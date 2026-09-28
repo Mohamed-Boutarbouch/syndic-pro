@@ -47,7 +47,7 @@ interface DataTableProps {
   propertyId: string;
   ratePerPoint: number;
   totalWeight: number;
-  unassignedCoOwners: { id: number; name: string }[]; // new
+  unassignedCoOwners: { id: number; name: string }[];
 }
 
 export function DataTable({
