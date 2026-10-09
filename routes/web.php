@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Billing\ShowBillingController;
+use App\Http\Controllers\Billing\StoreCoPayerController;
 use App\Http\Controllers\Billing\UpdateBillingFrequencyController;
 use App\Http\Controllers\Budget\AddMidYearUnitController;
 use App\Http\Controllers\Budget\ShowBudgetController;
@@ -79,6 +80,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'properties/{property}/billing/co-owners/{unitCoOwner}/frequency',
         UpdateBillingFrequencyController::class,
     )->name('properties.billing.co-owners.frequency');
+
+    Route::post(
+        'properties/{property}/billing/co-owners/{unitCoOwner}/co-payers',
+        StoreCoPayerController::class,
+    )->name('properties.billing.co-owners.co-payers.store');
 
     Route::get(
         'properties/{property}/ledger',

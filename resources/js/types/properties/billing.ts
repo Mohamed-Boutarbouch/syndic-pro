@@ -19,6 +19,7 @@ export type HouseholdCoPayer = {
   relationship: string;
   sharePercentage: number;
   collected: number;
+  isOwner: boolean;
 };
 
 export type CoOwnerPayment = {
@@ -45,6 +46,7 @@ export type CoOwnerPaymentsProps = {
 };
 
 export type CoOwnerPaymentCardProps = {
+  propertyId: string;
   payment: CoOwnerPayment;
   onFrequencyChange?: (paymentId: string, frequency: PaymentFrequency) => void;
 };
@@ -59,5 +61,6 @@ export type FrequencyDialogProps = {
 };
 
 export type HouseholdCoPayersProps = {
+  propertyId: string;
   payment: CoOwnerPayment;
 };

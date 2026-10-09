@@ -1,19 +1,8 @@
-import { Plus, UserRoundX, UsersRoundIcon } from 'lucide-react';
+import { UserRoundX, UsersRoundIcon } from 'lucide-react';
 
 import { getProgress } from '@/components/billing/billing-data';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import {
   Empty,
   EmptyDescription,
@@ -21,15 +10,13 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
-import { Field, FieldGroup } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
-import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
 import type { HouseholdCoPayer, HouseholdCoPayersProps } from '@/types/properties/billing';
+import { AddCoPayerDialog } from './add-co-payer-dialog';
 
-export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
+export function HouseholdCoPayers({ payment, propertyId }: HouseholdCoPayersProps) {
   const { t, money } = useTranslation('properties.billing.household');
   const coPayers = payment.coPayers ?? [];
 
@@ -46,73 +33,12 @@ export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
           <span className="text-sm font-medium">{t('title')}</span>
         </div>
 
-        <Dialog>
-          <form>
-            <DialogTrigger
-              render={
-                <Button variant="outline">
-                  <Plus data-plus="inline-start" />
-                  {t('add_button')}
-                </Button>
-              }
-            />
-
-            <DialogContent className="sm:max-w-sm">
-              <DialogHeader>
-                <DialogTitle>{t('add_dialog.title')}</DialogTitle>
-
-                <DialogDescription>
-                  {t('add_dialog.description', {
-                    name: payment.name,
-                    quota: money(payment.quota),
-                  })}
-                </DialogDescription>
-              </DialogHeader>
-
-              <FieldGroup>
-                <Field>
-                  <Label htmlFor="full-name">{t('add_dialog.full_name_label')}</Label>
-
-                  <Input
-                    id="full-name"
-                    name="full-name"
-                    placeholder={t('add_dialog.full_name_placeholder')}
-                  />
-                </Field>
-
-                <Field>
-                  <Label htmlFor="relationship">{t('add_dialog.relationship_label')}</Label>
-
-                  <Input
-                    id="relationship"
-                    name="relationship"
-                    placeholder={t('add_dialog.relationship_placeholder')}
-                  />
-                </Field>
-
-                <Field>
-                  <Label htmlFor="quota-share">{t('add_dialog.quota_share_label')}</Label>
-
-                  <Input
-                    type="number"
-                    step="1"
-                    id="quota-share"
-                    name="quota-share"
-                    placeholder={t('add_dialog.quota_share_placeholder')}
-                  />
-                </Field>
-              </FieldGroup>
-
-              <DialogFooter>
-                <DialogClose
-                  render={<Button variant="outline">{t('add_dialog.cancel_button')}</Button>}
-                />
-
-                <Button type="submit">{t('add_dialog.add_button')}</Button>
-              </DialogFooter>
-            </DialogContent>
-          </form>
-        </Dialog>
+        <AddCoPayerDialog
+          propertyId={propertyId}
+          unitCoOwnerId={Number(payment.id)}
+          name={payment.name}
+          quota={payment.quota}
+        />
       </div>
 
       <div className="rounded-md border bg-muted/30 p-2.5">

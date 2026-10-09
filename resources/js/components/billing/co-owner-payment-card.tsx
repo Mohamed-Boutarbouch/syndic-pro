@@ -19,7 +19,11 @@ import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnerPaymentCardProps } from '@/types/properties/billing';
 
-export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymentCardProps) {
+export function CoOwnerPaymentCard({
+  propertyId,
+  payment,
+  onFrequencyChange,
+}: CoOwnerPaymentCardProps) {
   const { t, tChoice, money, isRtl } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -34,7 +38,7 @@ export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymen
   const remaining = getRemaining(payment.collected, payment.quota);
   const installment = getInstallmentAmount(payment.quota, payment.frequency);
 
-  const coPayerCount = Math.max(0, (payment.coPayers?.length ?? 0) - 1);
+  const coPayerCount = (payment.coPayers ?? []).filter((coPayer) => !coPayer.isOwner).length;
 
   const hasCoPayers = coPayerCount > 0;
 
@@ -161,7 +165,7 @@ export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymen
           />
 
           <CollapsibleContent>
-            <HouseholdCoPayers payment={payment} />
+            <HouseholdCoPayers payment={payment} propertyId={propertyId} />
           </CollapsibleContent>
         </Collapsible>
       </div>

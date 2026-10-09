@@ -112,7 +112,7 @@ class ShowBillingController
 
         if ($coPayerRows->isNotEmpty()) {
             $coPayers = $coPayerRows
-                ->map(function ($rowsForUser, $userId) use ($obligation) {
+                ->map(function ($rowsForUser, $userId) use ($obligation, $coOwner) {
                     $user = $rowsForUser->first()->user;
 
                     $collectedForUser = $obligation->paymentSchedules
@@ -135,6 +135,7 @@ class ShowBillingController
                         'relationship' => 'Co-payer',
                         'sharePercentage' => (int) round($avgSharePercentage),
                         'collected' => $collectedForUser,
+                        'isOwner' => $coOwner->user_id !== null && (int) $userId === (int) $coOwner->user_id,
                     ];
                 })
                 ->values()

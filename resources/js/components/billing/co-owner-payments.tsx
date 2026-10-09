@@ -31,6 +31,7 @@ export function CoOwnerPayments({ propertyId, payments: initialPayments }: CoOwn
       {payments.map((payment) => (
         <CoOwnerPaymentCard
           key={payment.id}
+          propertyId={propertyId}
           payment={payment}
           onFrequencyChange={handleFrequencyChange}
         />
