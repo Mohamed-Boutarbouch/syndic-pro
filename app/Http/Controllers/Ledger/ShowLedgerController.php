@@ -18,16 +18,14 @@ class ShowLedgerController
                 ->with([
                     'ownership.coOwner',
                     'ownership.unit',
-                    'paymentSchedules.payments' => fn ($q) => $q->whereNull('voided_at'),
+                    'paymentSchedules',
+                    'payments' => fn ($q) => $q->whereNull('voided_at')->with('paymentSchedule'),
                 ])
                 ->get()
             : collect();
 
         $coOwnerStatuses = $obligations->map(function ($obligation) {
             $unitCoOwner = $obligation->ownership;
-            $paid = $obligation->paymentSchedules
-                ->flatMap->payments
-                ->sum('amount');
 
             return [
                 'id' => (string) $unitCoOwner->id,
@@ -36,8 +34,7 @@ class ShowLedgerController
                 'initials' => $this->initials($unitCoOwner->coOwner->name),
                 'unit' => $unitCoOwner->unit->label,
                 'quota' => (float) $obligation->share_amount,
-                'payments' => $obligation->paymentSchedules
-                    ->flatMap->payments
+                'payments' => $obligation->payments
                     ->sortByDesc('paid_at')
                     ->values()
                     ->map(fn ($payment) => [
@@ -49,21 +46,17 @@ class ShowLedgerController
         })->values();
 
         $allPayments = $obligations
-            ->flatMap(function ($obligation) {
-                $unitCoOwner = $obligation->ownership;
-
-                return $obligation->paymentSchedules->flatMap(
-                    fn ($schedule) => $schedule->payments->map(fn ($payment) => [
-                        'id' => (string) $payment->id,
-                        'date' => $payment->paid_at->toDateString(),
-                        'coOwner' => $unitCoOwner->coOwner->name,
-                        'period' => 'Installment '.$schedule->installment_number,
-                        'type' => $schedule->status === ScheduleStatus::Partial ? 'partial' : 'full',
-                        'amount' => (float) $payment->amount,
-                        'notes' => $payment->notes ?? '',
-                    ]),
-                );
-            })
+            ->flatMap(fn ($obligation) => $obligation->payments->map(fn ($payment) => [
+                'id' => (string) $payment->id,
+                'date' => $payment->paid_at->toDateString(),
+                'coOwner' => $obligation->ownership->coOwner->name,
+                'period' => $payment->paymentSchedule
+                    ? 'Installment '.$payment->paymentSchedule->installment_number
+                    : 'Credit',
+                'type' => $payment->paymentSchedule?->status === ScheduleStatus::Partial ? 'partial' : 'full',
+                'amount' => (float) $payment->amount,
+                'notes' => $payment->notes ?? '',
+            ]))
             ->sortByDesc('date')
             ->values();
 

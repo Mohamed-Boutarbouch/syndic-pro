@@ -26,7 +26,7 @@ class StorePaymentController
 
         $payerUser = $obligation->ownership->coOwner->user;
 
-        abort_unless($payerUser, 422, 'This co-owner has no linked user account to attribute the payment to.');
+        $payerUser = $obligation->ownership->coOwner->user ?? $request->user();
 
         $recorder->record(
             obligation: $obligation,

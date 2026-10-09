@@ -102,22 +102,17 @@ class PaymentRecorder
             // Nothing left owing anywhere but money remains: park it as credit
             // for future installments instead of silently dropping it.
             if ($remaining > 0) {
-                if ($createdPayments->isEmpty()) {
-                    // No outstanding schedule at all (fully paid obligation) —
-                    // still record the payment as an unattached credit deposit.
-                    $payment = Payment::create([
-                        'cycle_obligation_id' => $obligation->id,
-                        'payment_schedule_id' => null,
-                        'paid_by_user_id' => $paidBy->id,
-                        'recorded_by_user_id' => $recordedBy->id,
-                        'amount' => $remaining,
-                        'paid_at' => $paidAt,
-                        'method' => $method,
-                        'reference' => $reference,
-                        'notes' => trim(($notes ?? '').' [surplus credited to balance]'),
-                    ]);
-                    $createdPayments->push($payment);
-                }
+                $createdPayments->push(Payment::create([
+                    'cycle_obligation_id' => $obligation->id,
+                    'payment_schedule_id' => null,
+                    'paid_by_user_id' => $paidBy->id,
+                    'recorded_by_user_id' => $recordedBy->id,
+                    'amount' => $remaining,
+                    'paid_at' => $paidAt,
+                    'method' => $method,
+                    'reference' => $reference,
+                    'notes' => trim(($notes ?? '').' [surplus credited to balance]'),
+                ]));
 
                 $obligation->update([
                     'credit_balance' => round((float) $obligation->credit_balance + $remaining, 2),

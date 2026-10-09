@@ -25,18 +25,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldTitle,
-} from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnerOption, PaymentLog } from '@/types/properties/ledger';
@@ -126,7 +117,7 @@ export function PaymentJournal({
 
                     <Input
                       type="number"
-                      step="1"
+                      step="0.01"
                       id="amount"
                       name="amount"
                       placeholder={t('dialog.amount_placeholder')}
@@ -177,22 +168,6 @@ export function PaymentJournal({
                     {errors.paid_at && <FieldError>{errors.paid_at}</FieldError>}
                   </Field>
                 </div>
-
-                <FieldLabel htmlFor="partial-payment">
-                  <Field orientation="horizontal">
-                    <FieldContent>
-                      <FieldTitle>{t('dialog.partial_payment.title')}</FieldTitle>
-
-                      <FieldDescription>{t('dialog.partial_payment.description')}</FieldDescription>
-                    </FieldContent>
-
-                    <Switch
-                      id="partial-payment"
-                      checked={data.partial}
-                      onCheckedChange={(checked) => setData('partial', checked)}
-                    />
-                  </Field>
-                </FieldLabel>
 
                 <Field>
                   <FieldLabel htmlFor="notes">{t('dialog.notes_label')}</FieldLabel>
