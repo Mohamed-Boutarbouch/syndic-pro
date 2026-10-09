@@ -39,6 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import type { UnitType } from '@/components/unit-type-badge';
 import { useTranslation } from '@/hooks/use-translation';
 import type { UnitShare } from '@/types/properties/co-owners';
 
@@ -47,6 +48,7 @@ interface DataTableProps {
   propertyId: string;
   ratePerPoint: number;
   totalWeight: number;
+  unitTypes: UnitType[];
   unassignedCoOwners: { id: number; name: string }[];
 }
 
@@ -55,14 +57,15 @@ export function DataTable({
   propertyId,
   ratePerPoint,
   totalWeight,
+  unitTypes,
   unassignedCoOwners,
 }: DataTableProps) {
   const { t, money, isRtl } = useTranslation('properties.co_owners.data_table');
   const [search, setSearch] = useState('');
 
   const columns = useMemo(
-    () => buildColumns(propertyId, ratePerPoint, t, money, unassignedCoOwners),
-    [propertyId, ratePerPoint, t, money, unassignedCoOwners],
+    () => buildColumns(propertyId, ratePerPoint, t, money, unitTypes, unassignedCoOwners),
+    [propertyId, ratePerPoint, t, money, unitTypes, unassignedCoOwners],
   );
 
   const table = useTable({

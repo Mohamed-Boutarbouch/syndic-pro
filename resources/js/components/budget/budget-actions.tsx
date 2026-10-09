@@ -25,7 +25,7 @@ import { Separator } from '@/components/ui/separator';
 import { useTranslation } from '@/hooks/use-translation';
 
 type BudgetActionsProps = {
-  propertyId: number;
+  propertyId: string;
   sharePerPoint: number;
   currentTotalBudget: number;
 };

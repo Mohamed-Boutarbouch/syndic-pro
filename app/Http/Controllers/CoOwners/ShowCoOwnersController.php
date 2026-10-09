@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CoOwners;
 
 use App\Enums\SyndicEvent;
+use App\Enums\UnitTypes;
 use App\Models\CoOwner;
 use App\Models\Property;
 use Inertia\Inertia;
@@ -173,6 +174,7 @@ class ShowCoOwnersController
                 'isLocked' => $currentBudget->is_budget_locked,
             ] : null,
             'unassignedCoOwners' => $unassignedCoOwners,
+            'unitTypes' => array_column(UnitTypes::cases(), 'value'),
         ]);
     }
 }

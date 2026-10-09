@@ -4,11 +4,11 @@ import { Building, CircleEllipsis, Store, Warehouse } from 'lucide-react';
 import { BillingFrequencyBadge } from '@/components/billing-frequency-badge';
 import { AssignCoOwnerCell } from '@/components/co-owners/assign-co-owner-cell';
 import type { DataTableFeatures } from '@/components/co-owners/data-table-features';
+import { UnitRowEditCell } from '@/components/co-owners/unit-row-edit-cell';
 import { Badge } from '@/components/ui/badge';
 import type { UnitType } from '@/components/unit-type-badge';
 import type { MoneyFunction, TFunction } from '@/hooks/use-translation';
 import type { UnitShare } from '@/types/properties/co-owners';
-import { UnitRowEditCell } from '@/components/co-owners/unit-row-edit-cell';
 
 const columnHelper = createColumnHelper<DataTableFeatures, UnitShare>();
 

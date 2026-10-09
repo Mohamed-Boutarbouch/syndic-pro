@@ -11,6 +11,7 @@ export default function CoOwners({
   activeSyndic,
   transferCandidates,
   budget,
+  unitTypes,
   unassignedCoOwners,
 }: CoOwnersProps) {
   const { t } = useTranslation('properties.co_owners');
@@ -40,6 +41,7 @@ export default function CoOwners({
             propertyId={property.id}
             ratePerPoint={budget?.ratePerPoint ?? 0}
             totalWeight={budget?.totalWeight ?? 0}
+            unitTypes={unitTypes}
             unassignedCoOwners={unassignedCoOwners}
           />
         </div>

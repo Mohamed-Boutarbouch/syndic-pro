@@ -22,7 +22,7 @@ export default function Budget({ property, budget, distribution }: BudgetProps) 
               Fiscal year
             </h2>
 
-            <FiscalYear budget={budget} distribution={distribution} />
+            <FiscalYear propertyId={property.id} budget={budget} distribution={distribution} />
           </section>
 
           <aside className="space-y-6 lg:sticky lg:top-6 lg:col-span-4">

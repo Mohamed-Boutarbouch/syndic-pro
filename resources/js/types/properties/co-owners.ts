@@ -1,3 +1,4 @@
+import type { UnitType } from '@/components/unit-type-badge';
 import type { Property } from '@/types/property';
 
 export type CoOwnersKpis = {
@@ -54,5 +55,6 @@ export type CoOwnersProps = {
   activeSyndic: ActiveSyndic | null;
   transferCandidates: TransferCandidate[];
   budget: BudgetSummary | null;
-  unassignedCoOwners: { id: number; name: string }[]; // new
+  unitTypes: UnitType[];
+  unassignedCoOwners: { id: number; name: string }[];
 };
