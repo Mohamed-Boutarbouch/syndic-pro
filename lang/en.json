@@ -228,6 +228,7 @@
   "properties.billing.household.add_dialog.quota_share_placeholder": "10",
   "properties.billing.household.add_dialog.cancel_button": "Cancel",
   "properties.billing.household.add_dialog.add_button": "Add",
+  "properties.billing.household.add_dialog.email_label": "Email",
 
   "properties.billing.household.co_payer_progress": ":percentage% · :collected/:quota",
 
