@@ -1,4 +1,14 @@
 {
+  "navigation.dashboard": "Dashboard",
+  "navigation.financial_budget": "Financial Budget",
+  "navigation.co_owners": "Co-Owners",
+  "navigation.billing": "Billing",
+  "navigation.ledger": "Ledger",
+  "navigation.management": "Management",
+  "user_menu.settings": "Settings",
+  "user_menu.language": "Language",
+  "user_menu.logout": "Log out",
+
   "properties.dashboard.title": "Property Dashboard",
   "properties.dashboard.subtitle": "Overview of your property finances, collections, and payments.",
   "properties.dashboard.collection_progress.title": "Collection Progress",

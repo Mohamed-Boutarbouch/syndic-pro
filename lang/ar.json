@@ -1,4 +1,14 @@
 {
+  "navigation.dashboard": "لوحة التحكم",
+  "navigation.financial_budget": "الميزانية التقديرية",
+  "navigation.co_owners": "المُلّاك المشتركون",
+  "navigation.billing": "الفوترة",
+  "navigation.ledger": "دفتر الحسابات",
+  "navigation.management": "الإدارة",
+  "user_menu.settings": "الإعدادات",
+  "user_menu.language": "اللغة",
+  "user_menu.logout": "تسجيل الخروج",
+
   "properties.dashboard.title": "لوحة تحكم العقار",
   "properties.dashboard.subtitle": "نظرة عامة على الوضعية المالية للعقار، التحصيلات، والأداءات.",
   "properties.dashboard.collection_progress.title": "تقدم التحصيل",

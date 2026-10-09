@@ -1,4 +1,14 @@
 {
+  "navigation.dashboard": "Tableau de bord",
+  "navigation.financial_budget": "Budget prévisionnel",
+  "navigation.co_owners": "Copropriétaires",
+  "navigation.billing": "Facturation",
+  "navigation.ledger": "Grand livre",
+  "navigation.management": "Gestion",
+  "user_menu.settings": "Paramètres",
+  "user_menu.language": "Langue",
+  "user_menu.logout": "Se déconnecter",
+
   "properties.dashboard.title": "Tableau de bord de la copropriété",
   "properties.dashboard.subtitle": "Vue d'ensemble des finances, encaissements et paiements de votre copropriété.",
   "properties.dashboard.collection_progress.title": "Progression des encaissements",

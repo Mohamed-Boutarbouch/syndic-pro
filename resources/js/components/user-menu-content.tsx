@@ -47,7 +47,7 @@ const LOCALES: ReadonlyArray<{
 
 export function UserMenuContent({ user }: Props) {
   const cleanup = useMobileNavigation();
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
 
   const { put, processing, transform } = useForm<{
     locale: Locale;
@@ -95,13 +95,13 @@ export function UserMenuContent({ user }: Props) {
           className="cursor-pointer"
         >
           <Settings className="mr-2" />
-          Settings
+          {t('user_menu.settings')}
         </DropdownMenuItem>
 
         <DropdownMenuSub>
           <DropdownMenuSubTrigger disabled={processing} className="cursor-pointer">
             <Languages className="mr-2" />
-            <span>Language</span>
+            <span>{t('user_menu.language')}</span>
 
             <span className="ml-auto text-muted-foreground">{currentLocale?.nativeLabel}</span>
           </DropdownMenuSubTrigger>
@@ -137,7 +137,7 @@ export function UserMenuContent({ user }: Props) {
         className="w-full cursor-pointer"
       >
         <LogOut className="mr-2" />
-        Log out
+        {t('user_menu.logout')}
       </DropdownMenuItem>
     </>
   );

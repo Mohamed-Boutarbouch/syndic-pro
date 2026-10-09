@@ -26,31 +26,31 @@ type SharedProps = {
 
 export function AppSidebar() {
   const { property } = usePage<SharedProps>().props;
-  const { isRtl } = useTranslation();
+  const { isRtl, t } = useTranslation();
 
   const mainNavItems: NavItem[] = [
     {
-      title: 'Dashboard',
+      title: t('navigation.dashboard'),
       href: `/properties/${property.id}/dashboard`,
       icon: LayoutGrid,
     },
     {
-      title: 'Financial Budget',
+      title: t('navigation.financial_budget'),
       href: `/properties/${property.id}/budget`,
       icon: Wallet,
     },
     {
-      title: 'Co-Owners',
+      title: t('navigation.co_owners'),
       href: `/properties/${property.id}/co-owners`,
       icon: Building2,
     },
     {
-      title: 'Billing',
+      title: t('navigation.billing'),
       href: `/properties/${property.id}/billing`,
       icon: ReceiptText,
     },
     {
-      title: 'Ledger',
+      title: t('navigation.ledger'),
       href: `/properties/${property.id}/ledger`,
       icon: BookOpen,
     },
