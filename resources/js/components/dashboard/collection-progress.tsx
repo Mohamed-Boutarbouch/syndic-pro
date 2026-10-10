@@ -6,10 +6,9 @@ import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
-import type { CollectionProgressData, DashboardProperty } from '@/types/properties/dashboard';
+import type { CollectionProgressData } from '@/types/properties/dashboard';
 
 type CollectionProgressProps = {
-  property: DashboardProperty;
   data: CollectionProgressData | null;
 };
 
@@ -23,7 +22,7 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
-export function CollectionProgress({ property, data }: CollectionProgressProps) {
+export function CollectionProgress({ data }: CollectionProgressProps) {
   const { t, tChoice, money, isRtl } = useTranslation('properties.dashboard');
 
   if (!data) {
@@ -97,7 +96,7 @@ export function CollectionProgress({ property, data }: CollectionProgressProps) 
 
         {remainingOwners > 0 && (
           <Link
-            href={ledger(property.id).url}
+            href={ledger().url}
             className={buttonVariants({
               variant: 'secondary',
               size: 'sm',

@@ -16,7 +16,7 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { HouseholdCoPayer, HouseholdCoPayersProps } from '@/types/properties/billing';
 import { AddCoPayerDialog } from './add-co-payer-dialog';
 
-export function HouseholdCoPayers({ payment, propertyId }: HouseholdCoPayersProps) {
+export function HouseholdCoPayers({ payment }: HouseholdCoPayersProps) {
   const { t, money } = useTranslation('properties.billing.household');
   const coPayers = payment.coPayers ?? [];
 
@@ -34,7 +34,6 @@ export function HouseholdCoPayers({ payment, propertyId }: HouseholdCoPayersProp
         </div>
 
         <AddCoPayerDialog
-          propertyId={propertyId}
           unitCoOwnerId={Number(payment.id)}
           name={payment.name}
           quota={payment.quota}

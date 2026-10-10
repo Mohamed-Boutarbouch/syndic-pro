@@ -30,15 +30,10 @@ export default function CoOwners({
         <div className="grid grid-cols-1 items-start gap-6">
           <CoOwnersCards kpis={kpis} />
 
-          <ActiveSyndic
-            propertyId={property.id}
-            activeSyndic={activeSyndic}
-            candidates={transferCandidates}
-          />
+          <ActiveSyndic activeSyndic={activeSyndic} candidates={transferCandidates} />
 
           <DataTable
             data={unitShares}
-            propertyId={property.id}
             ratePerPoint={budget?.ratePerPoint ?? 0}
             totalWeight={budget?.totalWeight ?? 0}
             unitTypes={unitTypes}

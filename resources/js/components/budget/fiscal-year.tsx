@@ -37,7 +37,6 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { Budget, BudgetDistribution } from '@/types/properties/budget';
 
 type FiscalYearProps = {
-  propertyId: string;
   budget: Budget | null;
   distribution: Pick<BudgetDistribution, 'totalWeight' | 'sharePerPoint'>;
 };
@@ -46,7 +45,7 @@ function monthOf(dateString: string): string {
   return dateString.slice(5, 7);
 }
 
-export function FiscalYear({ propertyId, budget, distribution }: FiscalYearProps) {
+export function FiscalYear({ budget, distribution }: FiscalYearProps) {
   const { t, money, isRtl } = useTranslation('properties.budget.fiscal_year');
 
   const months = Array.from({ length: 12 }, (_, index) => {
@@ -74,7 +73,6 @@ export function FiscalYear({ propertyId, budget, distribution }: FiscalYearProps
 
     router.patch(
       update.url({
-        property: propertyId,
         budget: budget.id,
       }),
       {

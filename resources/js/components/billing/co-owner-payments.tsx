@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { CoOwnerPaymentCard } from '@/components/billing/co-owner-payment-card';
 import type { CoOwnerPaymentsProps, PaymentFrequency } from '@/types/properties/billing';
 
-export function CoOwnerPayments({ propertyId, payments: initialPayments }: CoOwnerPaymentsProps) {
+export function CoOwnerPayments({ payments: initialPayments }: CoOwnerPaymentsProps) {
   const [payments, setPayments] = useState(initialPayments);
 
   function handleFrequencyChange(paymentId: string, frequency: PaymentFrequency) {
@@ -15,7 +15,7 @@ export function CoOwnerPayments({ propertyId, payments: initialPayments }: CoOwn
     );
 
     router.patch(
-      `/properties/${propertyId}/billing/co-owners/${paymentId}/frequency`,
+      `/billing/co-owners/${paymentId}/frequency`,
       { billing_frequency: frequency },
       {
         preserveScroll: true,
@@ -31,7 +31,6 @@ export function CoOwnerPayments({ propertyId, payments: initialPayments }: CoOwn
       {payments.map((payment) => (
         <CoOwnerPaymentCard
           key={payment.id}
-          propertyId={propertyId}
           payment={payment}
           onFrequencyChange={handleFrequencyChange}
         />

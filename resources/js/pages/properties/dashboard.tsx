@@ -6,7 +6,6 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { DashboardProps } from '@/types/properties/dashboard';
 
 export default function Dashboard({
-  property,
   kpis,
   collectionProgress,
   monthlyCollection,
@@ -36,7 +35,7 @@ export default function Dashboard({
             Collection progress
           </h2>
 
-          <CollectionProgress property={property} data={collectionProgress} />
+          <CollectionProgress data={collectionProgress} />
         </section>
 
         <section aria-labelledby="monthly-collection" className="lg:col-span-8">

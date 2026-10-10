@@ -4,7 +4,7 @@ import { FiscalYear } from '@/components/budget/fiscal-year';
 import { useTranslation } from '@/hooks/use-translation';
 import type { BudgetProps } from '@/types/properties/budget';
 
-export default function Budget({ property, budget, distribution }: BudgetProps) {
+export default function Budget({ budget, distribution }: BudgetProps) {
   const { t } = useTranslation('properties.budget');
 
   return (
@@ -22,7 +22,7 @@ export default function Budget({ property, budget, distribution }: BudgetProps) 
               Fiscal year
             </h2>
 
-            <FiscalYear propertyId={property.id} budget={budget} distribution={distribution} />
+            <FiscalYear budget={budget} distribution={distribution} />
           </section>
 
           <aside className="space-y-6 lg:sticky lg:top-6 lg:col-span-4">
@@ -32,7 +32,6 @@ export default function Budget({ property, budget, distribution }: BudgetProps) 
               </h2>
 
               <BudgetActions
-                propertyId={property.id}
                 sharePerPoint={distribution.sharePerPoint}
                 currentTotalBudget={budget?.totalBudget ?? 0}
               />

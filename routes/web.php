@@ -14,87 +14,30 @@ use App\Http\Controllers\CoOwners\UpdateUnitRowController;
 use App\Http\Controllers\Ledger\ShowLedgerController;
 use App\Http\Controllers\Ledger\StorePaymentController;
 use App\Http\Controllers\Property\DashboardController;
-use App\Http\Controllers\Property\PropertySelectionController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/properties/select', PropertySelectionController::class)
-        ->name('properties.select');
+Route::middleware(['auth', 'verified', 'property.current'])->group(function () {
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
 
-    Route::get(
-        'properties/{property}/dashboard',
-        DashboardController::class,
-    )->name('properties.dashboard');
+    Route::get('budget', ShowBudgetController::class)->name('budget');
+    Route::post('budget/units', AddMidYearUnitController::class)->name('budget.units.store');
+    Route::patch('budget/{budget}', UpdateBudgetController::class)->name('budget.update');
 
-    // Add alongside existing property routes (adjust prefix/middleware to match
-    // how properties/{property} routes are already grouped in your routes file).
-    Route::get(
-        'properties/{property}/budget',
-        ShowBudgetController::class,
-    )->name('properties.budget');
+    Route::get('co-owners', ShowCoOwnersController::class)->name('co-owners');
+    Route::patch('co-owners/units/{unit}', UpdateUnitRowController::class)->name('co-owners.units.update');
+    Route::post('co-owners/syndic/transfer', TransferSyndicController::class)->name('co-owners.syndic.transfer');
 
-    Route::post('properties/{property}/budget/units', AddMidYearUnitController::class)
-        ->name('properties.budget.units.store');
+    Route::post('units', StoreUnitController::class)->name('units.store');
+    Route::post('units/{unit}/co-owners', StoreUnitCoOwnerController::class)->name('units.co-owners.store');
 
-    // NOTE: scoping this route model binding (Route::scopedBindings()) so that
-    // {budget} is automatically constrained to the parent {property} would let
-    // you drop the manual abort_unless() check in the controller.
-    Route::patch(
-        'properties/{property}/budget/{budget}',
-        UpdateBudgetController::class
-    )->name('properties.budget.update');
+    Route::get('billing', ShowBillingController::class)->name('billing');
+    Route::patch('billing/co-owners/{unitCoOwner}/frequency', UpdateBillingFrequencyController::class)->name('billing.co-owners.frequency');
+    Route::post('billing/co-owners/{unitCoOwner}/co-payers', StoreCoPayerController::class)->name('billing.co-owners.co-payers.store');
 
-    Route::get(
-        'properties/{property}/co-owners',
-        ShowCoOwnersController::class,
-    )->name('properties.co-owners');
-
-    Route::patch(
-        'properties/{property}/co-owners/units/{unit}',
-        UpdateUnitRowController::class,
-    )->name('properties.co-owners.units.update');
-
-    Route::post(
-        'properties/{property}/co-owners/syndic/transfer',
-        TransferSyndicController::class,
-    )->name('properties.co-owners.syndic.transfer');
-
-    Route::post(
-        'properties/{property}/units',
-        StoreUnitController::class,
-    )->name('properties.units.store');
-
-    Route::post(
-        'properties/{property}/units/{unit}/co-owners',
-        StoreUnitCoOwnerController::class,
-    )->name('properties.units.co-owners.store');
-
-    Route::get(
-        'properties/{property}/billing',
-        ShowBillingController::class,
-    )->name('properties.billing');
-
-    Route::patch(
-        'properties/{property}/billing/co-owners/{unitCoOwner}/frequency',
-        UpdateBillingFrequencyController::class,
-    )->name('properties.billing.co-owners.frequency');
-
-    Route::post(
-        'properties/{property}/billing/co-owners/{unitCoOwner}/co-payers',
-        StoreCoPayerController::class,
-    )->name('properties.billing.co-owners.co-payers.store');
-
-    Route::get(
-        'properties/{property}/ledger',
-        ShowLedgerController::class,
-    )->name('properties.ledger');
-
-    Route::post(
-        'properties/{property}/ledger/payments',
-        StorePaymentController::class,
-    )->name('properties.ledger.payments.store');
+    Route::get('ledger', ShowLedgerController::class)->name('ledger');
+    Route::post('ledger/payments', StorePaymentController::class)->name('ledger.payments.store');
 });
 
 require __DIR__.'/onboarding.php';

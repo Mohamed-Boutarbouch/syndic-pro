@@ -33,18 +33,12 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnerOption, PaymentLog } from '@/types/properties/ledger';
 
 type PaymentJournalProps = {
-  propertyId: string;
   coOwners: CoOwnerOption[];
   payments: PaymentLog[];
   transactionCount: number;
 };
 
-export function PaymentJournal({
-  propertyId,
-  coOwners,
-  payments,
-  transactionCount,
-}: PaymentJournalProps) {
+export function PaymentJournal({ coOwners, payments, transactionCount }: PaymentJournalProps) {
   const { t, tChoice } = useTranslation('properties.ledger.payment_journal');
   const columns = useColumns();
   const [open, setOpen] = useState(false);
@@ -61,7 +55,7 @@ export function PaymentJournal({
   });
 
   function submit() {
-    post(store.url({ property: propertyId }), {
+    post(store.url(), {
       preserveScroll: true,
       onSuccess: () => {
         reset();

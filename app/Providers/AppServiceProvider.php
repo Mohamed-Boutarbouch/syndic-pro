@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,21 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
-
-        Inertia::share([
-            'currentProperty' => function () {
-                $property = request()->route('property');
-
-                if (! $property) {
-                    return null;
-                }
-
-                return [
-                    'id' => $property->id,
-                    'name' => $property->name,
-                ];
-            },
-        ]);
     }
 
     /**

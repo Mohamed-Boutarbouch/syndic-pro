@@ -1,5 +1,3 @@
-import type { Property } from '@/types/property';
-
 export type Budget = {
   id: number;
   startDate: string;
@@ -22,7 +20,6 @@ export type BudgetDistribution = {
 };
 
 export type BudgetProps = {
-  property: Property;
   budget: Budget | null;
   distribution: BudgetDistribution;
 };

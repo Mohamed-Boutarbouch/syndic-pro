@@ -1,7 +1,7 @@
-export type DashboardProperty = {
-  id: string;
-  name: string;
-};
+// export type DashboardProperty = {
+//   id: string;
+//   name: string;
+// };
 
 export type DashboardKpis = {
   unitsCount: number;
@@ -42,7 +42,7 @@ export type RecentPayment = {
 };
 
 export type DashboardProps = {
-  property: DashboardProperty;
+  // property: DashboardProperty;
   kpis: DashboardKpis | null;
   collectionProgress: CollectionProgressData | null;
   monthlyCollection: MonthlyCollectionPoint[];

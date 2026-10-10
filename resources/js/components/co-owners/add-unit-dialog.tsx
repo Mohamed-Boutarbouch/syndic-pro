@@ -34,10 +34,6 @@ import {
 } from '@/components/ui/select';
 import { useTranslation } from '@/hooks/use-translation';
 
-type AddUnitDialogProps = {
-  propertyId: string;
-};
-
 const UNIT_TYPES = ['residential', 'commercial', 'storage', 'other'] as const;
 
 const unitSchema = v.object({
@@ -63,7 +59,7 @@ type UnitFormValues = v.InferOutput<typeof unitSchema>;
 
 const FORM_ID = 'add-unit-form';
 
-export function AddUnitDialog({ propertyId }: AddUnitDialogProps) {
+export function AddUnitDialog() {
   const { t, isRtl } = useTranslation('properties.co_owners.add_unit_dialog');
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -90,7 +86,7 @@ export function AddUnitDialog({ propertyId }: AddUnitDialogProps) {
   function onSubmit(values: UnitFormValues) {
     setProcessing(true);
 
-    router.post(`/properties/${propertyId}/units`, values, {
+    router.post('/units', values, {
       preserveScroll: true,
       onSuccess: () => {
         setOpen(false);

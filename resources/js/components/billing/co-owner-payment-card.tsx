@@ -19,11 +19,7 @@ import { Progress } from '@/components/ui/progress';
 import { useTranslation } from '@/hooks/use-translation';
 import type { CoOwnerPaymentCardProps } from '@/types/properties/billing';
 
-export function CoOwnerPaymentCard({
-  propertyId,
-  payment,
-  onFrequencyChange,
-}: CoOwnerPaymentCardProps) {
+export function CoOwnerPaymentCard({ payment, onFrequencyChange }: CoOwnerPaymentCardProps) {
   const { t, tChoice, money, isRtl } = useTranslation();
 
   const [open, setOpen] = useState(false);
@@ -165,7 +161,7 @@ export function CoOwnerPaymentCard({
           />
 
           <CollapsibleContent>
-            <HouseholdCoPayers payment={payment} propertyId={propertyId} />
+            <HouseholdCoPayers payment={payment} />
           </CollapsibleContent>
         </Collapsible>
       </div>

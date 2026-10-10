@@ -67,7 +67,6 @@ export type UnitRowEditSource = UnitShare & {
 
 type UnitRowEditCellProps = {
   unit: UnitRowEditSource;
-  propertyId: string;
   ratePerPoint: number;
   unitTypes: UnitType[];
 };
@@ -117,12 +116,7 @@ function buildDefaultValues(unit: UnitRowEditSource): UnitRowEditFormValues {
   };
 }
 
-export function UnitRowEditCell({
-  unit,
-  propertyId,
-  ratePerPoint,
-  unitTypes,
-}: UnitRowEditCellProps) {
+export function UnitRowEditCell({ unit, ratePerPoint, unitTypes }: UnitRowEditCellProps) {
   const [open, setOpen] = useState(false);
   const form = useForm<UnitRowEditFormValues>({
     resolver: valibotResolver(unitRowEditSchema),
@@ -141,7 +135,7 @@ export function UnitRowEditCell({
 
   function submitHandler(values: UnitRowEditFormValues) {
     router.patch(
-      UpdateUnitRowController.url({ property: propertyId, unit: unit.unitId }),
+      UpdateUnitRowController.url({ unit: unit.unitId }),
       {
         ...values,
         unitCoOwnerId: unit.unitCoOwnerId,

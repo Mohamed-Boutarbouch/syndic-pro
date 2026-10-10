@@ -45,16 +45,14 @@ import type { UnitShare } from '@/types/properties/co-owners';
 
 interface DataTableProps {
   data: UnitShare[];
-  propertyId: string;
   ratePerPoint: number;
   totalWeight: number;
   unitTypes: UnitType[];
-  unassignedCoOwners: { id: number; name: string }[];
+  unassignedCoOwners: { id: string; name: string }[];
 }
 
 export function DataTable({
   data,
-  propertyId,
   ratePerPoint,
   totalWeight,
   unitTypes,
@@ -64,8 +62,8 @@ export function DataTable({
   const [search, setSearch] = useState('');
 
   const columns = useMemo(
-    () => buildColumns(propertyId, ratePerPoint, t, money, unitTypes, unassignedCoOwners),
-    [propertyId, ratePerPoint, t, money, unitTypes, unassignedCoOwners],
+    () => buildColumns(ratePerPoint, t, money, unitTypes, unassignedCoOwners),
+    [ratePerPoint, t, money, unitTypes, unassignedCoOwners],
   );
 
   const table = useTable({
@@ -102,7 +100,7 @@ export function DataTable({
         </CardDescription>
 
         <CardAction>
-          <AddUnitDialog propertyId={propertyId} />
+          <AddUnitDialog />
         </CardAction>
       </CardHeader>
 

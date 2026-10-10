@@ -25,16 +25,11 @@ import { Separator } from '@/components/ui/separator';
 import { useTranslation } from '@/hooks/use-translation';
 
 type BudgetActionsProps = {
-  propertyId: string;
   sharePerPoint: number;
   currentTotalBudget: number;
 };
 
-export function BudgetActions({
-  propertyId,
-  sharePerPoint,
-  currentTotalBudget,
-}: BudgetActionsProps) {
+export function BudgetActions({ sharePerPoint, currentTotalBudget }: BudgetActionsProps) {
   const [unitName, setUnitName] = useState('');
   const [weightCoefficient, setWeightCoefficient] = useState('1.0');
   const [open, setOpen] = useState(false);
@@ -50,7 +45,7 @@ export function BudgetActions({
     setProcessing(true);
 
     router.post(
-      addMidYearUnit.url({ property: propertyId }),
+      addMidYearUnit.url(),
       {
         label: unitName,
         weight_coefficient: weightCoefficient,

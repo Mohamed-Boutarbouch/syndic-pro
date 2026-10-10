@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Inertia\Middleware;
@@ -47,11 +48,8 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
 
-            'currentProperty' => $property
-                ? [
-                    'id' => $property->id,
-                    'name' => $property->name,
-                ]
+            'currentProperty' => fn () => ($property = $request->route('property')) instanceof Property
+                ? ['id' => $property->id, 'name' => $property->name]
                 : null,
 
             'sidebarOpen' => ! $request->hasCookie('sidebar_state')

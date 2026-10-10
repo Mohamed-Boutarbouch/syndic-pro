@@ -34,13 +34,12 @@ const schema = v.object({
 type FormValues = v.InferInput<typeof schema>;
 
 type Props = {
-  propertyId: string;
   unitCoOwnerId: number;
   name: string;
   quota: number;
 };
 
-export function AddCoPayerDialog({ propertyId, unitCoOwnerId, name, quota }: Props) {
+export function AddCoPayerDialog({ unitCoOwnerId, name, quota }: Props) {
   const { t, money } = useTranslation('properties.billing.household');
   const [open, setOpen] = useState(false);
 
@@ -51,7 +50,7 @@ export function AddCoPayerDialog({ propertyId, unitCoOwnerId, name, quota }: Pro
 
   function onSubmit(values: FormValues) {
     router.post(
-      store.url({ property: propertyId, unitCoOwner: unitCoOwnerId }),
+      store.url({ unitCoOwner: unitCoOwnerId }),
       {
         name: values.name,
         email: values.email,

@@ -3,7 +3,7 @@ import { CoOwnerPayments } from '@/components/billing/co-owner-payments';
 import { useTranslation } from '@/hooks/use-translation';
 import type { BillingProps } from '@/types/properties/billing';
 
-export default function Billing({ property, payments, kpis }: BillingProps) {
+export default function Billing({ payments, kpis }: BillingProps) {
   const { t } = useTranslation('properties.billing');
 
   return (
@@ -19,7 +19,7 @@ export default function Billing({ property, payments, kpis }: BillingProps) {
           <BillingCards kpis={kpis} />
 
           {payments.length > 0 ? (
-            <CoOwnerPayments propertyId={property.id} payments={payments} />
+            <CoOwnerPayments payments={payments} />
           ) : (
             <div className="rounded-lg border bg-card p-8 text-center text-sm text-muted-foreground">
               {t('empty_state')}

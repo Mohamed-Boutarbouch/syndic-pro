@@ -41,7 +41,6 @@ import type {
 } from '@/types/properties/co-owners';
 
 type ActiveSyndicProps = {
-  propertyId: string;
   activeSyndic: ActiveSyndicData | null;
   candidates: TransferCandidate[];
 };
@@ -55,7 +54,7 @@ function initials(name: string) {
     .toUpperCase();
 }
 
-export function ActiveSyndic({ propertyId, activeSyndic, candidates }: ActiveSyndicProps) {
+export function ActiveSyndic({ activeSyndic, candidates }: ActiveSyndicProps) {
   const { t } = useTranslation('properties.co_owners.active_syndic');
   const [open, setOpen] = useState(false);
 
@@ -68,7 +67,7 @@ export function ActiveSyndic({ propertyId, activeSyndic, candidates }: ActiveSyn
       return;
     }
 
-    post(`/properties/${propertyId}/co-owners/syndic/transfer`, {
+    post(`/co-owners/syndic/transfer`, {
       preserveScroll: true,
       onSuccess: () => {
         setOpen(false);

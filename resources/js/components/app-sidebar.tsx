@@ -18,42 +18,22 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { NavItem } from '@/types';
 
 type SharedProps = {
-  property: {
+  currentProperty: {
     id: string;
     name: string;
-  };
+  } | null;
 };
 
 export function AppSidebar() {
-  const { property } = usePage<SharedProps>().props;
+  const { currentProperty } = usePage<SharedProps>().props;
   const { isRtl, t } = useTranslation();
 
   const mainNavItems: NavItem[] = [
-    {
-      title: t('navigation.dashboard'),
-      href: `/properties/${property.id}/dashboard`,
-      icon: LayoutGrid,
-    },
-    {
-      title: t('navigation.financial_budget'),
-      href: `/properties/${property.id}/budget`,
-      icon: Wallet,
-    },
-    {
-      title: t('navigation.co_owners'),
-      href: `/properties/${property.id}/co-owners`,
-      icon: Building2,
-    },
-    {
-      title: t('navigation.billing'),
-      href: `/properties/${property.id}/billing`,
-      icon: ReceiptText,
-    },
-    {
-      title: t('navigation.ledger'),
-      href: `/properties/${property.id}/ledger`,
-      icon: BookOpen,
-    },
+    { title: t('navigation.dashboard'), href: '/dashboard', icon: LayoutGrid },
+    { title: t('navigation.financial_budget'), href: '/budget', icon: Wallet },
+    { title: t('navigation.co_owners'), href: '/co-owners', icon: Building2 },
+    { title: t('navigation.billing'), href: '/billing', icon: ReceiptText },
+    { title: t('navigation.ledger'), href: '/ledger', icon: BookOpen },
   ];
 
   return (
@@ -68,7 +48,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
-              render={<Link href={`/properties/${property.id}/dashboard`} prefetch />}
+              render={currentProperty ? <Link href="/dashboard" prefetch /> : undefined}
             >
               <AppLogo />
             </SidebarMenuButton>

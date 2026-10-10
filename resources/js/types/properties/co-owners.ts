@@ -56,5 +56,5 @@ export type CoOwnersProps = {
   transferCandidates: TransferCandidate[];
   budget: BudgetSummary | null;
   unitTypes: UnitType[];
-  unassignedCoOwners: { id: number; name: string }[];
+  unassignedCoOwners: { id: string; name: string }[];
 };

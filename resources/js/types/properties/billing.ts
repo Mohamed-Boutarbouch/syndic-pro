@@ -41,12 +41,10 @@ export type BillingProps = {
 };
 
 export type CoOwnerPaymentsProps = {
-  propertyId: string;
   payments: CoOwnerPayment[];
 };
 
 export type CoOwnerPaymentCardProps = {
-  propertyId: string;
   payment: CoOwnerPayment;
   onFrequencyChange?: (paymentId: string, frequency: PaymentFrequency) => void;
 };
@@ -61,6 +59,5 @@ export type FrequencyDialogProps = {
 };
 
 export type HouseholdCoPayersProps = {
-  propertyId: string;
   payment: CoOwnerPayment;
 };

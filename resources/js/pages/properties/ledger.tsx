@@ -6,7 +6,6 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { LedgerProps } from '@/types/properties/ledger';
 
 export default function Ledger({
-  property,
   fiscalYear,
   transactionSummary,
   coOwnerStatuses,
@@ -38,7 +37,6 @@ export default function Ledger({
           <CoOwnerStatus coOwners={coOwnerStatuses} />
 
           <PaymentJournal
-            propertyId={property.id}
             coOwners={coOwnerOptions}
             payments={payments}
             transactionCount={transactionSummary.total}

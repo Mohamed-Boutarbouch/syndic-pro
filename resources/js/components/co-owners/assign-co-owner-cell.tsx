@@ -30,26 +30,22 @@ import { useTranslation } from '@/hooks/use-translation';
 import type { TFunction } from '@/hooks/use-translation';
 
 type UnassignedCoOwnerOption = {
-  id: number;
+  id: string;
   name: string;
 };
 
 type AssignCoOwnerCellProps = {
-  propertyId: string;
   unitId: number;
   unitLabel: string;
   unassignedCoOwners: UnassignedCoOwnerOption[];
   t: TFunction;
 };
 
-function buildSchema(unassignedCoOwnerIds: number[]) {
+function buildSchema(unassignedCoOwnerIds: string[]) {
   return v.variant('mode', [
     v.object({
       mode: v.literal('existing'),
-      co_owner_id: v.pipe(
-        v.number('Select a co-owner.'),
-        v.picklist(unassignedCoOwnerIds, 'Select a valid co-owner.'),
-      ),
+      co_owner_id: v.picklist(unassignedCoOwnerIds, 'Select a valid co-owner.'),
     }),
     v.object({
       mode: v.literal('new'),
@@ -67,14 +63,11 @@ function buildSchema(unassignedCoOwnerIds: number[]) {
   ]);
 }
 
-type AssignCoOwnerFormValues =
-  | { mode: 'existing'; co_owner_id: number }
-  | { mode: 'new'; name: string; email?: string; phone?: string };
+type AssignCoOwnerFormValues = v.InferOutput<ReturnType<typeof buildSchema>>;
 
 const FORM_ID = 'assign-co-owner-form';
 
 export function AssignCoOwnerCell({
-  propertyId,
   unitId,
   unitLabel,
   unassignedCoOwners,
@@ -123,7 +116,7 @@ export function AssignCoOwnerCell({
   function onSubmit(values: AssignCoOwnerFormValues) {
     setProcessing(true);
 
-    router.post(`/properties/${propertyId}/units/${unitId}/co-owners`, values, {
+    router.post(`/units/${unitId}/co-owners`, values, {
       preserveScroll: true,
       onSuccess: () => {
         setOpen(false);

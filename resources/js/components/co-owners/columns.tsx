@@ -13,12 +13,11 @@ import type { UnitShare } from '@/types/properties/co-owners';
 const columnHelper = createColumnHelper<DataTableFeatures, UnitShare>();
 
 export function buildColumns(
-  propertyId: string,
   ratePerPoint: number,
   t: TFunction,
   money: MoneyFunction,
   unitTypes: UnitType[],
-  unassignedCoOwners: { id: number; name: string }[],
+  unassignedCoOwners: { id: string; name: string }[],
 ) {
   return columnHelper.columns([
     columnHelper.accessor('unit', {
@@ -136,7 +135,6 @@ export function buildColumns(
         <div className="flex justify-end">
           {row.original.unitCoOwnerId === null ? (
             <AssignCoOwnerCell
-              propertyId={propertyId}
               unitId={row.original.unitId}
               unitLabel={row.original.unit}
               unassignedCoOwners={unassignedCoOwners}
@@ -145,10 +143,8 @@ export function buildColumns(
           ) : (
             <UnitRowEditCell
               unit={row.original}
-              propertyId={propertyId}
               ratePerPoint={ratePerPoint}
               unitTypes={unitTypes}
-              // t={t}
             />
           )}
         </div>
