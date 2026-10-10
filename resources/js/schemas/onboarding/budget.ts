@@ -1,3 +1,4 @@
+import type { DefaultValues } from 'react-hook-form';
 import * as v from 'valibot';
 
 export const annualTargetBudgetSchema = v.pipe(
@@ -30,9 +31,9 @@ export const annualTargetBudgetSchema = v.pipe(
 
 export type AnnualTargetBudgetFormValues = v.InferOutput<typeof annualTargetBudgetSchema>;
 
-export const annualTargetBudgetDefaultValues: AnnualTargetBudgetFormValues = {
+export const annualTargetBudgetDefaultValues: DefaultValues<AnnualTargetBudgetFormValues> = {
   start_date: '',
   end_date: '',
-  total_budget: 0,
+  total_budget: undefined,
   is_budget_locked: false,
 };
