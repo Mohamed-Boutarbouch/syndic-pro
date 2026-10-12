@@ -24,9 +24,10 @@ class AnnualTargetBudgetController
         StoreBudgetRequest $request,
         Property $property,
     ): RedirectResponse {
-        $property->annualTargetBudgets()->create(
-            $request->validated(),
-        );
+        $property->annualTargetBudgets()->create([
+            ...$request->validated(),
+            'created_by_user_id' => $request->user()->id,
+        ]);
 
         return to_route(
             'onboarding.units.create',

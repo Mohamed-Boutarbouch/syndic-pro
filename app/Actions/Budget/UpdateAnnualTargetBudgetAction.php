@@ -16,15 +16,16 @@ class UpdateAnnualTargetBudgetAction
         // only the mid-year-add flow (AddMidYearUnitAction) may adjust
         // total_budget after lock, and it does so directly, bypassing
         // this action. Locking itself is still allowed here.
-        if ($budget->is_budget_locked) {
-            $unlockedFieldsChanged =
+        // UpdateAnnualTargetBudgetAction
+        if ($budget->is_budget_locked && $data['is_budget_locked']) {
+            $frozenFieldsChanged =
                 $budget->start_date->toDateString() !== $data['start_date']
                 || $budget->end_date->toDateString() !== $data['end_date']
                 || round((float) $budget->total_budget, 2) !== round((float) $data['total_budget'], 2);
 
-            if ($unlockedFieldsChanged) {
+            if ($frozenFieldsChanged) {
                 throw ValidationException::withMessages([
-                    'total_budget' => 'This budget is locked. Only mid-year unit additions may adjust the total budget.',
+                    'total_budget' => 'This budget is locked. Unlock it before changing the period or total.',
                 ]);
             }
         }

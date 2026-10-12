@@ -115,8 +115,7 @@ class CoOwnerController
             }
         });
 
-        return to_route('properties.dashboard', [
-            'property' => $property,
-        ])->with('success', 'Co-owners created successfully.');
+        return to_route('dashboard')
+            ->with('success', 'Co-owners created successfully.');
     }
 }

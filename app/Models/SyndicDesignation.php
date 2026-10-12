@@ -73,7 +73,9 @@ class SyndicDesignation extends Model
      */
     public function scopeCurrent(Builder $query): Builder
     {
-        return $query->whereNull('resigned_at');
+        return $query
+            ->where('status', SyndicEvent::Assigned)
+            ->whereNull('resigned_at');
     }
 
     /**

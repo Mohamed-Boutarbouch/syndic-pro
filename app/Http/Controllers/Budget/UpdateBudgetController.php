@@ -12,12 +12,10 @@ class UpdateBudgetController
 {
     public function __invoke(
         UpdateBudgetRequest $request,
-        Property $property,
         AnnualTargetBudget $budget,
+        Property $property,
         UpdateAnnualTargetBudgetAction $action
     ): RedirectResponse {
-        // Defensive check: ensure the budget actually belongs to this property
-        // (scoped binding is the cleaner long-term fix — see note below).
         abort_unless($budget->property_id === $property->id, 404);
 
         $action->handle($budget, $request->validated());
