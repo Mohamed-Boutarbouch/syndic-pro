@@ -9,6 +9,10 @@
   "user_menu.language": "اللغة",
   "user_menu.logout": "تسجيل الخروج",
 
+  "layout.budget_status.locked": "الميزانية مقفلة",
+  "layout.budget_status.unlocked": "الميزانية غير مقفلة",
+  "layout.budget_status.period": ":start – :end",
+
   "properties.dashboard.title": "لوحة تحكم العقار",
   "properties.dashboard.subtitle": "نظرة عامة على الوضعية المالية للعقار، التحصيلات، والأداءات.",
   "properties.dashboard.collection_progress.title": "تقدم التحصيل",

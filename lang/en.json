@@ -9,6 +9,10 @@
   "user_menu.language": "Language",
   "user_menu.logout": "Log out",
 
+  "layout.budget_status.locked": "Budget locked",
+  "layout.budget_status.unlocked": "Budget unlocked",
+  "layout.budget_status.period": ":start – :end",
+
   "properties.dashboard.title": "Property Dashboard",
   "properties.dashboard.subtitle": "Overview of your property finances, collections, and payments.",
   "properties.dashboard.collection_progress.title": "Collection Progress",

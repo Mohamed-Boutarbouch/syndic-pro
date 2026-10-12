@@ -9,6 +9,10 @@
   "user_menu.language": "Langue",
   "user_menu.logout": "Se déconnecter",
 
+  "layout.budget_status.locked": "Budget verrouillé",
+  "layout.budget_status.unlocked": "Budget déverrouillé",
+  "layout.budget_status.period": ":start – :end",
+
   "properties.dashboard.title": "Tableau de bord de la copropriété",
   "properties.dashboard.subtitle": "Vue d'ensemble des finances, encaissements et paiements de votre copropriété.",
   "properties.dashboard.collection_progress.title": "Progression des encaissements",

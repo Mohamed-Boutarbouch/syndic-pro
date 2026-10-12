@@ -10,6 +10,12 @@ type Props = {
 
 type SharedProps = {
   sidebarOpen: boolean;
+  currentBudget: {
+    id: number;
+    isLocked: boolean;
+    startDate: string;
+    endDate: string;
+  } | null;
 };
 
 export function AppShell({ children, variant = 'sidebar' }: Props) {

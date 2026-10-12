@@ -52,6 +52,23 @@ class HandleInertiaRequests extends Middleware
                 ? ['id' => $property->id, 'name' => $property->name]
                 : null,
 
+            'currentBudget' => function () use ($request) {
+                $property = $request->route('property');
+
+                if (! $property instanceof Property) {
+                    return null;
+                }
+
+                $budget = $property->currentAnnualTargetBudget()->first();
+
+                return $budget ? [
+                    'id' => $budget->id,
+                    'isLocked' => $budget->is_budget_locked,
+                    'startDate' => $budget->start_date->toDateString(),
+                    'endDate' => $budget->end_date->toDateString(),
+                ] : null;
+            },
+
             'sidebarOpen' => ! $request->hasCookie('sidebar_state')
                 || $request->cookie('sidebar_state') === 'true',
 
