@@ -14,7 +14,7 @@ class AddMidYearUnitController
         Property $property,
         AddMidYearUnitAction $action
     ): RedirectResponse {
-        $action->handle($property, $request->validated());
+        $action->handle($property, $request->validated(), $request->user());
 
         return back()->with('success', 'Unit added — total budget updated.');
     }
