@@ -13,7 +13,6 @@ class DashboardController
     public function __invoke(Property $property): Response
     {
         $budget = $property->annualTargetBudgets()
-            ->where('is_budget_locked', true)
             ->latest('start_date')
             ->first();
 
