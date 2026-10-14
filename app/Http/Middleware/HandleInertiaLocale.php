@@ -13,8 +13,8 @@ class HandleInertiaLocale
 
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->session()->get('locale')
-            ?? $request->user()?->locale
+        $locale = $request->user()?->locale
+            ?? $request->session()->get('locale')
             ?? $request->getPreferredLanguage(self::SUPPORTED)
             ?? 'en';
 

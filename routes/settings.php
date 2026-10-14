@@ -11,6 +11,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::put('settings/locale', UpdateLocaleController::class)->name('locale.update');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -25,7 +27,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('user-password.update');
 
     Route::inertia('settings/appearance', 'settings/appearance')->name('appearance.edit');
-
-    Route::put('settings/locale', UpdateLocaleController::class)
-        ->name('locale.update');
 });

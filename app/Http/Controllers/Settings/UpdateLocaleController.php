@@ -21,9 +21,8 @@ class UpdateLocaleController extends Controller
     {
         $locale = $request->validated('locale');
 
+        $request->user()->update(['locale' => $locale]);
         $request->session()->put('locale', $locale);
-
-        $request->user()?->update(['locale' => $locale]);
 
         return back();
     }
