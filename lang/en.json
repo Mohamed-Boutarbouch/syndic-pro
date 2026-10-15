@@ -45,6 +45,45 @@
   "welcome.cta.subtitle": "Add your building, your units and this year’s budget.",
   "welcome.footer.copyright": "© :year SyndicPro",
 
+  "auth.fields.name": "Name",
+  "auth.fields.full_name": "Full name",
+  "auth.fields.email": "Email address",
+  "auth.fields.password": "Password",
+  "auth.fields.confirm_password": "Confirm password",
+
+  "auth.login.meta_title": "Log in",
+  "auth.login.title": "Log in to your account",
+  "auth.login.description": "Enter your email and password below to log in",
+  "auth.login.forgot_password": "Forgot your password?",
+  "auth.login.remember_me": "Remember me",
+  "auth.login.submit": "Log in",
+  "auth.login.no_account": "Don't have an account?",
+  "auth.login.sign_up": "Sign up",
+
+  "auth.register.meta_title": "Register",
+  "auth.register.title": "Create an account",
+  "auth.register.description": "Enter your details below to create your account",
+  "auth.register.submit": "Create account",
+  "auth.register.have_account": "Already have an account?",
+
+  "auth.verify.title": "Email verification",
+  "auth.verify.description": "Please verify your email address by clicking on the link we just emailed to you.",
+  "auth.verify.link_sent": "A new verification link has been sent to the email address you provided during registration.",
+  "auth.verify.resend": "Resend verification email",
+
+  "auth.reset.title": "Reset password",
+  "auth.reset.description": "Please enter your new password below",
+  "auth.reset.email_label": "Email",
+
+  "auth.forgot.title": "Forgot password",
+  "auth.forgot.description": "Enter your email to receive a password reset link",
+  "auth.forgot.submit": "Email password reset link",
+  "auth.forgot.return_to": "Or, return to",
+  "auth.forgot.login_link": "log in",
+
+  "auth.confirm.title": "Confirm password",
+  "auth.confirm.description": "This is a secure area of the application. Please confirm your password before continuing.",
+
   "settings.layout.title": "Settings",
   "settings.layout.description": "Manage your profile and account settings",
   "settings.layout.nav_label": "Settings",

@@ -45,6 +45,45 @@
   "welcome.cta.subtitle": "Ajoutez votre immeuble, vos lots et le budget de cette année.",
   "welcome.footer.copyright": "© :year SyndicPro",
 
+  "auth.fields.name": "Nom",
+  "auth.fields.full_name": "Nom complet",
+  "auth.fields.email": "Adresse e-mail",
+  "auth.fields.password": "Mot de passe",
+  "auth.fields.confirm_password": "Confirmer le mot de passe",
+
+  "auth.login.meta_title": "Connexion",
+  "auth.login.title": "Connectez-vous à votre compte",
+  "auth.login.description": "Saisissez votre adresse e-mail et votre mot de passe pour vous connecter",
+  "auth.login.forgot_password": "Mot de passe oublié ?",
+  "auth.login.remember_me": "Se souvenir de moi",
+  "auth.login.submit": "Se connecter",
+  "auth.login.no_account": "Vous n’avez pas de compte ?",
+  "auth.login.sign_up": "Inscrivez-vous",
+
+  "auth.register.meta_title": "Inscription",
+  "auth.register.title": "Créer un compte",
+  "auth.register.description": "Saisissez vos informations ci-dessous pour créer votre compte",
+  "auth.register.submit": "Créer le compte",
+  "auth.register.have_account": "Vous avez déjà un compte ?",
+
+  "auth.verify.title": "Vérification de l’e-mail",
+  "auth.verify.description": "Veuillez vérifier votre adresse e-mail en cliquant sur le lien que nous venons de vous envoyer.",
+  "auth.verify.link_sent": "Un nouveau lien de vérification a été envoyé à l’adresse e-mail indiquée lors de l’inscription.",
+  "auth.verify.resend": "Renvoyer l’e-mail de vérification",
+
+  "auth.reset.title": "Réinitialiser le mot de passe",
+  "auth.reset.description": "Veuillez saisir votre nouveau mot de passe ci-dessous",
+  "auth.reset.email_label": "E-mail",
+
+  "auth.forgot.title": "Mot de passe oublié",
+  "auth.forgot.description": "Saisissez votre adresse e-mail pour recevoir un lien de réinitialisation du mot de passe",
+  "auth.forgot.submit": "Envoyer le lien de réinitialisation",
+  "auth.forgot.return_to": "Ou retourner à la",
+  "auth.forgot.login_link": "connexion",
+
+  "auth.confirm.title": "Confirmer le mot de passe",
+  "auth.confirm.description": "Ceci est une zone sécurisée de l’application. Veuillez confirmer votre mot de passe avant de continuer.",
+
   "settings.layout.title": "Paramètres",
   "settings.layout.description": "Gérez votre profil et les paramètres de votre compte",
   "settings.layout.nav_label": "Paramètres",

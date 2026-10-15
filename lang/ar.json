@@ -45,6 +45,45 @@
   "welcome.cta.subtitle": "أضف عمارتك ووحداتك وميزانية هذه السنة.",
   "welcome.footer.copyright": "© :year SyndicPro",
 
+  "auth.fields.name": "الاسم",
+  "auth.fields.full_name": "الاسم الكامل",
+  "auth.fields.email": "عنوان البريد الإلكتروني",
+  "auth.fields.password": "كلمة المرور",
+  "auth.fields.confirm_password": "تأكيد كلمة المرور",
+
+  "auth.login.meta_title": "تسجيل الدخول",
+  "auth.login.title": "سجّل الدخول إلى حسابك",
+  "auth.login.description": "أدخل بريدك الإلكتروني وكلمة المرور أدناه لتسجيل الدخول",
+  "auth.login.forgot_password": "نسيت كلمة المرور؟",
+  "auth.login.remember_me": "تذكّرني",
+  "auth.login.submit": "تسجيل الدخول",
+  "auth.login.no_account": "ليس لديك حساب؟",
+  "auth.login.sign_up": "إنشاء حساب",
+
+  "auth.register.meta_title": "التسجيل",
+  "auth.register.title": "إنشاء حساب",
+  "auth.register.description": "أدخل بياناتك أدناه لإنشاء حسابك",
+  "auth.register.submit": "إنشاء الحساب",
+  "auth.register.have_account": "لديك حساب بالفعل؟",
+
+  "auth.verify.title": "التحقق من البريد الإلكتروني",
+  "auth.verify.description": "يرجى التحقق من عنوان بريدك الإلكتروني بالنقر على الرابط الذي أرسلناه إليك للتو.",
+  "auth.verify.link_sent": "تم إرسال رابط تحقق جديد إلى عنوان البريد الإلكتروني الذي أدخلته عند التسجيل.",
+  "auth.verify.resend": "إعادة إرسال رسالة التحقق",
+
+  "auth.reset.title": "إعادة تعيين كلمة المرور",
+  "auth.reset.description": "يرجى إدخال كلمة المرور الجديدة أدناه",
+  "auth.reset.email_label": "البريد الإلكتروني",
+
+  "auth.forgot.title": "نسيت كلمة المرور",
+  "auth.forgot.description": "أدخل بريدك الإلكتروني لتلقي رابط إعادة تعيين كلمة المرور",
+  "auth.forgot.submit": "إرسال رابط إعادة التعيين",
+  "auth.forgot.return_to": "أو العودة إلى",
+  "auth.forgot.login_link": "تسجيل الدخول",
+
+  "auth.confirm.title": "تأكيد كلمة المرور",
+  "auth.confirm.description": "هذه منطقة آمنة في التطبيق. يرجى تأكيد كلمة المرور قبل المتابعة.",
+
   "settings.layout.title": "الإعدادات",
   "settings.layout.description": "إدارة ملفك الشخصي وإعدادات حسابك",
   "settings.layout.nav_label": "الإعدادات",
