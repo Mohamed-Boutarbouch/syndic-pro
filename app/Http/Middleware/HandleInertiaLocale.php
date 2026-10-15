@@ -13,8 +13,8 @@ class HandleInertiaLocale
 
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->user()?->locale
-            ?? $request->session()->get('locale')
+        $locale = $request->session()->get('locale')
+            ?? $request->user()?->locale
             ?? $request->getPreferredLanguage(self::SUPPORTED)
             ?? 'en';
 
@@ -27,10 +27,28 @@ class HandleInertiaLocale
         return $next($request);
     }
 
+    /**
+     * Return the JSON translations for the requested locale.
+     *
+     * @return array<string, mixed>
+     */
     public static function translationsFor(string $locale): array
     {
+        if (! in_array($locale, self::SUPPORTED, true)) {
+            $locale = 'en';
+        }
+
         $path = lang_path("{$locale}.json");
 
-        return file_exists($path) ? json_decode(file_get_contents($path), true) : [];
+        if (! is_file($path)) {
+            return [];
+        }
+
+        $translations = json_decode(
+            file_get_contents($path),
+            true,
+        );
+
+        return is_array($translations) ? $translations : [];
     }
 }
