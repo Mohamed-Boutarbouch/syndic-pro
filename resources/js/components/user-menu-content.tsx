@@ -1,5 +1,5 @@
 import { Link, router, useForm } from '@inertiajs/react';
-import { Languages, LogOut, Settings } from 'lucide-react';
+import { Languages, LogOut, Settings, Monitor, Moon, Sun } from 'lucide-react';
 
 import updateLocale from '@/actions/App/Http/Controllers/Settings/UpdateLocaleController';
 import {
@@ -12,6 +12,8 @@ import {
   DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserInfo } from '@/components/user-info';
+import type { Appearance } from '@/hooks/use-appearance';
+import { useAppearance } from '@/hooks/use-appearance';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { useTranslation } from '@/hooks/use-translation';
 import { logout } from '@/routes';
@@ -48,6 +50,18 @@ const LOCALES: ReadonlyArray<{
 export function UserMenuContent({ user }: Props) {
   const cleanup = useMobileNavigation();
   const { locale, t } = useTranslation();
+
+  const { appearance, updateAppearance } = useAppearance();
+
+  const THEMES: ReadonlyArray<{
+    value: Appearance;
+    label: string;
+    icon: typeof Sun;
+  }> = [
+    { value: 'light', label: 'Light', icon: Sun },
+    { value: 'dark', label: 'Dark', icon: Moon },
+    { value: 'system', label: 'System', icon: Monitor },
+  ];
 
   const { put, processing, transform } = useForm<{
     locale: Locale;
@@ -97,6 +111,35 @@ export function UserMenuContent({ user }: Props) {
           <Settings className="mr-2" />
           {t('user_menu.settings')}
         </DropdownMenuItem>
+
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger className="cursor-pointer">
+            {appearance === 'light' && <Sun className="mr-2 size-4" />}
+            {appearance === 'dark' && <Moon className="mr-2 size-4" />}
+            {appearance === 'system' && <Monitor className="mr-2 size-4" />}
+
+            <span>Theme</span>
+
+            <span className="ml-auto text-muted-foreground capitalize">{appearance}</span>
+          </DropdownMenuSubTrigger>
+
+          <DropdownMenuSubContent>
+            {THEMES.map(({ value, label, icon: Icon }) => (
+              <DropdownMenuItem
+                key={value}
+                onClick={() => updateAppearance(value)}
+                className="cursor-pointer"
+              >
+                <Icon className="mr-2 size-4" />
+                <span>{label}</span>
+
+                {appearance === value && (
+                  <span className="ml-auto text-xs text-muted-foreground">✓</span>
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
 
         <DropdownMenuSub>
           <DropdownMenuSubTrigger disabled={processing} className="cursor-pointer">

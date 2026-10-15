@@ -1,38 +1,48 @@
 import * as v from 'valibot';
 
-export const coOwnerSchema = v.object({
-  unitId: v.number(),
-  name: v.pipe(
-    v.string(),
-    v.trim(),
-    v.nonEmpty('Co-owner name is required'),
-    v.maxLength(255, 'Co-owner name must not exceed 255 characters'),
-  ),
-  email: v.pipe(
-    v.string(),
-    v.trim(),
-    v.maxLength(255, 'Email must not exceed 255 characters'),
-    v.check(
-      (value) => value === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-      'Please enter a valid email address',
+type T = (key: string, params?: Record<string, string | number>) => string;
+
+export const createCoOwnerSchema = (t: T) =>
+  v.object({
+    unitId: v.number(),
+    name: v.pipe(
+      v.string(),
+      v.trim(),
+      v.nonEmpty(t('onboarding.validation.co_owners.name_required')),
+      v.maxLength(255, t('onboarding.validation.co_owners.name_max')),
     ),
-  ),
-  phone: v.pipe(
-    v.string(),
-    v.trim(),
-    v.maxLength(255, 'Phone number must not exceed 255 characters'),
-  ),
-  billing_frequency: v.pipe(v.string(), v.nonEmpty('Billing frequency is required')),
-  is_active: v.boolean(),
-});
+    email: v.pipe(
+      v.string(),
+      v.trim(),
+      v.maxLength(255, t('onboarding.validation.co_owners.email_max')),
+      v.check(
+        (value) => value === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        t('onboarding.validation.co_owners.email_invalid'),
+      ),
+    ),
+    phone: v.pipe(
+      v.string(),
+      v.trim(),
+      v.maxLength(255, t('onboarding.validation.co_owners.phone_max')),
+    ),
+    billing_frequency: v.pipe(
+      v.string(),
+      v.nonEmpty(t('onboarding.validation.co_owners.billing_required')),
+    ),
+    is_active: v.boolean(),
+  });
 
-export const coOwnersSchema = v.object({
-  coOwners: v.pipe(v.array(coOwnerSchema), v.minLength(1, 'At least one co-owner is required')),
-  syndicUnitId: v.number('Please designate one co-owner as syndic'),
-});
+export const createCoOwnersSchema = (t: T) =>
+  v.object({
+    coOwners: v.pipe(
+      v.array(createCoOwnerSchema(t)),
+      v.minLength(1, t('onboarding.validation.co_owners.min_one')),
+    ),
+    syndicUnitId: v.number(t('onboarding.validation.co_owners.syndic_required')),
+  });
 
-export type CoOwnerFormValues = v.InferInput<typeof coOwnersSchema>;
-export type CoOwnerFormOutputValues = v.InferOutput<typeof coOwnersSchema>;
+export type CoOwnerFormValues = v.InferInput<ReturnType<typeof createCoOwnersSchema>>;
+export type CoOwnerFormOutputValues = v.InferOutput<ReturnType<typeof createCoOwnersSchema>>;
 
 export function createEmptyCoOwner(unit: { id: number }): CoOwnerFormValues['coOwners'][number] {
   return {

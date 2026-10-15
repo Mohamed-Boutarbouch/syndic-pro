@@ -1,7 +1,8 @@
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { router } from '@inertiajs/react';
 import { ArrowRight, Plus, X } from 'lucide-react';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { useMemo } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { store } from '@/actions/App/Http/Controllers/Onboarding/UnitController';
 import { UnitBudgetShare } from '@/components/onboarding/unit-budget-share';
@@ -29,12 +30,14 @@ import { Spinner } from '@/components/ui/spinner';
 import { useTranslation } from '@/hooks/use-translation';
 import type { UnitPageProps } from '@/pages/onboarding/unit';
 import type { UnitsFormOutputValues, UnitsFormValues } from '@/schemas/onboarding/units';
-import { createEmptyUnit, unitsSchema } from '@/schemas/onboarding/units';
+import { createEmptyUnit, createUnitsSchema } from '@/schemas/onboarding/units';
 
 export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: UnitPageProps) {
-  const { money, isRtl } = useTranslation();
+  const { t, money } = useTranslation();
+  const schema = useMemo(() => createUnitsSchema(t), [t]);
+
   const form = useForm<UnitsFormValues, any, UnitsFormOutputValues>({
-    resolver: valibotResolver(unitsSchema),
+    resolver: valibotResolver(schema),
     defaultValues: {
       units: [createEmptyUnit()],
     },
@@ -63,24 +66,30 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
   }
 
   return (
-    <Card dir={isRtl ? 'rtl' : 'ltr'}>
+    <Card>
       <CardHeader>
-        <CardTitle>Add your units</CardTitle>
-        <CardDescription>
-          List all units in the property. You can add co-owners in the next step.
-        </CardDescription>
+        <CardTitle>{t('onboarding.units.title')}</CardTitle>
+        <CardDescription>{t('onboarding.units.description')}</CardDescription>
       </CardHeader>
+
       <CardContent>
         <Item className="mb-4" variant="outline" size="sm">
-          <ItemMedia className="text-muted-foreground">Budget:</ItemMedia>
+          <ItemMedia className="text-muted-foreground">{t('onboarding.units.budget')}</ItemMedia>
           <ItemContent>
-            <ItemTitle>{money(budget.total_budget)}/year</ItemTitle>
+            <ItemTitle>
+              {t('onboarding.units.per_year', {
+                amount: money(budget.total_budget),
+              })}
+            </ItemTitle>
           </ItemContent>
         </Item>
+
         <form id="onboarding-units-form" onSubmit={form.handleSubmit(submitHandler)}>
           <FieldSet className="gap-4">
-            <FieldLegend variant="label">Units</FieldLegend>
-            <FieldDescription>Add up to {MAX_UNITS} units for this property.</FieldDescription>
+            <FieldLegend variant="label">{t('onboarding.units.legend')}</FieldLegend>
+
+            <FieldDescription>{t('onboarding.units.limit', { max: MAX_UNITS })}</FieldDescription>
+
             <FieldGroup className="gap-4">
               {fields.map((field, index) => (
                 <Item
@@ -89,13 +98,19 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                   className="relative flex-col items-stretch gap-4"
                 >
                   <ItemTitle className="flex items-center justify-between">
-                    <span>Unit {index + 1}</span>
+                    <span>
+                      {t('onboarding.units.unit_n', {
+                        number: index + 1,
+                      })}
+                    </span>
+
                     <UnitBudgetShare
                       control={form.control}
                       index={index}
                       totalBudget={budget.total_budget}
                     />
                   </ItemTitle>
+
                   <ItemContent className="grid w-full gap-4 sm:grid-cols-2 md:grid-cols-4 md:items-start">
                     <Controller
                       name={`units.${index}.label`}
@@ -103,25 +118,31 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                       render={({ field: controllerField, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                           <FieldLabel htmlFor={`unit-label-${index}`}>
-                            Label
+                            {t('onboarding.units.label')}
                             <span className="text-destructive">*</span>
                           </FieldLabel>
+
                           <Input
                             {...controllerField}
                             id={`unit-label-${index}`}
                             aria-invalid={fieldState.invalid}
                             placeholder="A-101"
                           />
+
                           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                         </Field>
                       )}
                     />
+
                     <Controller
                       name={`units.${index}.type`}
                       control={form.control}
                       render={({ field: controllerField, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel htmlFor={`unit-type-${index}`}>Type</FieldLabel>
+                          <FieldLabel htmlFor={`unit-type-${index}`}>
+                            {t('onboarding.units.type')}
+                          </FieldLabel>
+
                           <Select
                             name={controllerField.name}
                             value={controllerField.value}
@@ -133,6 +154,7 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                             >
                               <SelectValue />
                             </SelectTrigger>
+
                             <SelectContent>
                               {unitTypes.map((type) => (
                                 <SelectItem key={type.value} value={type.value}>
@@ -141,35 +163,43 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                               ))}
                             </SelectContent>
                           </Select>
+
                           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                         </Field>
                       )}
                     />
+
                     <Controller
                       name={`units.${index}.floor`}
                       control={form.control}
                       render={({ field: controllerField, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel htmlFor={`unit-floor-${index}`}>Floor</FieldLabel>
+                          <FieldLabel htmlFor={`unit-floor-${index}`}>
+                            {t('onboarding.units.floor')}
+                          </FieldLabel>
+
                           <Input
                             {...controllerField}
                             id={`unit-floor-${index}`}
                             aria-invalid={fieldState.invalid}
                             placeholder="RDC"
                           />
+
                           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                         </Field>
                       )}
                     />
+
                     <Controller
                       name={`units.${index}.weight_coefficient`}
                       control={form.control}
                       render={({ field: controllerField, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                           <FieldLabel htmlFor={`weight-coefficient-${index}`}>
-                            Weight coefficient
+                            {t('onboarding.units.weight')}
                             <span className="text-destructive">*</span>
                           </FieldLabel>
+
                           <div className="relative">
                             <span
                               aria-hidden="true"
@@ -177,6 +207,7 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                             >
                               ×
                             </span>
+
                             <Input
                               id={`weight-coefficient-${index}`}
                               type="number"
@@ -192,16 +223,19 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                               value={controllerField.value ?? ''}
                               onChange={(event) => {
                                 const num = event.target.valueAsNumber;
+
                                 controllerField.onChange(Number.isNaN(num) ? undefined : num);
                               }}
                               className="pl-8"
                             />
                           </div>
+
                           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                         </Field>
                       )}
                     />
                   </ItemContent>
+
                   {fields.length > 1 && (
                     <ItemActions>
                       <Button
@@ -210,7 +244,9 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                         size="icon"
                         className="absolute top-2 right-2"
                         onClick={() => remove(index)}
-                        aria-label={`Remove unit ${index + 1}`}
+                        aria-label={t('onboarding.units.remove', {
+                          number: index + 1,
+                        })}
                       >
                         <X className="size-4" />
                       </Button>
@@ -219,6 +255,7 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
                 </Item>
               ))}
             </FieldGroup>
+
             <Button
               type="button"
               variant="outline"
@@ -227,8 +264,9 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
               disabled={fields.length >= MAX_UNITS}
             >
               <Plus data-icon="inline-start" />
-              Add Another Unit
+              {t('onboarding.units.add')}
             </Button>
+
             {form.formState.errors.units?.root && (
               <FieldError errors={[form.formState.errors.units.root]} />
             )}
@@ -237,7 +275,9 @@ export function UnitForm({ property, budget, unitTypes, maxUnits: MAX_UNITS }: U
           <div className="mt-8 flex justify-end">
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting && <Spinner data-icon="inline-start" />}
-              Continue
+
+              {t('onboarding.continue')}
+
               {!form.formState.isSubmitting && <ArrowRight data-icon="inline-end" />}
             </Button>
           </div>

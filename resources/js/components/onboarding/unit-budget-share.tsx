@@ -13,7 +13,7 @@ export function UnitBudgetShare({
   index: number;
   totalBudget: number;
 }) {
-  const { money, isRtl } = useTranslation();
+  const { t, money } = useTranslation();
   const weightCoefficients = useWatch({
     control,
     name: 'units',
@@ -23,8 +23,8 @@ export function UnitBudgetShare({
   const share = budgets[index] ?? 0;
 
   return (
-    <span className="text-sm text-muted-foreground" dir={isRtl ? 'rtl' : 'ltr'}>
-      {money(share)}/year
+    <span className="text-sm text-muted-foreground">
+      {t('onboarding.units.per_year', { amount: money(share) })}
     </span>
   );
 }

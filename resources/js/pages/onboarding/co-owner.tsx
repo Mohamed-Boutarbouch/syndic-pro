@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
 import { CoOwnerForm } from '@/components/onboarding/co-owner-form';
+import { useTranslation } from '@/hooks/use-translation';
 import OnboardingLayout from '@/layouts/onboarding/layout';
 
 export type CoOwnerPageProps = {
@@ -35,11 +36,11 @@ export default function CoOwnerPage({
   units,
   billingFrequency,
 }: CoOwnerPageProps) {
-  console.log(units);
+  const { t } = useTranslation();
 
   return (
     <>
-      <Head title="Onboarding — Co-Owners" />
+      <Head title={t('onboarding.head.co_owners')} />
 
       <CoOwnerForm
         property={property}

@@ -1,28 +1,28 @@
 import * as v from 'valibot';
 
-export const propertySchema = v.object({
-  name: v.pipe(
-    v.string(),
-    v.trim(),
-    v.nonEmpty('Property name is required'),
-    v.maxLength(200, 'Property name must be 200 characters or fewer'),
-  ),
+type T = (key: string, params?: Record<string, string | number>) => string;
 
-  address: v.optional(v.pipe(v.string(), v.trim())),
+export const createPropertySchema = (t: T) =>
+  v.object({
+    name: v.pipe(
+      v.string(),
+      v.trim(),
+      v.nonEmpty(t('validation.property.name_required')),
+      v.maxLength(200, t('validation.property.name_max')),
+    ),
+    address: v.optional(v.pipe(v.string(), v.trim())),
+    city: v.pipe(
+      v.string(),
+      v.trim(),
+      v.nonEmpty(t('validation.property.city_required')),
+      v.maxLength(100, t('validation.property.city_max')),
+    ),
+    postal_code: v.optional(
+      v.pipe(v.string(), v.trim(), v.maxLength(20, t('validation.property.postal_max'))),
+    ),
+  });
 
-  city: v.pipe(
-    v.string(),
-    v.trim(),
-    v.nonEmpty('City is required'),
-    v.maxLength(100, 'City must be 100 characters or fewer'),
-  ),
-
-  postal_code: v.optional(
-    v.pipe(v.string(), v.trim(), v.maxLength(20, 'Postal code must be 20 characters or fewer')),
-  ),
-});
-
-export type PropertyFormValues = v.InferOutput<typeof propertySchema>;
+export type PropertyFormValues = v.InferOutput<ReturnType<typeof createPropertySchema>>;
 
 export const propertyDefaultValues: PropertyFormValues = {
   name: '',

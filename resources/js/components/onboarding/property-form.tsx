@@ -1,6 +1,7 @@
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { router } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
+import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { store } from '@/actions/App/Http/Controllers/Onboarding/PropertyController';
@@ -10,12 +11,15 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslation } from '@/hooks/use-translation';
 import type { PropertyFormValues } from '@/schemas/onboarding/property';
-import { propertyDefaultValues, propertySchema } from '@/schemas/onboarding/property';
+import { createPropertySchema, propertyDefaultValues } from '@/schemas/onboarding/property';
 
 export function PropertyForm() {
+  const { t } = useTranslation('onboarding');
+  const schema = useMemo(() => createPropertySchema(t), [t]);
   const form = useForm<PropertyFormValues>({
-    resolver: valibotResolver(propertySchema),
+    resolver: valibotResolver(schema),
     defaultValues: propertyDefaultValues,
     mode: 'onBlur',
   });
@@ -40,9 +44,8 @@ export function PropertyForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tell us about your property</CardTitle>
-
-        <CardDescription>This is the residence you'll be managing as syndic.</CardDescription>
+        <CardTitle>{t('property.title')}</CardTitle>
+        <CardDescription>{t('property.description')}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -59,7 +62,7 @@ export function PropertyForm() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="property-name">
-                    Property name
+                    {t('property.name')}
                     <span className="text-destructive">*</span>
                   </FieldLabel>
 
@@ -81,13 +84,13 @@ export function PropertyForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="property-address">Address</FieldLabel>
+                  <FieldLabel htmlFor="property-address">{t('property.address')}</FieldLabel>
 
                   <Textarea
                     {...field}
                     id="property-address"
                     aria-invalid={fieldState.invalid}
-                    placeholder="Street, building, floor…"
+                    placeholder={t('property.address_placeholder')}
                     rows={3}
                     className="resize-none"
                     autoComplete="street-address"
@@ -105,7 +108,7 @@ export function PropertyForm() {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="property-city">
-                      City
+                      {t('property.city')}
                       <span className="text-destructive">*</span>
                     </FieldLabel>
 
@@ -127,7 +130,9 @@ export function PropertyForm() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="property-postal-code">Postal code</FieldLabel>
+                    <FieldLabel htmlFor="property-postal-code">
+                      {t('property.postal_code')}
+                    </FieldLabel>
 
                     <Input
                       {...field}
@@ -148,7 +153,7 @@ export function PropertyForm() {
           <div className="flex justify-end">
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting && <Spinner data-icon="inline-start" />}
-              Continue
+              {t('continue')}
               {!form.formState.isSubmitting && <ArrowRight data-icon="inline-end" />}
             </Button>
           </div>

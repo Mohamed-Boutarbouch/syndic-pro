@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 
 import { UnitForm } from '@/components/onboarding/unit-form';
+import { useTranslation } from '@/hooks/use-translation';
 import OnboardingLayout from '@/layouts/onboarding/layout';
 
 export type UnitPageProps = {
@@ -26,9 +27,11 @@ export type UnitPageProps = {
 };
 
 export default function UnitPage({ property, budget, unitTypes, maxUnits }: UnitPageProps) {
+  const { t } = useTranslation();
+
   return (
     <>
-      <Head title="Onboarding — Units" />
+      <Head title={t('onboarding.head.units')} />
 
       <UnitForm property={property} budget={budget} unitTypes={unitTypes} maxUnits={maxUnits} />
     </>

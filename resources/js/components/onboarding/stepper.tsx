@@ -1,32 +1,26 @@
 import { usePage } from '@inertiajs/react';
 import { cn } from 'cn';
 import { Building2, Calendar, Check, Home, Users } from 'lucide-react';
+import { useTranslation } from '@/hooks/use-translation';
 
 const steps = [
-  {
-    match: '/onboarding/property',
-    label: 'Property',
-    icon: Building2,
-  },
+  { match: '/onboarding/property', labelKey: 'onboarding.steps.property', icon: Building2 },
   {
     match: '/onboarding/property/:property/budget',
-    label: 'Fiscal Year',
+    labelKey: 'onboarding.steps.fiscal_year',
     icon: Calendar,
   },
-  {
-    match: '/onboarding/property/:property/units',
-    label: 'Units',
-    icon: Home,
-  },
+  { match: '/onboarding/property/:property/units', labelKey: 'onboarding.steps.units', icon: Home },
   {
     match: '/onboarding/property/:property/co-owners',
-    label: 'Co-Owners',
+    labelKey: 'onboarding.steps.co_owners',
     icon: Users,
   },
 ] as const;
 
 export function Stepper() {
   const { url } = usePage();
+  const { t } = useTranslation();
 
   const pathname = new URL(url, window.location.origin).pathname;
 
@@ -82,7 +76,7 @@ export function Stepper() {
                   isActive ? 'font-medium text-foreground' : 'text-muted-foreground',
                 )}
               >
-                {step.label}
+                {t(step.labelKey)}
               </span>
             </div>
 

@@ -1,9 +1,11 @@
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { router } from '@inertiajs/react';
 import { addYears, format, subDays } from 'date-fns';
+import { ar, enUS, fr } from 'date-fns/locale';
 import { ArrowRight, CalendarDays } from 'lucide-react';
-import { useEffect } from 'react';
-import { useForm, useWatch, Controller } from 'react-hook-form';
+import { useEffect, useMemo } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+
 import { store } from '@/actions/App/Http/Controllers/Onboarding/AnnualTargetBudgetController';
 import { MonthYearPicker } from '@/components/month-year-picker';
 import { Button } from '@/components/ui/button';
@@ -21,11 +23,14 @@ import {
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
+import { useTranslation } from '@/hooks/use-translation';
 import type { AnnualTargetBudgetFormValues } from '@/schemas/onboarding/budget';
 import {
   annualTargetBudgetDefaultValues,
-  annualTargetBudgetSchema,
+  createAnnualTargetBudgetSchema,
 } from '@/schemas/onboarding/budget';
+
+const dateLocales = { en: enUS, fr, ar } as const;
 
 type BudgetFormProps = {
   property: {
@@ -35,14 +40,26 @@ type BudgetFormProps = {
 };
 
 export function BudgetForm({ property }: BudgetFormProps) {
+  const { t, locale } = useTranslation('onboarding');
+  const dateLocale = dateLocales[locale as keyof typeof dateLocales] ?? enUS;
+
+  const schema = useMemo(() => createAnnualTargetBudgetSchema(t), [t]);
+
   const form = useForm<AnnualTargetBudgetFormValues>({
-    resolver: valibotResolver(annualTargetBudgetSchema),
+    resolver: valibotResolver(schema),
     defaultValues: annualTargetBudgetDefaultValues,
     mode: 'onBlur',
   });
 
-  const startDate = useWatch({ control: form.control, name: 'start_date' });
-  const endDate = useWatch({ control: form.control, name: 'end_date' });
+  const startDate = useWatch({
+    control: form.control,
+    name: 'start_date',
+  });
+
+  const endDate = useWatch({
+    control: form.control,
+    name: 'end_date',
+  });
 
   useEffect(() => {
     if (!startDate) {
@@ -53,6 +70,7 @@ export function BudgetForm({ property }: BudgetFormProps) {
       subDays(addYears(new Date(`${startDate}T00:00:00`), 1), 1),
       'yyyy-MM-dd',
     );
+
     form.setValue('end_date', computed, { shouldValidate: true });
   }, [startDate, form]);
 
@@ -80,13 +98,12 @@ export function BudgetForm({ property }: BudgetFormProps) {
     <Card>
       <CardHeader>
         <CardTitle>
-          Set up your fiscal year
-          {property.name && <> for {property.name} </>}
+          {property.name ? t('budget.title_for', { property: property.name }) : t('budget.title')}
         </CardTitle>
-        <CardDescription>
-          Define the budget period and annual target for this property.
-        </CardDescription>
+
+        <CardDescription>{t('budget.description')}</CardDescription>
       </CardHeader>
+
       <CardContent>
         <form
           id="onboarding-fiscal-year-form"
@@ -102,44 +119,55 @@ export function BudgetForm({ property }: BudgetFormProps) {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>
-                      Start of fiscal year
+                      {t('budget.start')}
                       <span className="text-destructive">*</span>
                     </FieldLabel>
+
                     <MonthYearPicker
                       value={field.value}
                       onChangeAction={field.onChange}
                       aria-invalid={fieldState.invalid}
                     />
+
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
               />
+
               <Field>
-                <FieldLabel>End of fiscal year</FieldLabel>
+                <FieldLabel>{t('budget.end')}</FieldLabel>
+
                 <div className="relative">
                   <Input
                     disabled
                     readOnly
-                    value={endDate ? format(new Date(`${endDate}T00:00:00`), 'MMMM d, yyyy') : ''}
-                    placeholder="Auto-calculated from start date"
+                    value={
+                      endDate
+                        ? format(new Date(`${endDate}T00:00:00`), 'PPP', { locale: dateLocale })
+                        : ''
+                    }
+                    placeholder={t('budget.end_placeholder')}
                   />
+
                   <CalendarDays className="absolute top-1/2 right-3 size-4 -translate-y-1/2 opacity-50" />
                 </div>
-                <FieldDescription>
-                  Automatically set to 12 months after the start date.
-                </FieldDescription>
+
+                <FieldDescription>{t('budget.end_help')}</FieldDescription>
               </Field>
             </div>
+
             <FieldSeparator />
+
             <Controller
               name="total_budget"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="annual-target-budget">
-                    Annual target budget (MAD)
+                    {t('budget.total')}
                     <span className="text-destructive">*</span>
                   </FieldLabel>
+
                   <Input
                     id="annual-target-budget"
                     type="number"
@@ -156,11 +184,14 @@ export function BudgetForm({ property }: BudgetFormProps) {
                     name={field.name}
                     ref={field.ref}
                   />
-                  <FieldDescription>The target annual budget for this property.</FieldDescription>
+
+                  <FieldDescription>{t('budget.total_help')}</FieldDescription>
+
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
+
             <Controller
               name="is_budget_locked"
               control={form.control}
@@ -168,12 +199,11 @@ export function BudgetForm({ property }: BudgetFormProps) {
                 <FieldLabel htmlFor="lock-budget">
                   <Field orientation="horizontal">
                     <FieldContent>
-                      <FieldTitle>Lock the budget after setup</FieldTitle>
-                      <FieldDescription>
-                        Existing co-owner quotas become immutable. New units added later only adjust
-                        the total.
-                      </FieldDescription>
+                      <FieldTitle>{t('budget.lock_title')}</FieldTitle>
+
+                      <FieldDescription>{t('budget.lock_description')}</FieldDescription>
                     </FieldContent>
+
                     <Switch
                       id="lock-budget"
                       checked={field.value}
@@ -186,10 +216,13 @@ export function BudgetForm({ property }: BudgetFormProps) {
               )}
             />
           </FieldGroup>
+
           <div className="flex justify-end">
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting && <Spinner data-icon="inline-start" />}
-              Continue
+
+              {t('continue')}
+
               {!form.formState.isSubmitting && <ArrowRight data-icon="inline-end" />}
             </Button>
           </div>
